@@ -65,13 +65,15 @@
   }
 
   .divider-ornament {
-    @apply flex items-center justify-center my-12 text-gold;
+    @apply flex items-center justify-center my-12;
+    color: theme('colors.gold.DEFAULT');
   }
 
   .divider-ornament::before,
   .divider-ornament::after {
     content: '';
-    @apply flex-1 h-px bg-gold/30 mx-4;
+    @apply flex-1 h-px mx-4;
+    background-color: rgba(184, 151, 62, 0.3);
   }
 
   /* Etichette in Garamond small caps — sostituisce Inter uppercase ovunque */
@@ -97,7 +99,10 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     font-feature-settings: 'smcp' 1;
-    @apply text-ink-soft hover:text-gold transition-colors duration-200;
+    @apply text-ink-soft transition-colors duration-200;
+  }
+  .nav-link:hover {
+    color: theme('colors.gold.DEFAULT');
   }
 
   .nav-link.active {
