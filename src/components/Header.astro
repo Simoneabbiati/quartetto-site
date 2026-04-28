@@ -1,0 +1,52 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import LangSwitcher from './LangSwitcher.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const prefix = lang === 'it' ? '' : '/en';
+
+const navItems = [
+  { href: `${prefix}/quartetto`, label: t('nav.quartetto') },
+  { href: `${prefix}/repertorio`, label: t('nav.repertorio') },
+  { href: `${prefix}/concerti`, label: t('nav.concerti') },
+  { href: `${prefix}/media`, label: t('nav.media') },
+  { href: `${prefix}/contatti`, label: t('nav.contatti') },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<header class="border-b border-ink/10 bg-paper/95 backdrop-blur-sm sticky top-0 z-50">
+  <div class="container-default flex items-center justify-between py-5">
+    <a href={prefix || '/'} class="font-serif text-xl tracking-wide hover:text-accent transition-colors">
+      Quartetto Vocale
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      {
+        navItems.map((item) => {
+          const isActive = currentPath === item.href.replace(/\/$/, '');
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                'text-sm tracking-wide uppercase font-medium hover:text-accent transition-colors',
+                isActive ? 'text-accent' : 'text-ink-soft',
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+      <LangSwitcher />
+    </nav>
+
+    <!-- Mobile: per ora solo lang switcher; un menu hamburger lo aggiungiamo in fase 2 -->
+    <div class="md:hidden">
+      <LangSwitcher />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,29 @@
+---
+import { getLangFromUrl } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const path = Astro.url.pathname;
+
+// Calcola gli URL "gemelli" per ciascuna lingua
+const stripped = path.replace(/^\/en/, '') || '/';
+const itHref = stripped;
+const enHref = stripped === '/' ? '/en/' : `/en${stripped}`;
+---
+
+<div class="flex items-center gap-2 text-xs uppercase tracking-wider">
+  <a
+    href={itHref}
+    class:list={['hover:text-accent transition-colors', lang === 'it' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    aria-label="Italiano"
+  >
+    IT
+  </a>
+  <span class="text-ink-muted/50">/</span>
+  <a
+    href={enHref}
+    class:list={['hover:text-accent transition-colors', lang === 'en' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    aria-label="English"
+  >
+    EN
+  </a>
+</div>

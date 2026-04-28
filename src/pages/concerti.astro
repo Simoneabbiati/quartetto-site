@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import ConcertoCard from '../components/ConcertoCard.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n/utils';
+
+const t = useTranslations('it');
+
+const oggi = new Date();
+oggi.setHours(0, 0, 0, 0);
+
+const tutti = await getCollection('concerti', ({ data }) => data.lingua === 'it');
+
+const prossimi = tutti
+  .filter((c) => c.data.data >= oggi)
+  .sort((a, b) => a.data.data.getTime() - b.data.data.getTime());
+
+const passati = tutti
+  .filter((c) => c.data.data < oggi)
+  .sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
+---
+
+<Base title="Concerti" description="I prossimi concerti del quartetto e l'archivio degli eventi passati.">
+  <section class="container-default py-20">
+    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.concerti')}</p>
+    <h1 class="font-serif mb-16">{t('concerti.prossimi')}</h1>
+
+    {
+      prossimi.length === 0 ? (
+        <p class="text-ink-muted italic">{t('concerti.nessunConcerto')}</p>
+      ) : (
+        <div>
+          {prossimi.map((c) => <ConcertoCard concerto={c} />)}
+        </div>
+      )
+    }
+
+    {
+      passati.length > 0 && (
+        <>
+          <div class="divider-ornament mt-24"><span class="font-serif italic">✦</span></div>
+          <h2 class="font-serif mb-12 mt-16">{t('concerti.archivio')}</h2>
+          <div>
+            {passati.map((c) => <ConcertoCard concerto={c} variant="compact" />)}
+          </div>
+        </>
+      )
+    }
+  </section>
+</Base>

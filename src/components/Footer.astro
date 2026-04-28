@@ -1,0 +1,30 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === 'it' ? '' : '/en';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink/10 bg-paper-warm mt-24">
+  <div class="container-default py-12 flex flex-col md:flex-row justify-between items-start gap-8">
+    <div>
+      <p class="font-serif text-lg mb-2">Quartetto Vocale</p>
+      <p class="text-sm text-ink-muted max-w-md">{t('site.tagline')}</p>
+    </div>
+
+    <nav class="flex flex-col gap-2 text-sm">
+      <a href={`${prefix}/contatti`} class="hover:text-accent transition-colors">{t('nav.contatti')}</a>
+      <a href="/press-kit/" class="hover:text-accent transition-colors">{t('nav.pressKit')}</a>
+      <!-- Aggiungere social qui quando attivi -->
+      <!-- <a href="https://instagram.com/..." class="hover:text-accent transition-colors">Instagram</a> -->
+    </nav>
+  </div>
+
+  <div class="border-t border-ink/10">
+    <div class="container-default py-4 text-xs text-ink-muted">
+      {t('footer.copyright', { year })}
+    </div>
+  </div>
+</footer>

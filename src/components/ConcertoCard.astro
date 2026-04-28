@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+export interface Props {
+  concerto: CollectionEntry<'concerti'>;
+  variant?: 'full' | 'compact';
+}
+
+const { concerto, variant = 'full' } = Astro.props;
+const { data } = concerto;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const dateFormatter = new Intl.DateTimeFormat(lang === 'it' ? 'it-IT' : 'en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const formattedDate = dateFormatter.format(data.data);
+---
+
+<article class="border-b border-ink/10 py-8 last:border-b-0">
+  <div class="grid md:grid-cols-[180px_1fr] gap-6">
+    <div class="text-sm">
+      <div class="font-serif text-2xl text-accent">{formattedDate}</div>
+      {data.ora && <div class="text-ink-muted mt-1">{data.ora}</div>}
+    </div>
+
+    <div>
+      <h3 class="text-2xl font-serif mb-2">{data.titolo}</h3>
+      <p class="text-ink-soft mb-3">
+        {data.luogo} · <span class="text-ink-muted">{data.citta}</span>
+      </p>
+
+      {
+        variant === 'full' && data.programma && data.programma.length > 0 && (
+          <details class="mb-3">
+            <summary class="text-sm uppercase tracking-wider text-ink-muted cursor-pointer hover:text-accent transition-colors">
+              {t('concerti.programma')}
+            </summary>
+            <ul class="mt-3 space-y-1 text-sm text-ink-soft">
+              {data.programma.map((brano) => (
+                <li>
+                  <span class="font-medium">{brano.compositore}</span>
+                  <span class="text-ink-muted"> — {brano.opera}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
+
+      <div class="flex flex-wrap gap-4 text-sm">
+        {data.ingresso && <span class="text-ink-muted">{t('concerti.ingresso')}: {data.ingresso}</span>}
+        {
+          data.biglietti && (
+            <a href={data.biglietti} target="_blank" rel="noopener" class="text-accent hover:text-accent-dark underline">
+              {t('concerti.biglietti')} →
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import ConcertoCard from '../components/ConcertoCard.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n/utils';
+
+const t = useTranslations('it');
+
+// Prossimo concerto: il primo evento futuro in lingua italiana
+const oggi = new Date();
+oggi.setHours(0, 0, 0, 0);
+
+const concertiFuturi = (await getCollection('concerti', ({ data }) => data.lingua === 'it' && data.data >= oggi))
+  .sort((a, b) => a.data.data.getTime() - b.data.data.getTime());
+
+const prossimo = concertiFuturi[0];
+---
+
+<Base title="home">
+  <!-- HERO -->
+  <section class="container-default py-24 md:py-32 text-center">
+    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-6">Quartetto Vocale</p>
+    <h1 class="font-serif mb-8">Musica sacra<br /><em class="text-accent">e corale</em></h1>
+    <p class="max-w-xl mx-auto text-lg text-ink-soft mb-10">
+      Quattro voci dedicate al repertorio sacro, dalla polifonia rinascimentale alla musica contemporanea.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="/contatti" class="btn-primary">{t('home.ctaBooking')}</a>
+      <a href="/concerti" class="btn-ghost">{t('home.ctaConcerto')}</a>
+    </div>
+  </section>
+
+  <div class="divider-ornament">
+    <span class="font-serif italic">✦</span>
+  </div>
+
+  <!-- PROSSIMO CONCERTO -->
+  {
+    prossimo && (
+      <section class="container-default py-16">
+        <p class="text-sm uppercase tracking-[0.2em] text-ink-muted text-center mb-8">{t('home.prossimoConcerto')}</p>
+        <ConcertoCard concerto={prossimo} variant="compact" />
+      </section>
+    )
+  }
+
+  <!-- ASCOLTACI -->
+  <section class="bg-paper-warm py-20 mt-16">
+    <div class="container-narrow text-center">
+      <h2 class="font-serif mb-6">{t('home.ascoltaci')}</h2>
+      <p class="text-ink-soft mb-8">
+        Un assaggio del nostro repertorio.
+      </p>
+      <!-- Placeholder per embed audio/video — da sostituire con embed YouTube/SoundCloud -->
+      <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
+        <span class="text-sm italic">Embed audio/video qui</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- IDENTITÀ BREVE -->
+  <section class="container-narrow py-20 text-center">
+    <h2 class="font-serif mb-6">Chi siamo</h2>
+    <p class="text-lg text-ink-soft leading-relaxed mb-8">
+      Quattro cantanti uniti dalla passione per la musica sacra. Il nostro repertorio attraversa secoli di tradizione, dalla polifonia rinascimentale ai mottetti barocchi fino al repertorio sacro contemporaneo.
+    </p>
+    <a href="/quartetto" class="text-accent hover:text-accent-dark uppercase tracking-wider text-sm font-medium">
+      Scopri il quartetto →
+    </a>
+  </section>
+</Base>

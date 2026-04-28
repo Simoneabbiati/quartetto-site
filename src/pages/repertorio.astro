@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n/utils';
+
+const t = useTranslations('it');
+
+const pagine = await getCollection('pagine', ({ id, data }) => id === 'repertorio.md' && data.lingua === 'it');
+const repertorio = pagine[0];
+const Content = repertorio ? (await repertorio.render()).Content : null;
+---
+
+<Base title="Repertorio" description="Il repertorio del quartetto vocale.">
+  <section class="container-narrow py-20">
+    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.repertorio')}</p>
+    <h1 class="font-serif mb-12">{repertorio?.data.titolo ?? 'Repertorio'}</h1>
+
+    {
+      Content ? (
+        <div class="prose prose-lg max-w-none">
+          <Content />
+        </div>
+      ) : (
+        <p class="text-ink-muted italic">Pagina repertorio da scrivere in src/content/pagine/repertorio.md</p>
+      )
+    }
+  </section>
+</Base>

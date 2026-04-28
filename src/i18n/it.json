@@ -1,0 +1,59 @@
+{
+  "site": {
+    "tagline": "Quartetto vocale — musica sacra e corale"
+  },
+  "nav": {
+    "quartetto": "Il Quartetto",
+    "repertorio": "Repertorio",
+    "concerti": "Concerti",
+    "media": "Media",
+    "contatti": "Contatti",
+    "pressKit": "Press Kit"
+  },
+  "home": {
+    "ctaBooking": "Scritturare il quartetto",
+    "ctaConcerto": "Prossimi concerti",
+    "prossimoConcerto": "Prossimo concerto",
+    "ascoltaci": "Ascoltaci"
+  },
+  "concerti": {
+    "prossimi": "Prossimi appuntamenti",
+    "archivio": "Concerti passati",
+    "ingresso": "Ingresso",
+    "biglietti": "Biglietti",
+    "programma": "Programma",
+    "nessunConcerto": "Stiamo definendo le prossime date. Tornate presto."
+  },
+  "cantanti": {
+    "soprano": "Soprano",
+    "contralto": "Contralto",
+    "mezzosoprano": "Mezzosoprano",
+    "tenore": "Tenore",
+    "baritono": "Baritono",
+    "basso": "Basso"
+  },
+  "contatti": {
+    "titolo": "Contatti",
+    "intro": "Per scritturare il quartetto o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
+    "form": {
+      "nome": "Nome e cognome",
+      "ruolo": "Ruolo",
+      "ente": "Ente / festival / parrocchia",
+      "tipo": "Tipo di evento",
+      "tipoLiturgia": "Liturgia",
+      "tipoConcerto": "Concerto",
+      "tipoFestival": "Festival",
+      "tipoAltro": "Altro",
+      "data": "Data prevista",
+      "luogo": "Luogo",
+      "email": "Email",
+      "telefono": "Telefono",
+      "note": "Note",
+      "invia": "Invia richiesta"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Quartetto Vocale. Tutti i diritti riservati.",
+    "lingua": "Lingua"
+  }
+}
