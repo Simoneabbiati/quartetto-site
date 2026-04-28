@@ -18,11 +18,15 @@ const prossimo = concertiFuturi[0];
 
 <Base title="home">
   <!-- HERO -->
-  <section class="container-default py-24 md:py-32 text-center">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-6">Quartetto Vocale</p>
-    <h1 class="font-serif mb-8">Musica sacra<br /><em class="text-accent">e corale</em></h1>
-    <p class="max-w-xl mx-auto text-lg text-ink-soft mb-10">
-      Quattro voci dedicate al repertorio sacro, dalla polifonia rinascimentale alla musica contemporanea.
+  <section class="container-default py-28 md:py-40 text-center">
+    <p class="label-caps mb-8">Quartetto Vocale</p>
+    <h1 class="font-serif mb-6">
+      Musica sacra<br />
+      <em class="text-accent">dalla polifonia al tempo presente</em>
+    </h1>
+    <p class="max-w-2xl mx-auto text-lg text-ink-soft mb-12 leading-loose">
+      Quattro voci nel filo ininterrotto della tradizione sacra —<br class="hidden md:block" />
+      dal canto gregoriano alla musica del nostro tempo.
     </p>
     <div class="flex flex-wrap gap-4 justify-center">
       <a href="/contatti" class="btn-primary">{t('home.ctaBooking')}</a>
@@ -31,14 +35,26 @@ const prossimo = concertiFuturi[0];
   </section>
 
   <div class="divider-ornament">
-    <span class="font-serif italic">✦</span>
+    <span class="font-serif italic text-gold">✦</span>
+  </div>
+
+  <!-- STATEMENT FILOSOFICO -->
+  <section class="container-narrow py-16 md:py-20">
+    <blockquote class="statement">
+      "Non eseguiamo musica antica.<br />
+      Abitiamo una tradizione che non ha smesso di vivere."
+    </blockquote>
+  </section>
+
+  <div class="divider-ornament">
+    <span class="font-serif italic text-gold">✦</span>
   </div>
 
   <!-- PROSSIMO CONCERTO -->
   {
     prossimo && (
       <section class="container-default py-16">
-        <p class="text-sm uppercase tracking-[0.2em] text-ink-muted text-center mb-8">{t('home.prossimoConcerto')}</p>
+        <p class="label-caps text-center mb-8">{t('home.prossimoConcerto')}</p>
         <ConcertoCard concerto={prossimo} variant="compact" />
       </section>
     )

@@ -25,7 +25,7 @@ const formattedDate = dateFormatter.format(data.data);
 <article class="border-b border-ink/10 py-8 last:border-b-0">
   <div class="grid md:grid-cols-[180px_1fr] gap-6">
     <div class="text-sm">
-      <div class="font-serif text-2xl text-accent">{formattedDate}</div>
+      <div class="font-serif text-2xl text-gold">{formattedDate}</div>
       {data.ora && <div class="text-ink-muted mt-1">{data.ora}</div>}
     </div>
 
@@ -38,7 +38,7 @@ const formattedDate = dateFormatter.format(data.data);
       {
         variant === 'full' && data.programma && data.programma.length > 0 && (
           <details class="mb-3">
-            <summary class="text-sm uppercase tracking-wider text-ink-muted cursor-pointer hover:text-accent transition-colors">
+            <summary class="label-caps cursor-pointer hover:text-gold transition-colors">
               {t('concerti.programma')}
             </summary>
             <ul class="mt-3 space-y-1 text-sm text-ink-soft">

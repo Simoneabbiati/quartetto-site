@@ -31,10 +31,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
           return (
             <a
               href={item.href}
-              class:list={[
-                'text-sm tracking-wide uppercase font-medium hover:text-accent transition-colors',
-                isActive ? 'text-accent' : 'text-ink-soft',
-              ]}
+              class:list={['nav-link', isActive && 'active']}
             >
               {item.label}
             </a>

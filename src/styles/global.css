@@ -65,12 +65,42 @@
   }
 
   .divider-ornament {
-    @apply flex items-center justify-center my-12 text-ink-muted;
+    @apply flex items-center justify-center my-12 text-gold;
   }
 
   .divider-ornament::before,
   .divider-ornament::after {
     content: '';
-    @apply flex-1 h-px bg-ink-muted/30 mx-4;
+    @apply flex-1 h-px bg-gold/30 mx-4;
+  }
+
+  /* Etichette in Garamond small caps — sostituisce Inter uppercase ovunque */
+  .label-caps {
+    font-family: theme('fontFamily.serif');
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-feature-settings: 'smcp' 1, 'c2sc' 1;
+    color: theme('colors.ink.muted');
+  }
+
+  /* Statement filosofico centrato */
+  .statement {
+    @apply font-serif italic text-xl md:text-2xl text-ink-soft leading-relaxed text-center;
+    font-feature-settings: 'liga' 1, 'onum' 1;
+  }
+
+  /* Nav link in small caps Garamond */
+  .nav-link {
+    font-family: theme('fontFamily.serif');
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-feature-settings: 'smcp' 1;
+    @apply text-ink-soft hover:text-gold transition-colors duration-200;
+  }
+
+  .nav-link.active {
+    @apply text-accent;
   }
 }

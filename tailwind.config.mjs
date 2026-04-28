@@ -25,6 +25,10 @@ export default {
           DEFAULT: '#7a1c2e', // bordeaux liturgico, usato con parsimonia
           dark: '#5a1422',
         },
+        gold: {
+          DEFAULT: '#b8973e', // oro sacro — candele, manoscritti illuminati
+          light: '#d4b86a',
+        },
       },
       typography: {
         DEFAULT: {
