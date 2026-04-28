@@ -117,7 +117,12 @@
   }
 
   .field-input {
-    @apply mt-2 block w-full border-b border-ink/20 bg-transparent py-2.5 text-ink focus:border-gold focus:outline-none transition-colors duration-200;
+    @apply mt-2 block w-full border-b border-ink/20 bg-transparent py-2.5 text-ink transition-colors duration-200;
+    outline: none;
+  }
+
+  .field-input:focus {
+    border-color: theme('colors.gold.DEFAULT');
   }
 
   .field-input::placeholder { color: theme('colors.ink.muted'); }
