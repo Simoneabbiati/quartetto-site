@@ -20,31 +20,33 @@ const passati = tutti
   .sort((a, b) => b.data.data.getTime() - a.data.data.getTime());
 ---
 
-<Base title="Concerti" description="I prossimi concerti del quartetto e l'archivio degli eventi passati.">
-  <section class="container-default py-20">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.concerti')}</p>
-    <h1 class="font-serif mb-16">{t('concerti.prossimi')}</h1>
+<Base title="Concerti" description="I prossimi concerti di VoxMea e l'archivio degli eventi passati.">
 
-    {
-      prossimi.length === 0 ? (
-        <p class="text-ink-muted italic">{t('concerti.nessunConcerto')}</p>
-      ) : (
-        <div>
-          {prossimi.map((c) => <ConcertoCard concerto={c} />)}
-        </div>
-      )
-    }
-
-    {
-      passati.length > 0 && (
-        <>
-          <div class="divider-ornament mt-24"><span class="font-serif italic">✦</span></div>
-          <h2 class="font-serif mb-12 mt-16">{t('concerti.archivio')}</h2>
-          <div>
-            {passati.map((c) => <ConcertoCard concerto={c} variant="compact" />)}
-          </div>
-        </>
-      )
-    }
+  <!-- Page header -->
+  <section class="container-default pt-20 pb-16" style="border-bottom: 1px solid rgba(26,26,26,0.07)">
+    <p class="label-caps mb-5">{t('nav.concerti')}</p>
+    <h1 class="font-serif">{t('concerti.prossimi')}</h1>
   </section>
+
+  <section class="container-default py-16">
+    {prossimi.length === 0 ? (
+      <p class="text-ink-muted italic py-8">{t('concerti.nessunConcerto')}</p>
+    ) : (
+      <div>
+        {prossimi.map((c) => <ConcertoCard concerto={c} />)}
+      </div>
+    )}
+
+    {passati.length > 0 && (
+      <>
+        <div class="divider-ornament mt-28"><span class="font-serif">✦</span></div>
+        <p class="label-caps mb-5 mt-6">{t('concerti.archivio')}</p>
+        <h2 class="font-serif mb-14">{t('concerti.archivio')}</h2>
+        <div>
+          {passati.map((c) => <ConcertoCard concerto={c} variant="compact" />)}
+        </div>
+      </>
+    )}
+  </section>
+
 </Base>

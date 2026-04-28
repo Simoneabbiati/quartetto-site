@@ -1,6 +1,7 @@
 {
   "site": {
-    "tagline": "Quartetto vocale — musica sacra e corale"
+    "name": "VoxMea",
+    "tagline": "Quattro voci per la tradizione sacra"
   },
   "nav": {
     "quartetto": "Il Quartetto",
@@ -11,7 +12,7 @@
     "pressKit": "Press Kit"
   },
   "home": {
-    "ctaBooking": "Scritturare il quartetto",
+    "ctaBooking": "Scritturare VoxMea",
     "ctaConcerto": "Prossimi concerti",
     "prossimoConcerto": "Prossimo concerto",
     "ascoltaci": "Ascoltaci"
@@ -34,7 +35,7 @@
   },
   "contatti": {
     "titolo": "Contatti",
-    "intro": "Per scritturare il quartetto o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
+    "intro": "Per scritturare VoxMea o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
     "form": {
       "nome": "Nome e cognome",
       "ruolo": "Ruolo",
@@ -53,7 +54,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Quartetto Vocale. Tutti i diritti riservati.",
+    "copyright": "© {year} VoxMea. Tutti i diritti riservati.",
     "lingua": "Lingua"
   }
 }

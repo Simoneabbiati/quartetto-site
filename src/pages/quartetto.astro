@@ -9,68 +9,72 @@ const cantanti = (await getCollection('cantanti', ({ data }) => data.lingua === 
   (a, b) => a.data.ordine - b.data.ordine
 );
 
-// Pagina narrativa "chi siamo" da src/content/pagine/chi-siamo.md (versione IT)
 const pagineChiSiamo = await getCollection('pagine', ({ id, data }) => id === 'chi-siamo.md' && data.lingua === 'it');
 const chiSiamo = pagineChiSiamo[0];
 const Content = chiSiamo ? (await chiSiamo.render()).Content : null;
 ---
 
-<Base title="Il Quartetto" description="Chi siamo: storia e cantanti del quartetto vocale.">
-  <section class="container-narrow py-20">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.quartetto')}</p>
-    <h1 class="font-serif mb-12">{chiSiamo?.data.titolo ?? 'Chi siamo'}</h1>
+<Base title="Il Quartetto" description="Chi siamo: storia e cantanti di VoxMea.">
 
-    {
-      Content ? (
-        <div class="prose prose-lg max-w-none">
-          <Content />
-        </div>
-      ) : (
-        <p class="text-ink-muted italic">Bio del quartetto da scrivere in src/content/pagine/chi-siamo.md</p>
-      )
-    }
+  <!-- Page header -->
+  <section class="container-default pt-20 pb-16" style="border-bottom: 1px solid rgba(26,26,26,0.07)">
+    <p class="label-caps mb-5">{t('nav.quartetto')}</p>
+    <h1 class="font-serif max-w-2xl">{chiSiamo?.data.titolo ?? 'Chi siamo'}</h1>
+    {chiSiamo?.data.sottotitolo && (
+      <p class="text-lg text-ink-soft mt-4 font-serif italic">{chiSiamo.data.sottotitolo}</p>
+    )}
   </section>
 
-  <div class="divider-ornament"><span class="font-serif italic">✦</span></div>
+  <!-- Bio narrativa -->
+  <section class="container-narrow py-16">
+    {Content ? (
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+    ) : (
+      <p class="text-ink-muted italic">Bio del quartetto da scrivere in src/content/pagine/chi-siamo.md</p>
+    )}
+  </section>
 
-  <section class="container-default py-16">
-    <h2 class="font-serif text-center mb-16">I cantanti</h2>
+  <div class="divider-ornament"><span class="font-serif">✦</span></div>
 
-    <div class="grid md:grid-cols-2 gap-12">
-      {
-        cantanti.length > 0 ? (
-          cantanti.map(async (cantante) => {
-            const { Content: BioContent } = await cantante.render();
-            const voceLabel = t(`cantanti.${cantante.data.voce}`);
-            return (
-              <article>
-                {cantante.data.foto && (
-                  <img
-                    src={cantante.data.foto}
-                    alt={cantante.data.nome}
-                    class="w-full aspect-[3/4] object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-700"
-                  />
-                )}
-                <p class="text-xs uppercase tracking-[0.2em] text-accent mb-2">{voceLabel}</p>
-                <h3 class="font-serif text-2xl mb-3">{cantante.data.nome}</h3>
-                <p class="text-ink-soft mb-4">{cantante.data.bioBreve}</p>
-                <details>
-                  <summary class="text-sm uppercase tracking-wider text-ink-muted cursor-pointer hover:text-accent transition-colors">
-                    Biografia
-                  </summary>
-                  <div class="prose prose-sm mt-4 max-w-none">
-                    <BioContent />
-                  </div>
-                </details>
-              </article>
-            );
-          })
-        ) : (
-          <p class="col-span-2 text-center text-ink-muted italic">
-            Schede dei cantanti da creare in src/content/cantanti/
-          </p>
-        )
-      }
+  <!-- Cantanti -->
+  <section class="container-default py-16 pb-28">
+    <p class="label-caps mb-5 text-center">I cantanti</p>
+    <h2 class="font-serif text-center mb-20">Le quattro voci</h2>
+
+    <div class="grid md:grid-cols-2 gap-16">
+      {cantanti.length > 0 ? (
+        cantanti.map(async (cantante) => {
+          const { Content: BioContent } = await cantante.render();
+          const voceLabel = t(`cantanti.${cantante.data.voce}`);
+          return (
+            <article>
+              {cantante.data.foto && (
+                <img
+                  src={cantante.data.foto}
+                  alt={cantante.data.nome}
+                  class="w-full aspect-[3/4] object-cover mb-6 grayscale hover:grayscale-0 transition-all duration-700"
+                />
+              )}
+              <p class="label-caps mb-3" style="color: #b8973e;">{voceLabel}</p>
+              <h3 class="font-serif text-2xl mb-3">{cantante.data.nome}</h3>
+              <p class="text-ink-soft mb-5 leading-relaxed">{cantante.data.bioBreve}</p>
+              <details>
+                <summary class="nav-link cursor-pointer">Biografia completa</summary>
+                <div class="prose prose-sm mt-5 max-w-none">
+                  <BioContent />
+                </div>
+              </details>
+            </article>
+          );
+        })
+      ) : (
+        <p class="col-span-2 text-center text-ink-muted italic">
+          Schede dei cantanti da creare in src/content/cantanti/
+        </p>
+      )}
     </div>
   </section>
+
 </Base>

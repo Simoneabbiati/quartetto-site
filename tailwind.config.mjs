@@ -4,10 +4,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Serif elegante per titoli — adatta al mondo classico/sacro
         serif: ['"EB Garamond"', 'Georgia', 'serif'],
-        // Sans pulita per il corpo del testo
         sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      fontSize: {
+        display: ['clamp(4.5rem, 13vw, 10rem)', { lineHeight: '0.95', letterSpacing: '-0.02em' }],
       },
       colors: {
         // Palette sobria: avorio caldo, inchiostro profondo, accento bordeaux discreto

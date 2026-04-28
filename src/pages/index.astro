@@ -6,7 +6,6 @@ import { useTranslations } from '../i18n/utils';
 
 const t = useTranslations('it');
 
-// Prossimo concerto: il primo evento futuro in lingua italiana
 const oggi = new Date();
 oggi.setHours(0, 0, 0, 0);
 
@@ -17,71 +16,119 @@ const prossimo = concertiFuturi[0];
 ---
 
 <Base title="home">
-  <!-- HERO -->
-  <section class="container-default py-28 md:py-40 text-center">
-    <p class="label-caps mb-8">Quartetto Vocale</p>
-    <h1 class="font-serif mb-6">
-      Musica sacra<br />
-      <em class="text-accent">dalla polifonia al tempo presente</em>
-    </h1>
-    <p class="max-w-2xl mx-auto text-lg text-ink-soft mb-12 leading-loose">
-      Quattro voci nel filo ininterrotto della tradizione sacra —<br class="hidden md:block" />
-      dal canto gregoriano alla musica del nostro tempo.
-    </p>
-    <div class="flex flex-wrap gap-4 justify-center">
-      <a href="/contatti" class="btn-primary">{t('home.ctaBooking')}</a>
-      <a href="/concerti" class="btn-ghost">{t('home.ctaConcerto')}</a>
+
+  <!-- ═══ HERO ═══════════════════════════════════════════════ -->
+  <section class="relative min-h-[100svh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+
+    <!-- Linee decorative di sfondo -->
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute top-[18%] inset-x-0 h-px" style="background: rgba(26,26,26,0.04)"></div>
+      <div class="absolute top-[82%] inset-x-0 h-px" style="background: rgba(26,26,26,0.04)"></div>
+    </div>
+
+    <div class="relative z-10 max-w-5xl mx-auto">
+      <p class="label-caps mb-10" style="color: #b8973e;">Musica Sacra · Quattro Voci</p>
+
+      <h1 class="text-display font-serif mb-8 leading-none tracking-tight">
+        Vox<em class="italic" style="color: #7a1c2e;">Mea</em>
+      </h1>
+
+      <p class="max-w-lg mx-auto text-lg md:text-xl text-ink-soft mb-14 leading-relaxed font-serif italic">
+        Dal canto gregoriano alla musica del nostro tempo —<br class="hidden md:inline" />
+        quattro voci, un millennio di tradizione sacra.
+      </p>
+
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href="/contatti" class="btn-primary">{t('home.ctaBooking')}</a>
+        <a href="/concerti" class="btn-ghost">{t('home.ctaConcerto')}</a>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+      <div class="h-12 w-px" style="background: linear-gradient(to bottom, transparent, rgba(107,107,107,0.5))"></div>
     </div>
   </section>
 
-  <div class="divider-ornament">
-    <span class="font-serif italic text-gold">✦</span>
-  </div>
-
-  <!-- STATEMENT FILOSOFICO -->
-  <section class="container-narrow py-16 md:py-20">
-    <blockquote class="statement">
-      "Non eseguiamo musica antica.<br />
-      Abitiamo una tradizione che non ha smesso di vivere."
-    </blockquote>
+  <!-- ═══ STATEMENT ══════════════════════════════════════════ -->
+  <section class="border-y py-16 md:py-24" style="border-color: rgba(26,26,26,0.07); background-color: #f5f1e8;">
+    <div class="container-narrow text-center">
+      <blockquote class="statement">
+        "Non eseguiamo musica antica.<br />
+        Abitiamo una tradizione che non ha smesso di vivere."
+      </blockquote>
+    </div>
   </section>
 
-  <div class="divider-ornament">
-    <span class="font-serif italic text-gold">✦</span>
-  </div>
+  <!-- ═══ TRE PILASTRI ═══════════════════════════════════════ -->
+  <section class="container-default py-24 md:py-32">
+    <div class="grid md:grid-cols-3 gap-12 md:gap-6">
 
-  <!-- PROSSIMO CONCERTO -->
-  {
-    prossimo && (
-      <section class="container-default py-16">
-        <p class="label-caps text-center mb-8">{t('home.prossimoConcerto')}</p>
-        <ConcertoCard concerto={prossimo} variant="compact" />
-      </section>
-    )
-  }
+      <div class="md:border-l md:pl-8" style="border-color: rgba(26,26,26,0.08)">
+        <p class="label-caps mb-5" style="color: #b8973e;">Polifonia Sacra</p>
+        <h3 class="font-serif text-xl mb-4">Il cuore contrappuntistico</h3>
+        <p class="text-ink-soft text-sm leading-relaxed">
+          Palestrina, Victoria, Tallis, Gibbons — il grande repertorio polifonico rinascimentale: mottetti, responsori, antifone nei loro capolavori più luminosi.
+        </p>
+      </div>
 
-  <!-- ASCOLTACI -->
-  <section class="bg-paper-warm py-20 mt-16">
-    <div class="container-narrow text-center">
-      <h2 class="font-serif mb-6">{t('home.ascoltaci')}</h2>
-      <p class="text-ink-soft mb-8">
-        Un assaggio del nostro repertorio.
-      </p>
-      <!-- Placeholder per embed audio/video — da sostituire con embed YouTube/SoundCloud -->
-      <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
-        <span class="text-sm italic">Embed audio/video qui</span>
+      <div class="md:border-l md:pl-8" style="border-color: rgba(26,26,26,0.08)">
+        <p class="label-caps mb-5" style="color: #b8973e;">Musica del Presente</p>
+        <h3 class="font-serif text-xl mb-4">Il dialogo con il contemporaneo</h3>
+        <p class="text-ink-soft text-sm leading-relaxed">
+          Ola Gjeilo e i compositori del nostro tempo continuano la tradizione sacra in linguaggio nuovo. Passato e presente come un'unica voce ininterrotta.
+        </p>
+      </div>
+
+      <div class="md:border-l md:pl-8" style="border-color: rgba(26,26,26,0.08)">
+        <p class="label-caps mb-5" style="color: #b8973e;">Il Rito come Spazio</p>
+        <h3 class="font-serif text-xl mb-4">Liturgia e concerto</h3>
+        <p class="text-ink-soft text-sm leading-relaxed">
+          Dal gregoriano alle Tenebrae, dal Natale alla Settimana Santa. Il repertorio costruito attorno al calendario liturgico come mappa spirituale dell'anno.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider-ornament"><span class="font-serif">✦</span></div>
+
+  <!-- ═══ PROSSIMO CONCERTO ══════════════════════════════════ -->
+  {prossimo && (
+    <section class="container-default py-20">
+      <p class="label-caps mb-12">{t('home.prossimoConcerto')}</p>
+      <ConcertoCard concerto={prossimo} variant="compact" />
+      <div class="mt-12">
+        <a href="/concerti" class="nav-link inline-flex items-center gap-2">
+          Tutti i concerti <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- ═══ ASCOLTACI ══════════════════════════════════════════ -->
+  <section class="py-24 border-t mt-8" style="border-color: rgba(26,26,26,0.07); background-color: #f5f1e8;">
+    <div class="container-narrow">
+      <p class="label-caps text-center mb-5">{t('home.ascoltaci')}</p>
+      <h2 class="font-serif text-center mb-12">Un assaggio del repertorio</h2>
+      <div class="aspect-video flex items-center justify-center border" style="background: rgba(26,26,26,0.03); border-color: rgba(26,26,26,0.08);">
+        <span class="label-caps">Embed audio · video</span>
       </div>
     </div>
   </section>
 
-  <!-- IDENTITÀ BREVE -->
-  <section class="container-narrow py-20 text-center">
-    <h2 class="font-serif mb-6">Chi siamo</h2>
-    <p class="text-lg text-ink-soft leading-relaxed mb-8">
-      Quattro cantanti uniti dalla passione per la musica sacra. Il nostro repertorio attraversa secoli di tradizione, dalla polifonia rinascimentale ai mottetti barocchi fino al repertorio sacro contemporaneo.
+  <!-- ═══ CHI SIAMO TEASER ════════════════════════════════════ -->
+  <section class="container-narrow py-28 text-center">
+    <p class="label-caps mb-6">Il quartetto</p>
+    <h2 class="font-serif mb-8">Chi siamo</h2>
+    <p class="text-lg text-ink-soft leading-relaxed mb-12 font-serif">
+      Quattro cantanti uniti dalla passione per la musica sacra. Il nostro repertorio attraversa secoli
+      di tradizione — dalla polifonia rinascimentale di Palestrina e Victoria alla musica
+      contemplativa di Ola Gjeilo.
     </p>
-    <a href="/quartetto" class="text-accent hover:text-accent-dark uppercase tracking-wider text-sm font-medium">
-      Scopri il quartetto →
+    <a href="/quartetto" class="nav-link inline-flex items-center gap-2">
+      Scopri il quartetto <span aria-hidden="true">→</span>
     </a>
   </section>
+
 </Base>

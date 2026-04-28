@@ -7,24 +7,39 @@ const prefix = lang === 'it' ? '' : '/en';
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-ink/10 bg-paper-warm mt-24">
-  <div class="container-default py-12 flex flex-col md:flex-row justify-between items-start gap-8">
+<footer class="border-t border-ink/[0.07] bg-paper-warm mt-32">
+  <div class="container-default py-16 grid md:grid-cols-[1fr_auto_auto] gap-12 items-start">
+
+    <!-- Brand -->
     <div>
-      <p class="font-serif text-lg mb-2">Quartetto Vocale</p>
-      <p class="text-sm text-ink-muted max-w-md">{t('site.tagline')}</p>
+      <p class="font-serif text-[1.35rem] tracking-tight leading-none mb-4">
+        Vox<em class="italic" style="color: #7a1c2e;">Mea</em>
+      </p>
+      <p class="text-sm text-ink-soft max-w-xs leading-relaxed">{t('site.tagline')}</p>
     </div>
 
-    <nav class="flex flex-col gap-2 text-sm">
-      <a href={`${prefix}/contatti`} class="hover:text-accent transition-colors">{t('nav.contatti')}</a>
-      <a href="/press-kit/" class="hover:text-accent transition-colors">{t('nav.pressKit')}</a>
-      <!-- Aggiungere social qui quando attivi -->
-      <!-- <a href="https://instagram.com/..." class="hover:text-accent transition-colors">Instagram</a> -->
+    <!-- Esplora -->
+    <nav class="flex flex-col gap-2.5">
+      <p class="label-caps mb-2">Esplora</p>
+      <a href={`${prefix}/quartetto`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.quartetto')}</a>
+      <a href={`${prefix}/repertorio`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.repertorio')}</a>
+      <a href={`${prefix}/concerti`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.concerti')}</a>
+      <a href={`${prefix}/media`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.media')}</a>
     </nav>
+
+    <!-- Contatti -->
+    <div class="flex flex-col gap-2.5">
+      <p class="label-caps mb-2">Contatti</p>
+      <a href={`${prefix}/contatti`} class="text-sm text-ink-soft hover:text-ink transition-colors">Scritturare VoxMea</a>
+      <a href="/press-kit" class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
+    </div>
+
   </div>
 
-  <div class="border-t border-ink/10">
-    <div class="container-default py-4 text-xs text-ink-muted">
-      {t('footer.copyright', { year })}
+  <div class="border-t border-ink/[0.07]">
+    <div class="container-default py-5 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-ink-muted">
+      <span>{t('footer.copyright', { year })}</span>
+      <span class="font-serif italic text-ink-muted/60">Quattro voci — un millennio di tradizione sacra</span>
     </div>
   </div>
 </footer>

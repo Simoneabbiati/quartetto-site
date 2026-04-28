@@ -11,101 +11,124 @@
     background-color: theme('colors.paper.DEFAULT');
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     font-family: theme('fontFamily.serif');
     font-weight: 500;
     letter-spacing: -0.01em;
     color: theme('colors.ink.DEFAULT');
   }
 
-  h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl leading-tight;
-  }
-  h2 {
-    @apply text-3xl md:text-4xl leading-tight;
-  }
-  h3 {
-    @apply text-2xl md:text-3xl;
-  }
+  h1 { @apply text-4xl md:text-5xl lg:text-6xl leading-tight; }
+  h2 { @apply text-3xl md:text-4xl leading-tight; }
+  h3 { @apply text-2xl md:text-3xl; }
 
-  p {
-    @apply leading-relaxed;
-  }
+  p { @apply leading-relaxed; }
 
-  a {
-    @apply transition-colors duration-200;
-  }
+  a { @apply transition-colors duration-200; text-underline-offset: 3px; }
 
   ::selection {
-    background-color: theme('colors.accent.DEFAULT');
+    background-color: theme('colors.gold.DEFAULT');
     color: theme('colors.paper.DEFAULT');
   }
 }
 
 @layer components {
-  .container-narrow {
-    @apply mx-auto max-w-3xl px-6;
-  }
+  .container-narrow  { @apply mx-auto max-w-3xl px-6; }
+  .container-default { @apply mx-auto max-w-5xl px-6; }
 
-  .container-default {
-    @apply mx-auto max-w-5xl px-6;
-  }
-
+  /* ─── Buttons ─────────────────────────────────────────── */
   .btn-primary {
-    @apply inline-block px-6 py-3 bg-ink text-paper font-medium tracking-wide uppercase text-sm hover:bg-accent transition-colors duration-300;
+    @apply inline-block px-7 py-3.5 bg-ink text-paper font-medium tracking-widest uppercase text-xs hover:bg-accent transition-colors duration-300;
+    font-family: theme('fontFamily.serif');
+    font-feature-settings: 'smcp' 1;
   }
 
   .btn-ghost {
-    @apply inline-block px-6 py-3 border border-ink text-ink font-medium tracking-wide uppercase text-sm hover:bg-ink hover:text-paper transition-colors duration-300;
+    @apply inline-block px-7 py-3.5 border border-ink text-ink font-medium tracking-widest uppercase text-xs hover:bg-ink hover:text-paper transition-colors duration-300;
+    font-family: theme('fontFamily.serif');
+    font-feature-settings: 'smcp' 1;
   }
 
+  /* ─── Labels & Eyebrows ───────────────────────────────── */
+  .label-caps {
+    display: block;
+    font-family: theme('fontFamily.serif');
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-feature-settings: 'smcp' 1, 'c2sc' 1;
+    color: theme('colors.ink.muted');
+  }
+
+  /* ─── Decorative dividers ─────────────────────────────── */
   .divider-ornament {
-    @apply flex items-center justify-center my-12;
+    @apply flex items-center justify-center my-16;
     color: theme('colors.gold.DEFAULT');
   }
 
   .divider-ornament::before,
   .divider-ornament::after {
     content: '';
-    @apply flex-1 h-px mx-4;
-    background-color: rgba(184, 151, 62, 0.3);
+    @apply flex-1 h-px mx-6;
+    background-color: rgba(184, 151, 62, 0.25);
   }
 
-  /* Etichette in Garamond small caps — sostituisce Inter uppercase ovunque */
-  .label-caps {
-    font-family: theme('fontFamily.serif');
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-feature-settings: 'smcp' 1, 'c2sc' 1;
-    color: theme('colors.ink.muted');
-  }
-
-  /* Statement filosofico centrato */
+  /* ─── Philosophical statement ─────────────────────────── */
   .statement {
-    @apply font-serif italic text-xl md:text-2xl text-ink-soft leading-relaxed text-center;
+    @apply font-serif italic text-2xl md:text-3xl text-ink-soft leading-relaxed text-center;
     font-feature-settings: 'liga' 1, 'onum' 1;
   }
 
-  /* Nav link in small caps Garamond */
+  /* ─── Navigation links (Garamond small caps) ──────────── */
   .nav-link {
     font-family: theme('fontFamily.serif');
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     font-feature-settings: 'smcp' 1;
     @apply text-ink-soft transition-colors duration-200;
   }
+
   .nav-link:hover {
     color: theme('colors.gold.DEFAULT');
   }
 
   .nav-link.active {
     @apply text-accent;
+  }
+
+  /* ─── Page header section ─────────────────────────────── */
+  .page-header {
+    @apply container-default pt-20 pb-16;
+    border-bottom: 1px solid theme('colors.ink.DEFAULT' / 8%);
+  }
+
+  /* ─── Form fields ─────────────────────────────────────── */
+  .field-label {
+    font-family: theme('fontFamily.serif');
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-feature-settings: 'smcp' 1;
+    @apply text-ink-soft;
+  }
+
+  .field-input {
+    @apply mt-2 block w-full border-b border-ink/20 bg-transparent py-2.5 text-ink focus:border-gold focus:outline-none transition-colors duration-200;
+  }
+
+  .field-input::placeholder { color: theme('colors.ink.muted'); }
+
+  /* ─── Prose overrides ─────────────────────────────────── */
+  .prose {
+    --tw-prose-body: theme('colors.ink.soft');
+    --tw-prose-headings: theme('colors.ink.DEFAULT');
+    --tw-prose-links: theme('colors.accent.DEFAULT');
+    font-family: theme('fontFamily.serif');
+    font-size: 1.05rem;
+    line-height: 1.75;
   }
 }

@@ -4,36 +4,40 @@ import { useTranslations } from '../i18n/utils';
 
 const t = useTranslations('it');
 
-// ⚠️ Sostituire con il proprio endpoint Formspree dopo la registrazione
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 ---
 
-<Base title="Contatti" description="Contatta il quartetto vocale per scritturare un concerto o una liturgia.">
-  <section class="container-narrow py-20">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.contatti')}</p>
-    <h1 class="font-serif mb-6">{t('contatti.titolo')}</h1>
-    <p class="text-lg text-ink-soft mb-12">{t('contatti.intro')}</p>
+<Base title="Contatti" description="Contatta VoxMea per scritturare un concerto o una liturgia.">
 
-    <form action={FORMSPREE_ENDPOINT} method="POST" class="space-y-6">
-      <div class="grid md:grid-cols-2 gap-6">
+  <!-- Page header -->
+  <section class="container-default pt-20 pb-16" style="border-bottom: 1px solid rgba(26,26,26,0.07)">
+    <p class="label-caps mb-5">{t('nav.contatti')}</p>
+    <h1 class="font-serif">{t('contatti.titolo')}</h1>
+    <p class="text-lg text-ink-soft mt-4 font-serif italic max-w-xl">{t('contatti.intro')}</p>
+  </section>
+
+  <section class="container-narrow py-16 pb-28">
+    <form action={FORMSPREE_ENDPOINT} method="POST" class="space-y-8">
+
+      <div class="grid md:grid-cols-2 gap-8">
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.nome')} *</span>
-          <input type="text" name="nome" required class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.nome')} *</span>
+          <input type="text" name="nome" required class="field-input" />
         </label>
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.ruolo')}</span>
-          <input type="text" name="ruolo" class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.ruolo')}</span>
+          <input type="text" name="ruolo" class="field-input" />
         </label>
       </div>
 
       <label class="block">
-        <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.ente')}</span>
-        <input type="text" name="ente" class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+        <span class="field-label">{t('contatti.form.ente')}</span>
+        <input type="text" name="ente" class="field-input" />
       </label>
 
       <label class="block">
-        <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.tipo')} *</span>
-        <select name="tipo" required class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none">
+        <span class="field-label">{t('contatti.form.tipo')} *</span>
+        <select name="tipo" required class="field-input">
           <option value="liturgia">{t('contatti.form.tipoLiturgia')}</option>
           <option value="concerto">{t('contatti.form.tipoConcerto')}</option>
           <option value="festival">{t('contatti.form.tipoFestival')}</option>
@@ -41,39 +45,40 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
         </select>
       </label>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-8">
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.data')}</span>
-          <input type="date" name="data" class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.data')}</span>
+          <input type="date" name="data" class="field-input" />
         </label>
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.luogo')}</span>
-          <input type="text" name="luogo" class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.luogo')}</span>
+          <input type="text" name="luogo" class="field-input" />
         </label>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-8">
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.email')} *</span>
-          <input type="email" name="email" required class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.email')} *</span>
+          <input type="email" name="email" required class="field-input" />
         </label>
         <label class="block">
-          <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.telefono')}</span>
-          <input type="tel" name="telefono" class="mt-2 block w-full border-b border-ink/30 bg-transparent py-2 focus:border-accent focus:outline-none" />
+          <span class="field-label">{t('contatti.form.telefono')}</span>
+          <input type="tel" name="telefono" class="field-input" />
         </label>
       </div>
 
       <label class="block">
-        <span class="text-sm uppercase tracking-wider text-ink-soft">{t('contatti.form.note')}</span>
-        <textarea name="note" rows="4" class="mt-2 block w-full border border-ink/30 bg-transparent p-3 focus:border-accent focus:outline-none"></textarea>
+        <span class="field-label">{t('contatti.form.note')}</span>
+        <textarea name="note" rows="5" class="field-input resize-none" style="border: 1px solid rgba(26,26,26,0.15); padding: 0.75rem;"></textarea>
       </label>
 
-      <!-- Honeypot anti-spam -->
       <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
-      <div class="pt-4">
+      <div class="pt-2">
         <button type="submit" class="btn-primary">{t('contatti.form.invia')}</button>
       </div>
+
     </form>
   </section>
+
 </Base>

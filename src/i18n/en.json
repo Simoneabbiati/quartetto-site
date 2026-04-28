@@ -1,6 +1,7 @@
 {
   "site": {
-    "tagline": "Vocal quartet — sacred and choral music"
+    "name": "VoxMea",
+    "tagline": "Four voices for the sacred tradition"
   },
   "nav": {
     "quartetto": "The Ensemble",
@@ -11,7 +12,7 @@
     "pressKit": "Press Kit"
   },
   "home": {
-    "ctaBooking": "Book the ensemble",
+    "ctaBooking": "Book VoxMea",
     "ctaConcerto": "Upcoming concerts",
     "prossimoConcerto": "Next concert",
     "ascoltaci": "Listen"
@@ -34,7 +35,7 @@
   },
   "contatti": {
     "titolo": "Contact",
-    "intro": "To book the ensemble or request further information, please use the form below.",
+    "intro": "To book VoxMea or request further information, please use the form below.",
     "form": {
       "nome": "Full name",
       "ruolo": "Role",
@@ -53,7 +54,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Vocal Quartet. All rights reserved.",
+    "copyright": "© {year} VoxMea. All rights reserved.",
     "lingua": "Language"
   }
 }

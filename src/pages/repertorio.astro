@@ -10,19 +10,25 @@ const repertorio = pagine[0];
 const Content = repertorio ? (await repertorio.render()).Content : null;
 ---
 
-<Base title="Repertorio" description="Il repertorio del quartetto vocale.">
-  <section class="container-narrow py-20">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.repertorio')}</p>
-    <h1 class="font-serif mb-12">{repertorio?.data.titolo ?? 'Repertorio'}</h1>
+<Base title="Repertorio" description="Il repertorio di VoxMea — dalla polifonia rinascimentale alla musica sacra contemporanea.">
 
-    {
-      Content ? (
-        <div class="prose prose-lg max-w-none">
-          <Content />
-        </div>
-      ) : (
-        <p class="text-ink-muted italic">Pagina repertorio da scrivere in src/content/pagine/repertorio.md</p>
-      )
-    }
+  <!-- Page header -->
+  <section class="container-default pt-20 pb-16" style="border-bottom: 1px solid rgba(26,26,26,0.07)">
+    <p class="label-caps mb-5">{t('nav.repertorio')}</p>
+    <h1 class="font-serif">{repertorio?.data.titolo ?? 'Repertorio'}</h1>
+    <p class="text-lg text-ink-soft mt-4 font-serif italic max-w-xl">
+      Dal canto gregoriano alla musica del nostro tempo — un repertorio costruito attorno alla tradizione sacra vivente.
+    </p>
   </section>
+
+  <section class="container-narrow py-16 pb-28">
+    {Content ? (
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+    ) : (
+      <p class="text-ink-muted italic py-8">Pagina repertorio da scrivere in src/content/pagine/repertorio.md</p>
+    )}
+  </section>
+
 </Base>

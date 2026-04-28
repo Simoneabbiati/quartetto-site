@@ -15,7 +15,7 @@ const { title, description, ogImage = '/images/og-default.jpg' } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const fullTitle = title === 'home' ? `Quartetto Vocale — ${t('site.tagline')}` : `${title} · Quartetto Vocale`;
+const fullTitle = title === 'home' ? `VoxMea — ${t('site.tagline')}` : `${title} · VoxMea`;
 const metaDescription = description ?? t('site.tagline');
 ---
 
