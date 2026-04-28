@@ -22,8 +22,8 @@ export default {
           dark: '#ddd4ba',
         },
         accent: {
-          DEFAULT: '#6e1b2a', // bordeaux profondo e saturo
-          dark: '#4e1220',
+          DEFAULT: '#4a6f8a', // blu polvere sacro — alba nell'abside, lapis lazuli
+          dark: '#33516a',
         },
         gold: {
           DEFAULT: '#a87e18', // oro antico — manoscritti illuminati
