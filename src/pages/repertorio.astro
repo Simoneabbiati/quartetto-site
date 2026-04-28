@@ -73,21 +73,21 @@ const periodi = [
 ];
 
 const tagColors: Record<string, string> = {
-  'Natale':       'rgba(110,27,42,0.08)',
-  'Mariano':      'rgba(168,126,24,0.12)',
-  'Quaresima':    'rgba(58,48,40,0.07)',
-  'Settimana Santa': 'rgba(58,48,40,0.07)',
-  'Tenebrae':     'rgba(58,48,40,0.07)',
-  'Liturgico':    'rgba(58,48,40,0.06)',
-  'Spiritualità': 'rgba(168,126,24,0.10)',
-  'Contemplazione': 'rgba(168,126,24,0.10)',
+  'Natale':          'rgba(168,126,24,0.13)',
+  'Mariano':         'rgba(61,107,138,0.10)',
+  'Quaresima':       'rgba(26,37,53,0.07)',
+  'Settimana Santa': 'rgba(26,37,53,0.07)',
+  'Tenebrae':        'rgba(26,37,53,0.07)',
+  'Liturgico':       'rgba(26,37,53,0.06)',
+  'Spiritualità':    'rgba(61,107,138,0.10)',
+  'Contemplazione':  'rgba(61,107,138,0.10)',
 };
 ---
 
 <Base title="Repertorio" description="Il repertorio di VoxMea — dalla polifonia rinascimentale alla musica sacra contemporanea.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(28,20,16,0.07)">
+  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(26,37,53,0.07)">
     <p class="label-caps mb-4">{t('nav.repertorio')}</p>
     <h1 class="font-serif max-w-xl">Il repertorio</h1>
     <p class="text-base text-ink-soft mt-3 font-serif italic max-w-lg">
@@ -114,18 +114,18 @@ const tagColors: Record<string, string> = {
           {periodo.brani.map((brano, i) => (
             <div
               class="grid md:grid-cols-[1fr_auto] gap-2 py-3.5 items-baseline"
-              style={`border-bottom: 1px solid rgba(28,20,16,${i === periodo.brani.length - 1 ? '0' : '0.06'})`}
+              style={`border-bottom: 1px solid rgba(26,37,53,${i === periodo.brani.length - 1 ? '0' : '0.06'})`}
             >
               <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                 <span class="font-serif text-[1.05rem]">{brano.titolo}</span>
                 <span class="text-sm text-ink-muted">{brano.autore}</span>
               </div>
               <div class="flex items-center gap-2 flex-wrap md:justify-end">
-                <span class="label-caps text-[0.65rem]" style="color: rgba(122,110,100,0.9)">{brano.periodo}</span>
+                <span class="label-caps text-[0.65rem]" style="color: rgba(112,136,165,0.9)">{brano.periodo}</span>
                 {brano.tags.slice(0, 2).map(tag => (
                   <span
                     class="text-[0.65rem] font-serif italic px-2 py-0.5 rounded-sm"
-                    style={`background: ${tagColors[tag] ?? 'rgba(58,48,40,0.06)'}; color: #3a3028`}
+                    style={`background: ${tagColors[tag] ?? 'rgba(26,37,53,0.06)'}; color: #354a65`}
                   >
                     {tag}
                   </span>
@@ -140,7 +140,7 @@ const tagColors: Record<string, string> = {
   </div>
 
   <!-- Footer note -->
-  <section class="border-t py-10" style="border-color: rgba(28,20,16,0.07); background-color: #e8dfcc;">
+  <section class="border-t py-10" style="border-color: rgba(26,37,53,0.08); background-color: #e5ecf4;">
     <div class="container-narrow text-center">
       <p class="text-sm text-ink-muted font-serif italic">
         Il repertorio è in continua evoluzione. Per programmi personalizzati su liturgia, concerto o festival,

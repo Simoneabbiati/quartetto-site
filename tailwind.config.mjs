@@ -12,29 +12,29 @@ export default {
       },
       colors: {
         ink: {
-          DEFAULT: '#1c1410', // nero-seppia, come l'inchiostro antico
-          soft: '#3a3028',
-          muted: '#7a6e64',
+          DEFAULT: '#1a2535', // blu-carbone profondo
+          soft:    '#354a65',
+          muted:   '#7088a5',
         },
         paper: {
-          DEFAULT: '#f2ece0', // pergamena ricca
-          warm: '#e8dfcc',   // vellum antico
-          dark: '#ddd4ba',
+          DEFAULT: '#f3f1ee', // bianco neutro, quasi impercettibile
+          warm:    '#e5ecf4', // blu-grigio pallido — luce sull'abside
+          dark:    '#d2dde9',
         },
         accent: {
-          DEFAULT: '#4a6f8a', // blu polvere sacro — alba nell'abside, lapis lazuli
-          dark: '#33516a',
+          DEFAULT: '#3d6b8a', // lapis lazuli
+          dark:    '#2a4f6a',
         },
         gold: {
-          DEFAULT: '#a87e18', // oro antico — manoscritti illuminati
-          light: '#c9a03e',
+          DEFAULT: '#a87e18', // oro antico — contrappunto caldo
+          light:   '#c9a03e',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '65ch',
-            color: '#3a3028',
+            color: '#354a65',
           },
         },
       },

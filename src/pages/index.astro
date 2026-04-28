@@ -20,14 +20,14 @@ const prossimo = concertiFuturi[0];
   <!-- ═══ HERO ═══════════════════════════════════════════════ -->
   <section class="relative min-h-[82svh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-      <div class="absolute top-[20%] inset-x-0 h-px" style="background: rgba(28,20,16,0.05)"></div>
-      <div class="absolute top-[80%] inset-x-0 h-px" style="background: rgba(28,20,16,0.05)"></div>
+      <div class="absolute top-[20%] inset-x-0 h-px" style="background: rgba(26,37,53,0.05)"></div>
+      <div class="absolute top-[80%] inset-x-0 h-px" style="background: rgba(26,37,53,0.05)"></div>
     </div>
 
     <div class="relative z-10 max-w-4xl mx-auto">
       <p class="label-caps mb-8" style="color: #a87e18;">Musica Sacra · Quattro Voci</p>
       <h1 class="text-display font-serif mb-6 leading-none tracking-tight">
-        Vox<em class="italic" style="color: #4a6f8a;">Mea</em>
+        Vox<em class="italic" style="color: #3d6b8a;">Mea</em>
       </h1>
       <p class="max-w-md mx-auto text-lg text-ink-soft mb-10 leading-relaxed font-serif italic">
         Dal canto gregoriano alla musica del nostro tempo —<br class="hidden md:inline" />
@@ -40,12 +40,12 @@ const prossimo = concertiFuturi[0];
     </div>
 
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
-      <div class="h-10 w-px" style="background: linear-gradient(to bottom, transparent, rgba(122,110,100,0.5))"></div>
+      <div class="h-10 w-px" style="background: linear-gradient(to bottom, transparent, rgba(112,136,165,0.5))"></div>
     </div>
   </section>
 
   <!-- ═══ STATEMENT ══════════════════════════════════════════ -->
-  <section class="border-y py-12 md:py-16" style="border-color: rgba(28,20,16,0.07); background-color: #e8dfcc;">
+  <section class="border-y py-12 md:py-14" style="border-color: rgba(26,37,53,0.08); background-color: #e5ecf4;">
     <div class="container-narrow text-center">
       <blockquote class="statement">
         "Non eseguiamo musica antica.<br />
@@ -56,7 +56,7 @@ const prossimo = concertiFuturi[0];
 
   <!-- ═══ PROSSIMO CONCERTO ══════════════════════════════════ -->
   {prossimo && (
-    <section class="container-default pb-16">
+    <section class="container-default pt-14 pb-12">
       <p class="label-caps mb-8">{t('home.prossimoConcerto')}</p>
       <ConcertoCard concerto={prossimo} variant="compact" />
       <div class="mt-8">
@@ -68,20 +68,20 @@ const prossimo = concertiFuturi[0];
   )}
 
   <!-- ═══ ASCOLTACI ══════════════════════════════════════════ -->
-  <section class="py-16 border-t mt-4" style="border-color: rgba(28,20,16,0.07); background-color: #e8dfcc;">
+  <section class="py-14 border-t" style="border-color: rgba(26,37,53,0.08); background-color: #e5ecf4;">
     <div class="container-narrow">
       <p class="label-caps text-center mb-4">{t('home.ascoltaci')}</p>
       <h2 class="font-serif text-center mb-8">Un assaggio del repertorio</h2>
-      <div class="aspect-video flex items-center justify-center border" style="background: rgba(28,20,16,0.03); border-color: rgba(28,20,16,0.08);">
+      <div class="aspect-video flex items-center justify-center border" style="background: rgba(26,37,53,0.03); border-color: rgba(26,37,53,0.1);">
         <span class="label-caps">Embed audio · video</span>
       </div>
     </div>
   </section>
 
   <!-- ═══ CHI SIAMO TEASER ════════════════════════════════════ -->
-  <section class="container-narrow py-20 text-center">
-    <p class="label-caps mb-5">Il quartetto</p>
-    <h2 class="font-serif mb-6">Chi siamo</h2>
+  <section class="container-narrow py-16 text-center">
+    <p class="label-caps mb-4">Il quartetto</p>
+    <h2 class="font-serif mb-5">Chi siamo</h2>
     <p class="text-lg text-ink-soft leading-relaxed mb-8 font-serif">
       Quattro cantanti uniti dalla passione per la musica sacra. Il nostro repertorio attraversa secoli
       di tradizione — dalla polifonia rinascimentale di Palestrina e Victoria alla musica
