@@ -1,11 +1,9 @@
 ---
-nome: "Nome Cognome"
+nome: "Valentina Oriani"
 voce: soprano
-bioBreve: "Soprano, formata al Conservatorio di [...] e specializzata in repertorio sacro rinascimentale."
+bioBreve: "Soprano, specializzata in repertorio sacro rinascimentale e musica da camera vocale."
 ordine: 1
 lingua: it
 ---
 
-Bio estesa del soprano. Studi, esperienze principali, collaborazioni rilevanti, eventuale attività didattica o di ricerca.
-
-*Testo provvisorio.*
+Bio estesa di Valentina Oriani. *Da completare.*

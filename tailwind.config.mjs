@@ -8,34 +8,33 @@ export default {
         sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       fontSize: {
-        display: ['clamp(4.5rem, 13vw, 10rem)', { lineHeight: '0.95', letterSpacing: '-0.02em' }],
+        display: ['clamp(4rem, 12vw, 9rem)', { lineHeight: '0.95', letterSpacing: '-0.02em' }],
       },
       colors: {
-        // Palette sobria: avorio caldo, inchiostro profondo, accento bordeaux discreto
         ink: {
-          DEFAULT: '#1a1a1a',
-          soft: '#3a3a3a',
-          muted: '#6b6b6b',
+          DEFAULT: '#1c1410', // nero-seppia, come l'inchiostro antico
+          soft: '#3a3028',
+          muted: '#7a6e64',
         },
         paper: {
-          DEFAULT: '#fbf9f4', // avorio
-          warm: '#f5f1e8',
-          dark: '#ebe6d9',
+          DEFAULT: '#f2ece0', // pergamena ricca
+          warm: '#e8dfcc',   // vellum antico
+          dark: '#ddd4ba',
         },
         accent: {
-          DEFAULT: '#7a1c2e', // bordeaux liturgico, usato con parsimonia
-          dark: '#5a1422',
+          DEFAULT: '#6e1b2a', // bordeaux profondo e saturo
+          dark: '#4e1220',
         },
         gold: {
-          DEFAULT: '#b8973e', // oro sacro — candele, manoscritti illuminati
-          light: '#d4b86a',
+          DEFAULT: '#a87e18', // oro antico — manoscritti illuminati
+          light: '#c9a03e',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '65ch',
-            color: '#1a1a1a',
+            color: '#3a3028',
           },
         },
       },

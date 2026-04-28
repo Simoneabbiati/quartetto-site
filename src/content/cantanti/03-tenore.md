@@ -1,9 +1,9 @@
 ---
-nome: "Nome Cognome"
+nome: "Giovanni De Luca"
 voce: tenore
-bioBreve: "Tenore, specializzato in polifonia rinascimentale e repertorio barocco."
-ordine: 3
+bioBreve: "Tenore, specializzato in polifonia rinascimentale e repertorio sacro."
+ordine: 2
 lingua: it
 ---
 
-Bio estesa del tenore. *Testo provvisorio.*
+Bio estesa di Giovanni De Luca. *Da completare.*

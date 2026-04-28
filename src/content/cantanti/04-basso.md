@@ -1,9 +1,9 @@
 ---
-nome: "Nome Cognome"
+nome: "Placeholder"
 voce: basso
-bioBreve: "Basso, attivo nel repertorio sacro dalla polifonia al contemporaneo."
-ordine: 4
-lingua: it
+bioBreve: "Da completare."
+ordine: 99
+lingua: en
 ---
 
-Bio estesa del basso. *Testo provvisorio.*
+Da completare.

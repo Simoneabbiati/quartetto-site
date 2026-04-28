@@ -1,9 +1,9 @@
 ---
-nome: "Nome Cognome"
-voce: contralto
-bioBreve: "Contralto, attiva nel repertorio sacro e cameristico."
-ordine: 2
+nome: "Simone Abbiati"
+voce: baritono
+bioBreve: "Baritono, attivo nel repertorio sacro dalla polifonia rinascimentale alla musica contemporanea."
+ordine: 3
 lingua: it
 ---
 
-Bio estesa del contralto. *Testo provvisorio.*
+Bio estesa di Simone Abbiati. *Da completare.*

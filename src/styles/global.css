@@ -65,7 +65,7 @@
 
   /* ─── Decorative dividers ─────────────────────────────── */
   .divider-ornament {
-    @apply flex items-center justify-center my-16;
+    @apply flex items-center justify-center my-10;
     color: theme('colors.gold.DEFAULT');
   }
 
