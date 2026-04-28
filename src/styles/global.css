@@ -30,7 +30,7 @@
   a { @apply transition-colors duration-200; text-underline-offset: 3px; }
 
   ::selection {
-    background-color: theme('colors.gold.DEFAULT');
+    background-color: theme('colors.accent.DEFAULT');
     color: theme('colors.paper.DEFAULT');
   }
 }
@@ -52,7 +52,7 @@
     font-feature-settings: 'smcp' 1;
   }
 
-  /* ─── Labels & Eyebrows ───────────────────────────────── */
+  /* ─── Labels ──────────────────────────────────────────── */
   .label-caps {
     display: block;
     font-family: theme('fontFamily.serif');
@@ -63,26 +63,26 @@
     color: theme('colors.ink.muted');
   }
 
-  /* ─── Decorative dividers ─────────────────────────────── */
+  /* ─── Dividers ────────────────────────────────────────── */
   .divider-ornament {
     @apply flex items-center justify-center my-10;
-    color: theme('colors.gold.DEFAULT');
+    color: theme('colors.ink.muted');
   }
 
   .divider-ornament::before,
   .divider-ornament::after {
     content: '';
     @apply flex-1 h-px mx-6;
-    background-color: rgba(184, 151, 62, 0.25);
+    background-color: rgba(112, 136, 165, 0.25);
   }
 
-  /* ─── Philosophical statement ─────────────────────────── */
+  /* ─── Statement ───────────────────────────────────────── */
   .statement {
     @apply font-serif italic text-2xl md:text-3xl text-ink-soft leading-relaxed text-center;
     font-feature-settings: 'liga' 1, 'onum' 1;
   }
 
-  /* ─── Navigation links (Garamond small caps) ──────────── */
+  /* ─── Nav links ───────────────────────────────────────── */
   .nav-link {
     font-family: theme('fontFamily.serif');
     font-size: 0.72rem;
@@ -92,19 +92,8 @@
     @apply text-ink-soft transition-colors duration-200;
   }
 
-  .nav-link:hover {
-    color: theme('colors.gold.DEFAULT');
-  }
-
-  .nav-link.active {
-    @apply text-accent;
-  }
-
-  /* ─── Page header section ─────────────────────────────── */
-  .page-header {
-    @apply container-default pt-20 pb-16;
-    border-bottom: 1px solid theme('colors.ink.DEFAULT' / 8%);
-  }
+  .nav-link:hover { color: theme('colors.accent.DEFAULT'); }
+  .nav-link.active { color: theme('colors.accent.DEFAULT'); }
 
   /* ─── Form fields ─────────────────────────────────────── */
   .field-label {
@@ -121,13 +110,9 @@
     outline: none;
   }
 
-  .field-input:focus {
-    border-color: theme('colors.gold.DEFAULT');
-  }
+  .field-input:focus { border-color: theme('colors.accent.DEFAULT'); }
 
-  .field-input::placeholder { color: theme('colors.ink.muted'); }
-
-  /* ─── Prose overrides ─────────────────────────────────── */
+  /* ─── Prose ───────────────────────────────────────────── */
   .prose {
     --tw-prose-body: theme('colors.ink.soft');
     --tw-prose-headings: theme('colors.ink.DEFAULT');

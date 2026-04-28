@@ -12,22 +12,18 @@ export default {
       },
       colors: {
         ink: {
-          DEFAULT: '#1a2535', // blu-carbone profondo
+          DEFAULT: '#1a2535',
           soft:    '#354a65',
           muted:   '#7088a5',
         },
         paper: {
-          DEFAULT: '#f3f1ee', // bianco neutro, quasi impercettibile
-          warm:    '#e5ecf4', // blu-grigio pallido — luce sull'abside
+          DEFAULT: '#f3f1ee',
+          warm:    '#e5ecf4',
           dark:    '#d2dde9',
         },
         accent: {
-          DEFAULT: '#3d6b8a', // lapis lazuli
+          DEFAULT: '#3d6b8a',
           dark:    '#2a4f6a',
-        },
-        gold: {
-          DEFAULT: '#a87e18', // oro antico — contrappunto caldo
-          light:   '#c9a03e',
         },
       },
       typography: {
