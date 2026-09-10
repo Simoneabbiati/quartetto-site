@@ -13,7 +13,7 @@ const year = new Date().getFullYear();
     <!-- Brand -->
     <div>
       <p class="font-serif text-[1.35rem] tracking-tight leading-none mb-4">
-        Vox<em class="italic" style="color: #4a6f8a;">Mea</em>
+        {t('site.name')}
       </p>
       <p class="text-sm text-ink-soft max-w-xs leading-relaxed">{t('site.tagline')}</p>
     </div>
@@ -30,7 +30,7 @@ const year = new Date().getFullYear();
     <!-- Contatti -->
     <div class="flex flex-col gap-2.5">
       <p class="label-caps mb-2">Contatti</p>
-      <a href={withBase(`${prefix}/contatti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">Scritturare VoxMea</a>
+      <a href={withBase(`${prefix}/contatti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('home.ctaBooking')}</a>
       <a href={withBase('/press-kit')} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
     </div>
 

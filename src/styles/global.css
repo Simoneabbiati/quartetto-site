@@ -39,17 +39,47 @@
   .container-narrow  { @apply mx-auto max-w-3xl px-6; }
   .container-default { @apply mx-auto max-w-5xl px-6; }
 
-  /* ─── Buttons ─────────────────────────────────────────── */
-  .btn-primary {
-    @apply inline-block px-7 py-3.5 bg-ink text-paper font-medium tracking-widest uppercase text-xs hover:bg-accent transition-colors duration-300;
+  /* ─── Buttons (shadcn-style: subtle lift, press feedback, focus ring) ─── */
+  .btn-primary,
+  .btn-ghost {
+    @apply relative inline-flex items-center justify-center px-7 py-3.5 font-medium tracking-widest uppercase text-xs;
     font-family: theme('fontFamily.serif');
     font-feature-settings: 'smcp' 1;
+    transition: background-color 0.25s ease, color 0.25s ease,
+                transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+    will-change: transform;
+  }
+
+  .btn-primary {
+    @apply bg-ink text-paper;
+    box-shadow: 0 1px 2px rgba(19, 28, 41, 0.12);
+  }
+  .btn-primary:hover {
+    @apply bg-accent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(19, 28, 41, 0.18);
   }
 
   .btn-ghost {
-    @apply inline-block px-7 py-3.5 border border-ink text-ink font-medium tracking-widest uppercase text-xs hover:bg-ink hover:text-paper transition-colors duration-300;
-    font-family: theme('fontFamily.serif');
-    font-feature-settings: 'smcp' 1;
+    @apply border border-ink text-ink;
+  }
+  .btn-ghost:hover {
+    @apply bg-ink text-paper;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(19, 28, 41, 0.15);
+  }
+
+  /* Press feedback + keyboard focus ring (shared) */
+  .btn-primary:active,
+  .btn-ghost:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(19, 28, 41, 0.12);
+  }
+  .btn-primary:focus-visible,
+  .btn-ghost:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px theme('colors.paper.DEFAULT'),
+                0 0 0 4px theme('colors.accent.DEFAULT');
   }
 
   /* ─── Labels ──────────────────────────────────────────── */
@@ -82,8 +112,9 @@
     font-feature-settings: 'liga' 1, 'onum' 1;
   }
 
-  /* ─── Nav links ───────────────────────────────────────── */
+  /* ─── Nav links (minimal animated underline) ──────────── */
   .nav-link {
+    position: relative;
     font-family: theme('fontFamily.serif');
     font-size: 0.72rem;
     letter-spacing: 0.18em;
@@ -92,8 +123,23 @@
     @apply text-ink-soft transition-colors duration-200;
   }
 
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.35em;
+    height: 1px;
+    width: 100%;
+    background-color: theme('colors.accent.DEFAULT');
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   .nav-link:hover { color: theme('colors.accent.DEFAULT'); }
   .nav-link.active { color: theme('colors.accent.DEFAULT'); }
+  .nav-link:hover::after,
+  .nav-link.active::after { transform: scaleX(1); }
 
   /* ─── Form fields ─────────────────────────────────────── */
   .field-label {
@@ -121,4 +167,18 @@
     font-size: 1.05rem;
     line-height: 1.75;
   }
+}
+
+/* Rispetta le preferenze di riduzione del movimento */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-ghost,
+  .nav-link::after {
+    transition: background-color 0.25s ease, color 0.25s ease;
+    transform: none !important;
+  }
+  .btn-primary:hover,
+  .btn-ghost:hover { transform: none !important; }
+  .nav-link:hover::after,
+  .nav-link.active::after { transform: scaleX(1) !important; }
 }

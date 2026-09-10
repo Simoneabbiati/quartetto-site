@@ -1,0 +1,152 @@
+---
+import Base from '../../layouts/Base.astro';
+import { useTranslations, withBase } from '../../i18n/utils';
+
+const t = useTranslations('en');
+
+const periods = [
+  {
+    titolo: 'Gregorian & Medieval',
+    slug: 'gregorian',
+    descrizione: 'The chant of the Church at its origins — a repertoire that survives intact after more than a thousand years.',
+    brani: [
+      { titolo: 'Ave Maris Stella', autore: 'Anonymous — Gregorian Hymn', periodo: 'Late Antiquity / Middle Ages', tags: ['Marian', 'Liturgical'] },
+    ],
+  },
+  {
+    titolo: 'Renaissance',
+    slug: 'renaissance',
+    descrizione: 'The great flowering of European sacred polyphony: counterpoint as prayer, the voice as architecture.',
+    brani: [
+      { titolo: 'Sicut Cervus', autore: 'Giovanni Pierluigi da Palestrina', periodo: 'c. 1575', tags: ['Liturgical'] },
+      { titolo: 'Caligaverunt Oculi Mei', autore: 'Tomás Luis de Victoria', periodo: '16th c.', tags: ['Holy Week', 'Tenebrae'] },
+      { titolo: 'Vere Languores', autore: 'Tomás Luis de Victoria', periodo: '16th c.', tags: ['Lent', 'Holy Week'] },
+      { titolo: 'If ye love me', autore: 'Thomas Tallis', periodo: 'c. 1549', tags: ['Pentecost', 'Liturgical'] },
+      { titolo: 'Drop Drop Slow Tears', autore: 'Orlando Gibbons', periodo: 'c. 1610', tags: ['Lent', 'Liturgical'] },
+      { titolo: 'A Piè dell\'Alta e Triomphale Palma', autore: 'Anonymous — Lauda', periodo: '1591', tags: ['Mary Magdalene', 'Easter'] },
+      { titolo: 'O Cor Soave', autore: 'Anonymous (attr. P. Francesco Soto de Langa)', periodo: 'Late 16th c.', tags: ['Marian', 'Liturgical'] },
+    ],
+  },
+  {
+    titolo: 'Baroque',
+    slug: 'baroque',
+    descrizione: 'The sacred voice in the new language of affective expression.',
+    brani: [
+      { titolo: 'O Jesulein süss (O little one sweet)', autore: 'Johann Sebastian Bach', periodo: '18th c.', tags: ['Christmas'] },
+    ],
+  },
+  {
+    titolo: 'Twentieth Century',
+    slug: 'twentieth-century',
+    descrizione: 'Twentieth-century composers who kept the sacred vein alive through eras of transformation.',
+    brani: [
+      { titolo: 'Hymne à la Vierge', autore: 'Pierre Villet', periodo: '1954', tags: ['Marian'] },
+      { titolo: 'Jesu Parvule', autore: 'Alfred Burt', periodo: 'Mid-20th c.', tags: ['Christmas'] },
+      { titolo: 'Nigh Bethlehem', autore: 'Alfred Burt', periodo: 'Mid-20th c.', tags: ['Christmas'] },
+      { titolo: 'O Sacrum Convivium', autore: 'Luigi Molfino', periodo: '1916–2012', tags: ['Corpus Christi', 'Eucharist'] },
+      { titolo: 'The Irish Blessing', autore: 'James E. Moore Jr.', periodo: '20th c.', tags: ['Farewell', 'Blessing'] },
+    ],
+  },
+  {
+    titolo: 'Contemporary',
+    slug: 'contemporary',
+    descrizione: 'The sacred tradition continues in the language of our time — contemplation, beauty, spirituality.',
+    brani: [
+      { titolo: 'Northern Lights', autore: 'Ola Gjeilo', periodo: 'Contemporary', tags: ['Spirituality', 'Contemplation'] },
+      { titolo: 'Ubi Caritas', autore: 'Ola Gjeilo', periodo: 'Contemporary', tags: ['Maundy Thursday', 'Weddings'] },
+      { titolo: 'Magnum Mysterium', autore: 'Buonavitacola', periodo: 'Contemporary', tags: ['Christmas', 'Epiphany'] },
+      { titolo: 'Nunc Dimittis', autore: 'Paul Smith', periodo: 'Contemporary', tags: ['Compline', 'Liturgical'] },
+      { titolo: 'Memorare', autore: 'Walter Muto', periodo: 'Contemporary', tags: ['Marian', 'Spirituality'] },
+      { titolo: 'There is more love', autore: 'Bay Ridge Band', periodo: 'Contemporary', tags: ['Spirituality'] },
+    ],
+  },
+  {
+    titolo: 'Folk Tradition',
+    slug: 'folk',
+    descrizione: 'Songs passed down from generation to generation — the popular soul of devotion.',
+    brani: [
+      { titolo: 'Carol of the Bells', autore: 'M. Leontovych', periodo: 'Early 20th c.', tags: ['Christmas'] },
+      { titolo: 'Saint Joseph i la Mare de Déu', autore: 'Catalan folk song', periodo: 'Traditional', tags: ['Christmas', 'Marian'] },
+      { titolo: 'Rocking', autore: 'Traditional Czech (arr. David Willcocks)', periodo: 'Traditional', tags: ['Christmas'] },
+    ],
+  },
+];
+
+const tagColors: Record<string, string> = {
+  'Christmas':      'rgba(47,90,120,0.10)',
+  'Marian':         'rgba(47,90,120,0.10)',
+  'Lent':           'rgba(19,28,41,0.07)',
+  'Holy Week':      'rgba(19,28,41,0.07)',
+  'Tenebrae':       'rgba(19,28,41,0.07)',
+  'Liturgical':     'rgba(19,28,41,0.06)',
+  'Spirituality':   'rgba(47,90,120,0.10)',
+  'Contemplation':  'rgba(47,90,120,0.10)',
+};
+---
+
+<Base title="Repertoire" description="The ensemble's repertoire — from Renaissance polyphony to contemporary sacred music.">
+
+  <!-- Page header -->
+  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(19,28,41,0.07)">
+    <p class="label-caps mb-4">{t('nav.repertorio')}</p>
+    <h1 class="font-serif max-w-xl">The repertoire</h1>
+    <p class="text-base text-ink-soft mt-3 font-serif italic max-w-lg">
+      From Gregorian chant to the music of our time — organised by historical period.
+    </p>
+  </section>
+
+  <!-- Periods -->
+  <div class="container-default py-12 pb-24 space-y-16">
+    {periods.map((period) => (
+      <section id={period.slug}>
+
+        <!-- Period header -->
+        <div class="flex items-baseline gap-6 mb-6 pb-4" style="border-bottom: 1px solid rgba(47,90,120,0.25)">
+          <h2 class="font-serif text-2xl">{period.titolo}</h2>
+          <p class="text-sm text-ink-soft font-serif italic hidden md:block">{period.descrizione}</p>
+        </div>
+
+        <!-- Mobile description -->
+        <p class="text-sm text-ink-soft font-serif italic mb-5 md:hidden">{period.descrizione}</p>
+
+        <!-- Piece list -->
+        <div class="space-y-0">
+          {period.brani.map((brano, i) => (
+            <div
+              class="grid md:grid-cols-[1fr_auto] gap-2 py-3.5 items-baseline"
+              style={`border-bottom: 1px solid rgba(19,28,41,${i === period.brani.length - 1 ? '0' : '0.06'})`}
+            >
+              <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <span class="font-serif text-[1.05rem]">{brano.titolo}</span>
+                <span class="text-sm text-ink-muted">{brano.autore}</span>
+              </div>
+              <div class="flex items-center gap-2 flex-wrap md:justify-end">
+                <span class="label-caps text-[0.65rem]" style="color: rgba(76,98,125,0.9)">{brano.periodo}</span>
+                {brano.tags.slice(0, 2).map(tag => (
+                  <span
+                    class="text-[0.65rem] font-serif italic px-2 py-0.5 rounded-sm"
+                    style={`background: ${tagColors[tag] ?? 'rgba(19,28,41,0.06)'}; color: #2b3d54`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </section>
+    ))}
+  </div>
+
+  <!-- Footer note -->
+  <section class="border-t py-10" style="border-color: rgba(19,28,41,0.08); background-color: #dde7f1;">
+    <div class="container-narrow text-center">
+      <p class="text-sm text-ink-muted font-serif italic">
+        The repertoire is continually evolving. For programmes tailored to a liturgy, concert or festival,
+        <a href={withBase('/en/contatti')} class="text-accent hover:underline">get in touch</a>.
+      </p>
+    </div>
+  </section>
+
+</Base>

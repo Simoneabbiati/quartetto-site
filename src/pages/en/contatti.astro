@@ -1,16 +1,16 @@
 ---
-import Base from '../layouts/Base.astro';
-import { useTranslations } from '../i18n/utils';
+import Base from '../../layouts/Base.astro';
+import { useTranslations } from '../../i18n/utils';
 
-const t = useTranslations('it');
+const t = useTranslations('en');
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 ---
 
-<Base title="Contatti" description="Contatta l'ensemble per scritturare un concerto o una liturgia.">
+<Base title="Contact" description="Get in touch to book a concert or a liturgy.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(26,37,53,0.07)">
+  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(19,28,41,0.07)">
     <p class="label-caps mb-5">{t('nav.contatti')}</p>
     <h1 class="font-serif">{t('contatti.titolo')}</h1>
     <p class="text-lg text-ink-soft mt-4 font-serif italic max-w-xl">{t('contatti.intro')}</p>
@@ -69,7 +69,7 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 
       <label class="block">
         <span class="field-label">{t('contatti.form.note')}</span>
-        <textarea name="note" rows="5" class="field-input resize-none" style="border: 1px solid rgba(26,26,26,0.15); padding: 0.75rem;"></textarea>
+        <textarea name="note" rows="5" class="field-input resize-none" style="border: 1px solid rgba(19,28,41,0.15); padding: 0.75rem;"></textarea>
       </label>
 
       <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />

@@ -12,25 +12,25 @@ export default {
       },
       colors: {
         ink: {
-          DEFAULT: '#1a2535',
-          soft:    '#354a65',
-          muted:   '#7088a5',
+          DEFAULT: '#131c29',
+          soft:    '#2b3d54',
+          muted:   '#4c627d',
         },
         paper: {
-          DEFAULT: '#f3f1ee',
-          warm:    '#e5ecf4',
-          dark:    '#d2dde9',
+          DEFAULT: '#f6f4f1',
+          warm:    '#dde7f1',
+          dark:    '#c9d6e4',
         },
         accent: {
-          DEFAULT: '#3d6b8a',
-          dark:    '#2a4f6a',
+          DEFAULT: '#2f5a78',
+          dark:    '#213f56',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '65ch',
-            color: '#354a65',
+            color: '#2b3d54',
           },
         },
       },

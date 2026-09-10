@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "VoxMea",
+    "name": "[Nome Ensemble]",
     "tagline": "Quattro voci per la tradizione sacra"
   },
   "nav": {
@@ -12,7 +12,7 @@
     "pressKit": "Press Kit"
   },
   "home": {
-    "ctaBooking": "Scritturare VoxMea",
+    "ctaBooking": "Scritturare [Nome Ensemble]",
     "ctaConcerto": "Prossimi concerti",
     "prossimoConcerto": "Prossimo concerto",
     "ascoltaci": "Ascoltaci"
@@ -35,7 +35,7 @@
   },
   "contatti": {
     "titolo": "Contatti",
-    "intro": "Per scritturare VoxMea o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
+    "intro": "Per scritturare [Nome Ensemble] o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
     "form": {
       "nome": "Nome e cognome",
       "ruolo": "Ruolo",
@@ -54,7 +54,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} VoxMea. Tutti i diritti riservati.",
+    "copyright": "© {year} [Nome Ensemble]. Tutti i diritti riservati.",
     "lingua": "Lingua"
   }
 }

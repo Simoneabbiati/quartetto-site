@@ -14,7 +14,7 @@ const chiSiamo = pagineChiSiamo[0];
 const Content = chiSiamo ? (await chiSiamo.render()).Content : null;
 ---
 
-<Base title="Il Quartetto" description="Chi siamo: storia e cantanti di VoxMea.">
+<Base title="Il Quartetto" description="Chi siamo: storia e voci dell'ensemble.">
 
   <!-- Page header -->
   <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(26,37,53,0.07)">
@@ -41,7 +41,7 @@ const Content = chiSiamo ? (await chiSiamo.render()).Content : null;
   <!-- Cantanti -->
   <section class="container-default py-16 pb-28">
     <p class="label-caps mb-5 text-center">I cantanti</p>
-    <h2 class="font-serif text-center mb-20">Le quattro voci</h2>
+    <h2 class="font-serif text-center mb-20">Le voci</h2>
 
     <div class="grid md:grid-cols-2 gap-16">
       {cantanti.length > 0 ? (

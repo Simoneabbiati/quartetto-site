@@ -22,7 +22,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
   <div class="container-default flex items-center justify-between py-5">
 
     <a href={withBase(prefix || '/')} class="font-serif text-[1.35rem] tracking-tight leading-none hover:opacity-75 transition-opacity duration-200">
-      Vox<em class="italic not-italic" style="color: #4a6f8a;">Mea</em>
+      {t('site.name')}
     </a>
 
     <nav class="hidden md:flex items-center gap-9">

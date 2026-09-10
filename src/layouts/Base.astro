@@ -15,7 +15,7 @@ const { title, description, ogImage = withBase('/images/og-default.jpg') } = Ast
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const fullTitle = title === 'home' ? `VoxMea — ${t('site.tagline')}` : `${title} · VoxMea`;
+const fullTitle = title === 'home' ? `${t('site.name')} — ${t('site.tagline')}` : `${title} · ${t('site.name')}`;
 const metaDescription = description ?? t('site.tagline');
 
 // URL bilingui per hreflang (base-aware): percorso logico senza base né /en

@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const t = useTranslations('en');
+---
+
+<Base title="Media" description="Audio, video and photos of the vocal ensemble.">
+  <section class="container-default py-20">
+    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.media')}</p>
+    <h1 class="font-serif mb-16">Media</h1>
+
+    <!-- VIDEO -->
+    <div class="mb-20">
+      <h2 class="font-serif mb-8">Video</h2>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
+          <span class="text-sm italic">YouTube embed (replace with &lt;iframe&gt;)</span>
+        </div>
+        <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
+          <span class="text-sm italic">YouTube embed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIO -->
+    <div class="mb-20">
+      <h2 class="font-serif mb-8">Audio</h2>
+      <div class="bg-paper-warm p-8 border border-ink/10">
+        <p class="text-ink-muted italic text-sm">
+          Audio player here. Options: SoundCloud embed, Spotify embed, or a self-hosted MP3 file with an HTML5 player.
+        </p>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div>
+      <h2 class="font-serif mb-8">Photos</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        {
+          Array.from({ length: 6 }).map(() => (
+            <div class="aspect-[4/5] bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
+              <span class="text-sm italic">Photo</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
