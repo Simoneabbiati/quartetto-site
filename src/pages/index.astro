@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ConcertoCard from '../components/ConcertoCard.astro';
 import { getCollection } from 'astro:content';
-import { useTranslations } from '../i18n/utils';
+import { useTranslations, withBase } from '../i18n/utils';
 
 const t = useTranslations('it');
 
@@ -34,8 +34,8 @@ const prossimo = concertiFuturi[0];
         quattro voci, un millennio di tradizione sacra.
       </p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <a href="/contatti" class="btn-primary">{t('home.ctaBooking')}</a>
-        <a href="/concerti" class="btn-ghost">{t('home.ctaConcerto')}</a>
+        <a href={withBase('/contatti')} class="btn-primary">{t('home.ctaBooking')}</a>
+        <a href={withBase('/concerti')} class="btn-ghost">{t('home.ctaConcerto')}</a>
       </div>
     </div>
 
@@ -60,7 +60,7 @@ const prossimo = concertiFuturi[0];
       <p class="label-caps mb-8">{t('home.prossimoConcerto')}</p>
       <ConcertoCard concerto={prossimo} variant="compact" />
       <div class="mt-8">
-        <a href="/concerti" class="nav-link inline-flex items-center gap-2">
+        <a href={withBase('/concerti')} class="nav-link inline-flex items-center gap-2">
           Tutti i concerti <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -87,7 +87,7 @@ const prossimo = concertiFuturi[0];
       di tradizione — dalla polifonia rinascimentale di Palestrina e Victoria alla musica
       contemplativa di Ola Gjeilo.
     </p>
-    <a href="/quartetto" class="nav-link inline-flex items-center gap-2">
+    <a href={withBase('/quartetto')} class="nav-link inline-flex items-center gap-2">
       Scopri il quartetto <span aria-hidden="true">→</span>
     </a>
   </section>

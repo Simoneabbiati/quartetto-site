@@ -1,13 +1,13 @@
 ---
-import { getLangFromUrl } from '../i18n/utils';
+import { getLangFromUrl, stripBase, withBase } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const path = Astro.url.pathname;
+const path = stripBase(Astro.url.pathname);
 
-// Calcola gli URL "gemelli" per ciascuna lingua
+// Calcola gli URL "gemelli" per ciascuna lingua (con base path)
 const stripped = path.replace(/^\/en/, '') || '/';
-const itHref = stripped;
-const enHref = stripped === '/' ? '/en/' : `/en${stripped}`;
+const itHref = withBase(stripped);
+const enHref = withBase(stripped === '/' ? '/en/' : `/en${stripped}`);
 ---
 
 <div class="flex items-center gap-2 text-xs uppercase tracking-wider">

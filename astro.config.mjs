@@ -5,8 +5,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // ⚠️ Sostituire con il dominio reale prima del deploy in produzione
-  site: 'https://quartetto.example.com',
+  // Deploy su GitHub Pages (project site): https://simoneabbiati.github.io/quartetto-site/
+  site: 'https://simoneabbiati.github.io',
+  base: '/quartetto-site',
 
   // Strategia bilingue: IT default su /, EN su /en/
   i18n: {

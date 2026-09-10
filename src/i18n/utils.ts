@@ -33,11 +33,38 @@ export function useTranslations(lang: Lang) {
 }
 
 /**
- * Estrae la lingua corrente dall'URL.
+ * Base path del sito (es. '/quartetto-site' su GitHub Pages, '' in locale/root).
+ * Normalizzato senza slash finale.
+ */
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Antepone il base path a un percorso interno.
+ * withBase('/concerti') → '/quartetto-site/concerti'
+ * withBase('/')         → '/quartetto-site/'
+ */
+export function withBase(path: string): string {
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE}${clean}` || '/';
+}
+
+/**
+ * Rimuove il base path da un pathname, restituendo il percorso "logico".
+ * stripBase('/quartetto-site/en/concerti') → '/en/concerti'
+ */
+export function stripBase(pathname: string): string {
+  if (BASE && pathname.startsWith(BASE)) {
+    return pathname.slice(BASE.length) || '/';
+  }
+  return pathname;
+}
+
+/**
+ * Estrae la lingua corrente dall'URL (base-aware).
  * /en/* → 'en', tutto il resto → 'it'
  */
 export function getLangFromUrl(url: URL): Lang {
-  const [, segment] = url.pathname.split('/');
+  const [, segment] = stripBase(url.pathname).split('/');
   if (segment === 'en') return 'en';
   return 'it';
 }

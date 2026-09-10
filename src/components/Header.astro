@@ -1,5 +1,5 @@
 ---
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getLangFromUrl, useTranslations, withBase } from '../i18n/utils';
 import LangSwitcher from './LangSwitcher.astro';
 
 const lang = getLangFromUrl(Astro.url);
@@ -8,11 +8,11 @@ const t = useTranslations(lang);
 const prefix = lang === 'it' ? '' : '/en';
 
 const navItems = [
-  { href: `${prefix}/quartetto`, label: t('nav.quartetto') },
-  { href: `${prefix}/repertorio`, label: t('nav.repertorio') },
-  { href: `${prefix}/concerti`, label: t('nav.concerti') },
-  { href: `${prefix}/media`, label: t('nav.media') },
-  { href: `${prefix}/contatti`, label: t('nav.contatti') },
+  { href: withBase(`${prefix}/quartetto`), label: t('nav.quartetto') },
+  { href: withBase(`${prefix}/repertorio`), label: t('nav.repertorio') },
+  { href: withBase(`${prefix}/concerti`), label: t('nav.concerti') },
+  { href: withBase(`${prefix}/media`), label: t('nav.media') },
+  { href: withBase(`${prefix}/contatti`), label: t('nav.contatti') },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
@@ -21,7 +21,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
 <header class="border-b border-ink/[0.07] bg-paper/95 backdrop-blur-sm sticky top-0 z-50">
   <div class="container-default flex items-center justify-between py-5">
 
-    <a href={prefix || '/'} class="font-serif text-[1.35rem] tracking-tight leading-none hover:opacity-75 transition-opacity duration-200">
+    <a href={withBase(prefix || '/')} class="font-serif text-[1.35rem] tracking-tight leading-none hover:opacity-75 transition-opacity duration-200">
       Vox<em class="italic not-italic" style="color: #4a6f8a;">Mea</em>
     </a>
 

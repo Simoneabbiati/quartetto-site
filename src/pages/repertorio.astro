@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { useTranslations } from '../i18n/utils';
+import { useTranslations, withBase } from '../i18n/utils';
 
 const t = useTranslations('it');
 
@@ -144,7 +144,7 @@ const tagColors: Record<string, string> = {
     <div class="container-narrow text-center">
       <p class="text-sm text-ink-muted font-serif italic">
         Il repertorio è in continua evoluzione. Per programmi personalizzati su liturgia, concerto o festival,
-        <a href="/contatti" class="text-accent hover:underline">contattateci</a>.
+        <a href={withBase('/contatti')} class="text-accent hover:underline">contattateci</a>.
       </p>
     </div>
   </section>

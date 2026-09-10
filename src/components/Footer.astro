@@ -1,5 +1,5 @@
 ---
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getLangFromUrl, useTranslations, withBase } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -21,17 +21,17 @@ const year = new Date().getFullYear();
     <!-- Esplora -->
     <nav class="flex flex-col gap-2.5">
       <p class="label-caps mb-2">Esplora</p>
-      <a href={`${prefix}/quartetto`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.quartetto')}</a>
-      <a href={`${prefix}/repertorio`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.repertorio')}</a>
-      <a href={`${prefix}/concerti`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.concerti')}</a>
-      <a href={`${prefix}/media`} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.media')}</a>
+      <a href={withBase(`${prefix}/quartetto`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.quartetto')}</a>
+      <a href={withBase(`${prefix}/repertorio`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.repertorio')}</a>
+      <a href={withBase(`${prefix}/concerti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.concerti')}</a>
+      <a href={withBase(`${prefix}/media`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.media')}</a>
     </nav>
 
     <!-- Contatti -->
     <div class="flex flex-col gap-2.5">
       <p class="label-caps mb-2">Contatti</p>
-      <a href={`${prefix}/contatti`} class="text-sm text-ink-soft hover:text-ink transition-colors">Scritturare VoxMea</a>
-      <a href="/press-kit" class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
+      <a href={withBase(`${prefix}/contatti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">Scritturare VoxMea</a>
+      <a href={withBase('/press-kit')} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
     </div>
 
   </div>
