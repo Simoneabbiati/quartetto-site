@@ -10,18 +10,18 @@ const itHref = withBase(stripped);
 const enHref = withBase(stripped === '/' ? '/en/' : `/en${stripped}`);
 ---
 
-<div class="flex items-center gap-2 text-xs uppercase tracking-wider">
+<div class="flex items-center text-xs uppercase tracking-wider">
   <a
     href={itHref}
-    class:list={['hover:text-accent transition-colors', lang === 'it' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    class:list={['inline-flex items-center py-2.5 px-1.5 hover:text-accent transition-colors', lang === 'it' ? 'text-accent font-semibold' : 'text-ink-muted']}
     aria-label="Italiano"
   >
     IT
   </a>
-  <span class="text-ink-muted/50">/</span>
+  <span class="text-ink-muted/50" aria-hidden="true">/</span>
   <a
     href={enHref}
-    class:list={['hover:text-accent transition-colors', lang === 'en' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    class:list={['inline-flex items-center py-2.5 px-1.5 hover:text-accent transition-colors', lang === 'en' ? 'text-accent font-semibold' : 'text-ink-muted']}
     aria-label="English"
   >
     EN

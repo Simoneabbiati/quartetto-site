@@ -37,8 +37,60 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
       <LangSwitcher />
     </nav>
 
-    <div class="md:hidden">
+    <!-- Mobile controls -->
+    <div class="flex items-center gap-3 md:hidden">
       <LangSwitcher />
+      <button
+        type="button"
+        id="menu-toggle"
+        class="mobile-menu-btn"
+        aria-label="Menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
+
+  <!-- Mobile menu panel -->
+  <nav id="mobile-menu" class="mobile-menu md:hidden" aria-label="Primary">
+    <div class="container-default flex flex-col pb-4">
+      {navItems.map((item) => {
+        const isActive = currentPath === item.href.replace(/\/$/, '');
+        return (
+          <a href={item.href} class:list={['mobile-nav-link', isActive && 'active']}>
+            {item.label}
+          </a>
+        );
+      })}
+    </div>
+  </nav>
 </header>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  if (btn && menu) {
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.classList.toggle('is-open', open);
+      menu.classList.toggle('is-open', open);
+    };
+
+    btn.addEventListener('click', () => {
+      setOpen(btn.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Close after tapping a link
+    menu.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => setOpen(false));
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+</script>

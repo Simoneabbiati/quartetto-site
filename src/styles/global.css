@@ -141,6 +141,79 @@
   .nav-link:hover::after,
   .nav-link.active::after { transform: scaleX(1); }
 
+  /* ─── Mobile menu (hamburger → X + slide-down panel) ──── */
+  .mobile-menu-btn {
+    @apply inline-flex items-center justify-center;
+    width: 44px;   /* comfortable tap target */
+    height: 44px;
+    margin-right: -0.5rem;
+    color: theme('colors.ink.DEFAULT');
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .mobile-menu-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px theme('colors.paper.DEFAULT'),
+                0 0 0 4px theme('colors.accent.DEFAULT');
+    border-radius: 2px;
+  }
+
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background-color: currentColor;
+  }
+  .hamburger {
+    position: relative;
+    transition: background-color 0.2s ease;
+  }
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hamburger::before { top: -6px; }
+  .hamburger::after  { top: 6px; }
+
+  .mobile-menu-btn.is-open .hamburger { background-color: transparent; }
+  .mobile-menu-btn.is-open .hamburger::before { transform: translateY(6px) rotate(45deg); }
+  .mobile-menu-btn.is-open .hamburger::after  { transform: translateY(-6px) rotate(-45deg); }
+
+  .mobile-menu {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    border-top: 1px solid rgba(19, 28, 41, 0.07);
+    background-color: theme('colors.paper.DEFAULT');
+    transition: max-height 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.25s ease, visibility 0.32s;
+  }
+  .mobile-menu.is-open {
+    max-height: 80vh;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav-link {
+    font-family: theme('fontFamily.serif');
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-feature-settings: 'smcp' 1;
+    @apply block py-3.5 text-ink-soft transition-colors duration-200;
+    border-bottom: 1px solid rgba(19, 28, 41, 0.06);
+  }
+  .mobile-nav-link:last-child { border-bottom: none; }
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active { color: theme('colors.accent.DEFAULT'); }
+
   /* ─── Form fields ─────────────────────────────────────── */
   .field-label {
     font-family: theme('fontFamily.serif');
@@ -181,4 +254,9 @@
   .btn-ghost:hover { transform: none !important; }
   .nav-link:hover::after,
   .nav-link.active::after { transform: scaleX(1) !important; }
+
+  .mobile-menu,
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after { transition: none !important; }
 }
