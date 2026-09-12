@@ -2,7 +2,7 @@
 nome: "Vecdi"
 voce: basso
 bioBreve: "Basso. *Bio da completare.*"
-ordine: 5
+ordine: 6
 lingua: it
 ---
 

@@ -2,7 +2,7 @@
 nome: "Vecdi"
 voce: basso
 bioBreve: "Bass. *Bio to be completed.*"
-ordine: 5
+ordine: 6
 lingua: en
 ---
 

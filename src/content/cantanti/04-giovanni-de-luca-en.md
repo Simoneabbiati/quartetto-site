@@ -2,7 +2,7 @@
 nome: "Giovanni De Luca"
 voce: tenore
 bioBreve: "Tenor, specialising in Renaissance polyphony and sacred repertoire."
-ordine: 3
+ordine: 4
 lingua: en
 ---
 

@@ -2,7 +2,7 @@
 nome: "Simone Abbiati"
 voce: baritono
 bioBreve: "Baritone, active in sacred repertoire from Renaissance polyphony to contemporary music."
-ordine: 4
+ordine: 5
 lingua: en
 ---
 
