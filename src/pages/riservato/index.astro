@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { getAccessEmail, getCorista, TEAM_DOMAIN } from '../../lib/access';
 import { useTranslations } from '../../i18n/utils';
+import { linkGoogleCalendar, linkMappe } from '../../lib/eventi';
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -28,7 +29,9 @@ interface Prova {
   id: number;
   data: string;
   ora: string | null;
+  ora_fine: string | null;
   luogo: string | null;
+  indirizzo: string | null;
   mioStato: string | null;
 }
 
@@ -58,7 +61,7 @@ if (db) {
     const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes] = await db.batch([
       db.prepare('SELECT id, titolo, compositore, organico, concerto_id FROM spartiti ORDER BY compositore, titolo'),
       db.prepare(
-        `SELECT p.id, p.data, p.ora, p.luogo, pr.stato as mioStato
+        `SELECT p.id, p.data, p.ora, p.ora_fine, p.luogo, p.indirizzo, pr.stato as mioStato
          FROM prove p LEFT JOIN presenze pr ON pr.prova_id = p.id AND pr.utente_email = ?
          ORDER BY p.data, p.ora`
       ).bind(userEmail ?? ''),
@@ -170,6 +173,22 @@ function presenzePerProva(provaId: number) {
       const vociMancanti = [...new Set(partecipanti.filter((c) => !c.stato).map((c) => c.voce))];
       const dataLunga = new Date(prossima.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
 
+      const mappaProssima = linkMappe(prossima.indirizzo, prossima.luogo);
+      const calendarioProssima = linkGoogleCalendar({
+        titolo: `${t('riservato.titoloEvento')} ${t('site.name')}`,
+        data: prossima.data,
+        ora: prossima.ora,
+        oraFine: prossima.ora_fine,
+        luogo: prossima.luogo,
+        indirizzo: prossima.indirizzo,
+        dettagli: [
+          pezzi.length > 0
+            ? `${t('riservato.pezziDaPreparare')}:\n${pezzi.map((x) => `\u2022 ${x.titolo}`).join('\n')}`
+            : '',
+          `${Astro.url.origin}/riservato/${suffissoLingua}`,
+        ].filter(Boolean).join('\n\n'),
+      });
+
       return (
         <>
           <h1 class="font-serif mb-6">{t('riservato.prossimaProva')}</h1>
@@ -180,9 +199,20 @@ function presenzePerProva(provaId: number) {
               <p class="font-serif type-title capitalize">{dataLunga}</p>
               <span class="type-body text-ink-muted">{etichettaGiorni(prossima.data)}</span>
             </div>
-            <p class="type-body text-ink-soft mb-5">
-              {prossima.ora && `${t('riservato.ore')} ${prossima.ora}`}{prossima.ora && prossima.luogo && ' · '}{prossima.luogo}
+            <p class="text-ink-soft mb-3">
+              {prossima.ora && `${t('riservato.ore')} ${prossima.ora}`}{prossima.ora && prossima.luogo && ' · '}
+              {mappaProssima
+                ? <a href={mappaProssima} target="_blank" rel="noopener" class="underline hover:text-accent">{prossima.luogo}</a>
+                : prossima.luogo}
             </p>
+
+            {calendarioProssima && (
+              <p class="mb-5">
+                <a href={calendarioProssima} target="_blank" rel="noopener" class="text-accent hover:underline">
+                  + {t('riservato.aggiungiCalendario')}
+                </a>
+              </p>
+            )}
 
             <!-- RSVP in un tocco, senza cambiare pagina -->
             <div class="flex gap-2 mb-2" id="rsvp-home" data-prova-id={prossima.id} data-mio-stato={prossima.mioStato ?? ''}

@@ -4,6 +4,7 @@ export const prerender = false;
 import Base from '../../../layouts/Base.astro';
 import { getAccessEmail } from '../../../lib/access';
 import { useTranslations } from '../../../i18n/utils';
+import { linkGoogleCalendar, linkMappe } from '../../../lib/eventi';
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -17,7 +18,7 @@ const db = env?.DB;
 const myEmail = getAccessEmail(Astro.request);
 const prova_id = Number(Astro.params.id);
 
-interface Prova { id: number; data: string; ora: string | null; luogo: string | null; note: string | null; }
+interface Prova { id: number; data: string; ora: string | null; ora_fine: string | null; luogo: string | null; indirizzo: string | null; note: string | null; }
 interface Pezzo { id: number; titolo: string; compositore: string; }
 interface Presenza { email: string; nome: string; voce: string; stato: string | null; }
 
@@ -32,7 +33,7 @@ if (!db) {
 } else if (!Number.isInteger(prova_id)) {
   errore = t('riservato.provaNonTrovata');
 } else {
-  prova = await db.prepare('SELECT id, data, ora, luogo, note FROM prove WHERE id = ?').bind(prova_id).first();
+  prova = await db.prepare('SELECT id, data, ora, ora_fine, luogo, indirizzo, note FROM prove WHERE id = ?').bind(prova_id).first();
 
   if (prova) {
     const pezziRes = await db
@@ -79,6 +80,24 @@ const STATO_LABEL: Record<string, string> = {
 const dataFormattata = prova
   ? new Date(prova.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })
   : '';
+
+const mappa = prova ? linkMappe(prova.indirizzo, prova.luogo) : null;
+const calendario = prova
+  ? linkGoogleCalendar({
+      titolo: `${t('riservato.titoloEvento')} ${t('site.name')}`,
+      data: prova.data,
+      ora: prova.ora,
+      oraFine: prova.ora_fine,
+      luogo: prova.luogo,
+      indirizzo: prova.indirizzo,
+      dettagli: [
+        pezzi.length > 0
+          ? `${t('riservato.pezziDaPreparare')}:\n${pezzi.map((x) => `\u2022 ${x.titolo}`).join('\n')}`
+          : '',
+        `${Astro.url.origin}/riservato/${suffissoLingua}`,
+      ].filter(Boolean).join('\n\n'),
+    })
+  : null;
 ---
 
 <Base title={prova ? `${t('riservato.prova')} ${dataFormattata}` : t('riservato.prova')}>
@@ -93,9 +112,20 @@ const dataFormattata = prova
       <>
         <p class="label-caps mt-6 mb-2">{t('riservato.prova')}</p>
         <h1 class="font-serif mb-1 capitalize">{dataFormattata}</h1>
-        <p class="text-ink-soft mb-8">
-          {prova.ora && `${t('riservato.ore')} ${prova.ora}`}{prova.ora && prova.luogo && ' · '}{prova.luogo}
+        <p class="text-ink-soft mb-3">
+          {prova.ora && `${t('riservato.ore')} ${prova.ora}`}{prova.ora && prova.luogo && ' · '}
+          {mappa
+            ? <a href={mappa} target="_blank" rel="noopener" class="underline hover:text-accent">{prova.luogo}</a>
+            : prova.luogo}
         </p>
+
+        {calendario && (
+          <p class="mb-8">
+            <a href={calendario} target="_blank" rel="noopener" class="text-accent hover:underline">
+              + {t('riservato.aggiungiCalendario')}
+            </a>
+          </p>
+        )}
 
         <!-- RSVP -->
         <div class="mb-12">

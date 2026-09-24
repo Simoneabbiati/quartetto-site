@@ -113,6 +113,9 @@
     "nessunPezzoAssegnato": "Nessun pezzo ancora assegnato",
     "oggi": "Oggi",
     "domani": "Domani",
-    "traGiorni": "Tra {n} giorni"
+    "traGiorni": "Tra {n} giorni",
+    "aggiungiCalendario": "Aggiungi al calendario",
+    "apriMappa": "Apri nelle mappe",
+    "titoloEvento": "Prova"
   }
 }

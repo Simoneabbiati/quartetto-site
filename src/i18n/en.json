@@ -113,6 +113,9 @@
     "nessunPezzoAssegnato": "No pieces assigned yet",
     "oggi": "Today",
     "domani": "Tomorrow",
-    "traGiorni": "In {n} days"
+    "traGiorni": "In {n} days",
+    "aggiungiCalendario": "Add to calendar",
+    "apriMappa": "Open in maps",
+    "titoloEvento": "Rehearsal"
   }
 }
