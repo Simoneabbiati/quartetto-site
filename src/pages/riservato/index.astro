@@ -169,8 +169,7 @@ function presenzePerProva(provaId: number) {
       const altre = prove.slice(1);
       const partecipanti = presenzePerProva(prossima.id);
       const pezzi = pezziPerProva.filter((x) => x.prova_id === prossima.id);
-      const risposte = partecipanti.filter((c) => c.stato).length;
-      const vociMancanti = [...new Set(partecipanti.filter((c) => !c.stato).map((c) => c.voce))];
+      const presenti = partecipanti.filter((c) => c.stato === 'si').length;
       const dataLunga = new Date(prossima.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
 
       const mappaProssima = linkMappe(prossima.indirizzo, prossima.luogo);
@@ -223,13 +222,8 @@ function presenzePerProva(provaId: number) {
             </div>
             <p id="rsvp-home-feedback" class="type-body text-ink-muted mb-5 h-4" aria-live="polite"></p>
 
-            <!-- Colpo d'occhio: quante risposte e quali voci mancano -->
-            <div class="flex flex-wrap gap-x-5 gap-y-1 type-body text-ink-muted mb-4">
-              <span>{risposte}/{partecipanti.length} {t('riservato.rispostePresenti')}</span>
-              {vociMancanti.length > 0 && (
-                <span>{t('riservato.vociMancanti')}: {vociMancanti.map((v) => t(`cantanti.${v}`)).join(', ')}</span>
-              )}
-            </div>
+            <!-- Colpo d'occhio: quanti ci saranno -->
+            <p class="type-body text-ink-muted mb-4">{presenti}/{partecipanti.length} {t('riservato.rispostePresenti')}</p>
 
             <details class="prova-details mb-4">
               <summary class="tocco gap-2 cursor-pointer text-ink-soft">
