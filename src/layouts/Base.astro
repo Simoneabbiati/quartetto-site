@@ -31,6 +31,10 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <!-- iOS non legge il favicon per "Aggiungi alla schermata Home": vuole
+         esplicitamente questo, in PNG (l'SVG non è supportato qui). -->
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <meta name="apple-mobile-web-app-title" content={t('site.name')} />
     <meta name="generator" content={Astro.generator} />
 
     <title>{fullTitle}</title>
