@@ -359,16 +359,21 @@ function presenzePerProva(provaId: number) {
 
                 <div class="pt-3 flex flex-col gap-4">
                   <!-- Desktop: PDF incorporato, si vede insieme all'audio sotto.
+                       Esce apposta dalla larghezza stretta del resto della pagina
+                       (pensata per il testo, non per uno spartito) fino a 1400px.
                        Mobile: link che apre il visualizzatore nativo del telefono —
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
-                  <iframe
-                    src={pdfUrl}
-                    title={s.titolo}
-                    class="hidden md:block"
-                    style="width:100%; height:70vh; border:1px solid rgba(26,37,53,0.15);"
-                    loading="lazy"
-                  ></iframe>
+                  <div class="hidden md:block pdf-breakout">
+                    <div class="pdf-ampio">
+                      <iframe
+                        src={pdfUrl}
+                        title={s.titolo}
+                        style="width:100%; height:85vh; border:1px solid rgba(26,37,53,0.15);"
+                        loading="lazy"
+                      ></iframe>
+                    </div>
+                  </div>
                   <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
 
                   {tracce.length > 0 && (
@@ -479,6 +484,20 @@ function presenzePerProva(provaId: number) {
     }
     .prova-details[open] > summary::after {
       transform: rotate(-135deg);
+    }
+
+    /* Fa uscire il visualizzatore PDF dalla larghezza stretta della pagina
+       (container-default, pensata per il testo) fino a un massimo più ampio,
+       centrato, indipendentemente da quanto è nidificato nella pagina. */
+    .pdf-breakout {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+    }
+    .pdf-ampio {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
     }
   </style>
 
