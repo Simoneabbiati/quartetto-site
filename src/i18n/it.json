@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "[Nome Ensemble]",
+    "name": "Ad Fontes",
     "tagline": "Quattro voci per la tradizione sacra"
   },
   "nav": {
@@ -9,10 +9,11 @@
     "concerti": "Concerti",
     "media": "Media",
     "contatti": "Contatti",
-    "pressKit": "Press Kit"
+    "pressKit": "Press Kit",
+    "riservato": "Area riservata"
   },
   "home": {
-    "ctaBooking": "Scritturare [Nome Ensemble]",
+    "ctaBooking": "Scritturare Ad Fontes",
     "ctaConcerto": "Prossimi concerti",
     "prossimoConcerto": "Prossimo concerto",
     "ascoltaci": "Ascoltaci"
@@ -35,7 +36,7 @@
   },
   "contatti": {
     "titolo": "Contatti",
-    "intro": "Per scritturare [Nome Ensemble] o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
+    "intro": "Per scritturare Ad Fontes o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
     "form": {
       "nome": "Nome e cognome",
       "ruolo": "Ruolo",
@@ -54,7 +55,64 @@
     }
   },
   "footer": {
-    "copyright": "© {year} [Nome Ensemble]. Tutti i diritti riservati.",
-    "lingua": "Lingua"
+    "copyright": "© {year} Ad Fontes. Tutti i diritti riservati.",
+    "lingua": "Lingua",
+    "esplora": "Esplora",
+    "contatti": "Contatti",
+    "motto": "Quattro voci — un millennio di tradizione sacra"
+  },
+  "riservato": {
+    "titolo": "Area riservata",
+    "accessoCome": "Accesso come",
+    "esci": "esci",
+    "prossimeProve": "Prossime prove",
+    "nessunaProva": "Nessuna prova in programma.",
+    "rispondi": "Rispondi",
+    "presenti": "presenti",
+    "chiCe": "Chi c'è",
+    "inAttesa": "in attesa",
+    "pezziDaPreparare": "Pezzi da preparare",
+    "apriProva": "Apri la prova e rispondi",
+    "prossimiConcerti": "Prossimi concerti",
+    "nessunConcerto": "Nessun concerto in programma.",
+    "programma": "Programma",
+    "repertorioCompleto": "Repertorio completo",
+    "nessunoSpartito": "Nessuno spartito caricato ancora.",
+    "studiatoUltimaVolta": "Studiato l'ultima volta il",
+    "provePassate": "Prove passate",
+    "studiato": "Studiato",
+    "presentiLabel": "Presenti",
+    "nessunaPresenza": "Nessuna presenza registrata",
+    "pezzo": "pezzo",
+    "pezzi": "pezzi",
+    "tornaIndietro": "Torna all'area riservata",
+    "prova": "Prova",
+    "tuaPresenza": "La tua presenza",
+    "si": "Sì",
+    "no": "No",
+    "forse": "Forse",
+    "ciSaro": "Ci sarò",
+    "nonCiSaro": "Non ci sarò",
+    "salvataggio": "Salvataggio…",
+    "salvato": "Salvato.",
+    "erroreSalvataggio": "Errore nel salvataggio, riprova.",
+    "provaNonTrovata": "Prova non trovata.",
+    "nessunPezzo": "Nessun pezzo assegnato a questa prova.",
+    "nonHaRisposto": "Non ha risposto",
+    "ore": "ore",
+    "anonimo": "Anonimo",
+    "chiudi": "Chiudi",
+    "apriScheda": "Apri in una nuova scheda",
+    "prossimaProva": "Prossima prova",
+    "altreProve": "Altre prove in programma",
+    "mostraTutte": "Mostra tutte",
+    "haiRisposto": "Hai risposto",
+    "nonHaiRisposto": "Non hai ancora risposto",
+    "rispostePresenti": "hanno risposto",
+    "vociMancanti": "Voci senza conferma",
+    "nessunPezzoAssegnato": "Nessun pezzo ancora assegnato",
+    "oggi": "Oggi",
+    "domani": "Domani",
+    "traGiorni": "Tra {n} giorni"
   }
 }

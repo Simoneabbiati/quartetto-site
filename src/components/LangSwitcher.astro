@@ -1,13 +1,32 @@
 ---
 import { getLangFromUrl, stripBase, withBase } from '../i18n/utils';
 
-const lang = getLangFromUrl(Astro.url);
 const path = stripBase(Astro.url.pathname);
 
-// Calcola gli URL "gemelli" per ciascuna lingua (con base path)
-const stripped = path.replace(/^\/en/, '') || '/';
-const itHref = withBase(stripped);
-const enHref = withBase(stripped === '/' ? '/en/' : `/en${stripped}`);
+// L'area riservata sta su un unico percorso (Cloudflare Access protegge /riservato:
+// una variante /it/riservato resterebbe scoperta), quindi lì la lingua passa da un
+// parametro invece che dal percorso.
+const inAreaRiservata = path.startsWith('/riservato');
+
+let lang: 'it' | 'en';
+let itHref: string;
+let enHref: string;
+
+if (inAreaRiservata) {
+  lang = Astro.url.searchParams.get('lang') === 'it' ? 'it' : 'en';
+
+  const params = new URLSearchParams(Astro.url.search);
+  params.delete('lang');
+  const altri = params.toString();
+
+  enHref = withBase(path) + (altri ? `?${altri}` : '');
+  itHref = withBase(path) + `?${altri ? altri + '&' : ''}lang=it`;
+} else {
+  lang = getLangFromUrl(Astro.url);
+  const stripped = path.replace(/^\/it/, '') || '/';
+  enHref = withBase(stripped);
+  itHref = withBase(stripped === '/' ? '/it/' : `/it${stripped}`);
+}
 ---
 
 <div class="flex items-center text-xs uppercase tracking-wider">

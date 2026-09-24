@@ -5,6 +5,19 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --type-title: 1.2rem;  /* titoli di scheda e di riga */
+    --type-body: 0.95rem;  /* tutto il testo corrente, comprese le informazioni secondarie */
+    --type-label: 0.72rem; /* etichette maiuscolette di sezione */
+  }
+
+  /* La misura del corpo testo si eredita da qui: così un elemento senza
+     classi è già alla dimensione giusta, invece di ricadere sui 16px del
+     browser e rompere la scala. (Su html resta 16px, per non alterare i rem.) */
+  body {
+    font-size: var(--type-body);
+  }
+
   html {
     font-family: theme('fontFamily.sans');
     color: theme('colors.ink.DEFAULT');
@@ -82,11 +95,42 @@
                 0 0 0 4px theme('colors.accent.DEFAULT');
   }
 
+  /* ─── Scala tipografica ───────────────────────────────────
+     Tre sole misure per tutto il sito. La gerarchia si ottiene con
+     colore e peso, non moltiplicando le dimensioni: dentro una sezione
+     solo il titolo cambia grandezza, il resto è tutto `type-body`.
+     Non usare text-xs / text-sm / text-lg nelle pagine: usare queste. */
+  .type-title {
+    font-family: theme('fontFamily.serif');
+    font-size: var(--type-title);
+    line-height: 1.35;
+  }
+
+  .type-body {
+    font-size: var(--type-body);
+    line-height: 1.6;
+  }
+
+  /* Il titolo di un brano si presenta allo stesso modo ovunque compaia
+     (prossima prova, dettaglio prova, repertorio, storico): definito qui
+     una volta sola, così non può divergere da una sezione all'altra. */
+  .titolo-pezzo {
+    font-family: theme('fontFamily.serif');
+    font-size: var(--type-title);
+    line-height: 1.35;
+    color: theme('colors.ink.DEFAULT');
+    transition: color 0.2s ease;
+  }
+  a.titolo-pezzo:hover,
+  button.titolo-pezzo:hover {
+    color: theme('colors.accent.DEFAULT');
+  }
+
   /* ─── Labels ──────────────────────────────────────────── */
   .label-caps {
     display: block;
     font-family: theme('fontFamily.serif');
-    font-size: 0.72rem;
+    font-size: var(--type-label);
     letter-spacing: 0.22em;
     text-transform: uppercase;
     font-feature-settings: 'smcp' 1, 'c2sc' 1;

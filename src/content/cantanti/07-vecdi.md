@@ -1,8 +1,9 @@
 ---
 nome: "Vecdi"
 voce: basso
+foto: "/images/cantanti/vecdi.svg"
 bioBreve: "Basso. *Bio da completare.*"
-ordine: 6
+ordine: 7
 lingua: it
 ---
 

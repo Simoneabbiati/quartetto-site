@@ -18,10 +18,10 @@ const t = useTranslations(lang);
 const fullTitle = title === 'home' ? `${t('site.name')} — ${t('site.tagline')}` : `${title} · ${t('site.name')}`;
 const metaDescription = description ?? t('site.tagline');
 
-// URL bilingui per hreflang (base-aware): percorso logico senza base né /en
-const cleanPath = stripBase(Astro.url.pathname).replace(/^\/en/, '') || '/';
-const itUrl = new URL(withBase(cleanPath), Astro.site);
-const enUrl = new URL(withBase(cleanPath === '/' ? '/en/' : `/en${cleanPath}`), Astro.site);
+// URL bilingui per hreflang (base-aware): percorso logico senza base né /it
+const cleanPath = stripBase(Astro.url.pathname).replace(/^\/it/, '') || '/';
+const enUrl = new URL(withBase(cleanPath), Astro.site);
+const itUrl = new URL(withBase(cleanPath === '/' ? '/it/' : `/it${cleanPath}`), Astro.site);
 const defaultUrl = new URL(withBase('/'), Astro.site);
 ---
 

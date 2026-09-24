@@ -3,21 +3,23 @@ import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
-  // Deploy su GitHub Pages (project site): https://simoneabbiati.github.io/quartetto-site/
-  site: 'https://simoneabbiati.github.io',
-  base: '/quartetto-site',
+  // Deploy su Cloudflare Pages: https://quartetto-site.pages.dev (dominio personalizzato da collegare in seguito)
+  site: 'https://quartetto-site.pages.dev',
 
-  // Strategia bilingue: IT default su /, EN su /en/
+  // Strategia bilingue: EN default su /, IT su /it/
   i18n: {
-    defaultLocale: 'it',
-    locales: ['it', 'en'],
+    defaultLocale: 'en',
+    locales: ['en', 'it'],
     routing: {
       prefixDefaultLocale: false,
     },
   },
 
+  // Compressione HTML attiva di default in Astro 5
   integrations: [
     tailwind({
       applyBaseStyles: false, // useremo il nostro global.css
@@ -25,5 +27,5 @@ export default defineConfig({
     sitemap(),
   ],
 
-  // Compressione HTML attiva di default in Astro 5
+  adapter: cloudflare()
 });

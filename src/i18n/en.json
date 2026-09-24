@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "[Ensemble Name]",
+    "name": "Ad Fontes",
     "tagline": "Four voices for the sacred tradition"
   },
   "nav": {
@@ -9,10 +9,11 @@
     "concerti": "Concerts",
     "media": "Media",
     "contatti": "Contact",
-    "pressKit": "Press Kit"
+    "pressKit": "Press Kit",
+    "riservato": "Members area"
   },
   "home": {
-    "ctaBooking": "Book [Ensemble Name]",
+    "ctaBooking": "Book Ad Fontes",
     "ctaConcerto": "Upcoming concerts",
     "prossimoConcerto": "Next concert",
     "ascoltaci": "Listen"
@@ -35,7 +36,7 @@
   },
   "contatti": {
     "titolo": "Contact",
-    "intro": "To book [Ensemble Name] or request further information, please use the form below.",
+    "intro": "To book Ad Fontes or request further information, please use the form below.",
     "form": {
       "nome": "Full name",
       "ruolo": "Role",
@@ -54,7 +55,64 @@
     }
   },
   "footer": {
-    "copyright": "© {year} [Ensemble Name]. All rights reserved.",
-    "lingua": "Language"
+    "copyright": "© {year} Ad Fontes. All rights reserved.",
+    "lingua": "Language",
+    "esplora": "Explore",
+    "contatti": "Contact",
+    "motto": "Four voices — a millennium of sacred tradition"
+  },
+  "riservato": {
+    "titolo": "Members area",
+    "accessoCome": "Signed in as",
+    "esci": "sign out",
+    "prossimeProve": "Upcoming rehearsals",
+    "nessunaProva": "No rehearsals scheduled.",
+    "rispondi": "Reply",
+    "presenti": "attending",
+    "chiCe": "Who's coming",
+    "inAttesa": "awaiting reply",
+    "pezziDaPreparare": "Pieces to prepare",
+    "apriProva": "Open rehearsal and reply",
+    "prossimiConcerti": "Upcoming concerts",
+    "nessunConcerto": "No concerts scheduled.",
+    "programma": "Programme",
+    "repertorioCompleto": "Full repertoire",
+    "nessunoSpartito": "No scores uploaded yet.",
+    "studiatoUltimaVolta": "Last rehearsed on",
+    "provePassate": "Past rehearsals",
+    "studiato": "Rehearsed",
+    "presentiLabel": "Attended",
+    "nessunaPresenza": "No attendance recorded",
+    "pezzo": "piece",
+    "pezzi": "pieces",
+    "tornaIndietro": "Back to members area",
+    "prova": "Rehearsal",
+    "tuaPresenza": "Your attendance",
+    "si": "Yes",
+    "no": "No",
+    "forse": "Maybe",
+    "ciSaro": "Attending",
+    "nonCiSaro": "Not attending",
+    "salvataggio": "Saving…",
+    "salvato": "Saved.",
+    "erroreSalvataggio": "Could not save, please try again.",
+    "provaNonTrovata": "Rehearsal not found.",
+    "nessunPezzo": "No pieces assigned to this rehearsal.",
+    "nonHaRisposto": "No reply yet",
+    "ore": "at",
+    "anonimo": "Anonymous",
+    "chiudi": "Close",
+    "apriScheda": "Open in a new tab",
+    "prossimaProva": "Next rehearsal",
+    "altreProve": "Other scheduled rehearsals",
+    "mostraTutte": "Show all",
+    "haiRisposto": "You replied",
+    "nonHaiRisposto": "You haven't replied yet",
+    "rispostePresenti": "replied",
+    "vociMancanti": "Voices not yet confirmed",
+    "nessunPezzoAssegnato": "No pieces assigned yet",
+    "oggi": "Today",
+    "domani": "Tomorrow",
+    "traGiorni": "In {n} days"
   }
 }

@@ -1,10 +1,10 @@
 ---
 export const prerender = false;
 
-import Base from '../layouts/Base.astro';
-import { useTranslations, withBase } from '../i18n/utils';
+import Base from '../../layouts/Base.astro';
+import { useTranslations, withBase } from '../../i18n/utils';
 
-const t = useTranslations('en');
+const t = useTranslations('it');
 
 Astro.response.headers.set('Cache-Control', 'no-store');
 
@@ -37,38 +37,38 @@ for (const s of spartiti) {
 }
 ---
 
-<Base title="Repertoire" description="The ensemble's repertoire — the pieces currently in our library.">
+<Base title="Repertorio" description="Il repertorio dell'ensemble — i brani attualmente in libreria.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(19,28,41,0.07)">
+  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(26,37,53,0.07)">
     <p class="label-caps mb-4">{t('nav.repertorio')}</p>
-    <h1 class="font-serif max-w-xl">The repertoire</h1>
+    <h1 class="font-serif max-w-xl">Il repertorio</h1>
     <p class="text-base text-ink-soft mt-3 font-serif italic max-w-lg">
-      The pieces currently in our library, updated as we add new scores.
+      I brani attualmente in libreria, aggiornati man mano che aggiungiamo nuovi spartiti.
     </p>
   </section>
 
-  <!-- Composers -->
+  <!-- Compositori -->
   <div class="container-default py-12 pb-24 space-y-16">
     {byCompositore.length === 0 && (
-      <p class="text-ink-soft">Repertoire coming soon.</p>
+      <p class="text-ink-soft">Repertorio in arrivo.</p>
     )}
 
     {byCompositore.map((gruppo) => (
       <section>
-        <div class="flex items-baseline gap-6 mb-6 pb-4" style="border-bottom: 1px solid rgba(47,90,120,0.25)">
-          <h2 class="font-serif text-2xl">{gruppo.compositore === 'Anonimo' ? 'Anonymous' : gruppo.compositore}</h2>
+        <div class="flex items-baseline gap-6 mb-6 pb-4" style="border-bottom: 1px solid rgba(61,107,138,0.25)">
+          <h2 class="font-serif text-2xl">{gruppo.compositore}</h2>
         </div>
 
         <div class="space-y-0">
           {gruppo.brani.map((brano, i) => (
             <div
               class="grid md:grid-cols-[1fr_auto] gap-2 py-3.5 items-baseline"
-              style={`border-bottom: 1px solid rgba(19,28,41,${i === gruppo.brani.length - 1 ? '0' : '0.06'})`}
+              style={`border-bottom: 1px solid rgba(26,37,53,${i === gruppo.brani.length - 1 ? '0' : '0.06'})`}
             >
               <span class="font-serif text-[1.05rem]">{brano.titolo}</span>
               {brano.organico && (
-                <span class="label-caps text-[0.65rem] md:justify-self-end" style="color: rgba(76,98,125,0.9)">{brano.organico}</span>
+                <span class="label-caps text-[0.65rem] md:justify-self-end" style="color: rgba(112,136,165,0.9)">{brano.organico}</span>
               )}
             </div>
           ))}
@@ -78,11 +78,11 @@ for (const s of spartiti) {
   </div>
 
   <!-- Footer note -->
-  <section class="border-t py-10" style="border-color: rgba(19,28,41,0.08); background-color: #dde7f1;">
+  <section class="border-t py-10" style="border-color: rgba(26,37,53,0.08); background-color: #e5ecf4;">
     <div class="container-narrow text-center">
       <p class="text-sm text-ink-muted font-serif italic">
-        The repertoire is continually evolving. For programmes tailored to a liturgy, concert or festival,
-        <a href={withBase('/contatti')} class="text-accent hover:underline">get in touch</a>.
+        Il repertorio è in continua evoluzione. Per programmi personalizzati su liturgia, concerto o festival,
+        <a href={withBase('/it/contatti')} class="text-accent hover:underline">contattateci</a>.
       </p>
     </div>
   </section>

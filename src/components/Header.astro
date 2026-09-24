@@ -5,7 +5,7 @@ import LangSwitcher from './LangSwitcher.astro';
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const prefix = lang === 'it' ? '' : '/en';
+const prefix = lang === 'en' ? '' : '/it';
 
 const navItems = [
   { href: withBase(`${prefix}/quartetto`), label: t('nav.quartetto') },
@@ -13,6 +13,7 @@ const navItems = [
   { href: withBase(`${prefix}/concerti`), label: t('nav.concerti') },
   { href: withBase(`${prefix}/media`), label: t('nav.media') },
   { href: withBase(`${prefix}/contatti`), label: t('nav.contatti') },
+  { href: withBase(lang === 'it' ? '/riservato/?lang=it' : '/riservato/'), label: t('nav.riservato') },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');

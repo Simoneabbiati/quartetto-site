@@ -61,10 +61,10 @@ export function stripBase(pathname: string): string {
 
 /**
  * Estrae la lingua corrente dall'URL (base-aware).
- * /en/* → 'en', tutto il resto → 'it'
+ * /it/* → 'it', tutto il resto → 'en'
  */
 export function getLangFromUrl(url: URL): Lang {
   const [, segment] = stripBase(url.pathname).split('/');
-  if (segment === 'en') return 'en';
-  return 'it';
+  if (segment === 'it') return 'it';
+  return 'en';
 }

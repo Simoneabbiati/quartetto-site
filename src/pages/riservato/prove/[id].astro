@@ -1,0 +1,209 @@
+---
+export const prerender = false;
+
+import Base from '../../../layouts/Base.astro';
+import { getAccessEmail } from '../../../lib/access';
+import { useTranslations } from '../../../i18n/utils';
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+const lang = Astro.url.searchParams.get('lang') === 'it' ? 'it' : 'en';
+const t = useTranslations(lang);
+const locale = lang === 'it' ? 'it-IT' : 'en-GB';
+const suffissoLingua = lang === 'it' ? '?lang=it' : '';
+
+const env = (Astro.locals as any).runtime?.env;
+const db = env?.DB;
+const myEmail = getAccessEmail(Astro.request);
+const prova_id = Number(Astro.params.id);
+
+interface Prova { id: number; data: string; ora: string | null; luogo: string | null; note: string | null; }
+interface Pezzo { id: number; titolo: string; compositore: string; }
+interface Presenza { email: string; nome: string; voce: string; stato: string | null; }
+
+let prova: Prova | null = null;
+let pezzi: Pezzo[] = [];
+let presenze: Presenza[] = [];
+let myStato: string | null = null;
+let errore: string | null = null;
+
+if (!db) {
+  errore = 'Binding D1 "DB" non disponibile.';
+} else if (!Number.isInteger(prova_id)) {
+  errore = t('riservato.provaNonTrovata');
+} else {
+  prova = await db.prepare('SELECT id, data, ora, luogo, note FROM prove WHERE id = ?').bind(prova_id).first();
+
+  if (prova) {
+    const pezziRes = await db
+      .prepare(
+        `SELECT s.id, s.titolo, s.compositore
+         FROM prove_spartiti ps JOIN spartiti s ON s.id = ps.spartito_id
+         WHERE ps.prova_id = ? ORDER BY s.compositore, s.titolo`
+      )
+      .bind(prova_id)
+      .all();
+    pezzi = pezziRes.results as Pezzo[];
+
+    const presenzeRes = await db
+      .prepare(
+        `SELECT c.email, c.nome, c.voce, p.stato
+         FROM coristi c LEFT JOIN presenze p ON p.utente_email = c.email AND p.prova_id = ?
+         ORDER BY c.voce, c.nome`
+      )
+      .bind(prova_id)
+      .all();
+    presenze = presenzeRes.results as Presenza[];
+    myStato = presenze.find((p) => p.email === myEmail)?.stato ?? null;
+
+  }
+}
+
+const VOCE_ORDER = ['soprano', 'contralto', 'mezzosoprano', 'tenore', 'baritono', 'basso'];
+const perVoce = VOCE_ORDER.map((voce) => ({
+  voce,
+  persone: presenze.filter((p) => p.voce === voce),
+})).filter((g) => g.persone.length > 0);
+
+const STATO_COLOR: Record<string, string> = {
+  si: '#2f8f5b',
+  no: '#c14444',
+  forse: '#c99a2e',
+};
+const STATO_LABEL: Record<string, string> = {
+  si: t('riservato.si'),
+  no: t('riservato.no'),
+  forse: t('riservato.forse'),
+};
+
+const dataFormattata = prova
+  ? new Date(prova.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })
+  : '';
+---
+
+<Base title={prova ? `${t('riservato.prova')} ${dataFormattata}` : t('riservato.prova')}>
+  <section class="container-default py-16 max-w-2xl mx-auto">
+    <a href={`/riservato/${suffissoLingua}`} class="type-body text-ink-soft hover:text-accent">&larr; {t('riservato.tornaIndietro')}</a>
+
+    {errore && <p class="type-body text-ink-muted mt-6">Errore: {errore}</p>}
+
+    {!errore && !prova && <p class="text-ink-soft mt-6">{t('riservato.provaNonTrovata')}</p>}
+
+    {prova && (
+      <>
+        <p class="label-caps mt-6 mb-2">{t('riservato.prova')}</p>
+        <h1 class="font-serif mb-1 capitalize">{dataFormattata}</h1>
+        <p class="text-ink-soft mb-8">
+          {prova.ora && `${t('riservato.ore')} ${prova.ora}`}{prova.ora && prova.luogo && ' · '}{prova.luogo}
+        </p>
+
+        <!-- RSVP -->
+        <div class="mb-12">
+          <p class="label-caps mb-3">{t('riservato.tuaPresenza')}</p>
+          <div class="flex gap-2" id="rsvp-buttons" data-prova-id={prova.id} data-mio-stato={myStato ?? ''} data-msg-saving={t('riservato.salvataggio')} data-msg-saved={t('riservato.salvato')} data-msg-error={t('riservato.erroreSalvataggio')}>
+            <button type="button" class="rsvp-btn" data-stato="si">{t('riservato.si')}</button>
+            <button type="button" class="rsvp-btn" data-stato="forse">{t('riservato.forse')}</button>
+            <button type="button" class="rsvp-btn" data-stato="no">{t('riservato.no')}</button>
+          </div>
+          <p id="rsvp-feedback" class="type-body text-ink-muted mt-2" aria-live="polite"></p>
+        </div>
+
+        <!-- Board presenze per voce -->
+        <div class="mb-12">
+          <p class="label-caps mb-3">{t('riservato.chiCe')}</p>
+          <div class="flex flex-col gap-4">
+            {perVoce.map((gruppo) => (
+              <div>
+                <p class="type-body text-ink-muted uppercase tracking-wide mb-1.5">{t(`cantanti.${gruppo.voce}`)}</p>
+                <div class="flex flex-col gap-1">
+                  {gruppo.persone.map((persona) => (
+                    <div class="flex items-center gap-2 type-body">
+                      <span
+                        class="inline-block rounded-full flex-shrink-0"
+                        style={`width:10px; height:10px; background:${persona.stato ? STATO_COLOR[persona.stato] : '#c7ccd3'};`}
+                        title={persona.stato ? STATO_LABEL[persona.stato] : t('riservato.nonHaRisposto')}
+                      ></span>
+                      <span class="text-ink">{persona.nome}</span>
+                      <span class="text-ink-muted type-body">{persona.stato ? STATO_LABEL[persona.stato] : t('riservato.inAttesa')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Pezzi da preparare -->
+        <div>
+          <p class="label-caps mb-3">{t('riservato.pezziDaPreparare')}</p>
+          {pezzi.length === 0 && <p class="text-ink-soft type-body">{t('riservato.nessunPezzo')}</p>}
+          <div class="flex flex-col gap-4">
+            {pezzi.map((pezzo) => (
+              <div class="border rounded-sm p-4" style="border-color: rgba(26,37,53,0.1);">
+                <a href={`/riservato/?apri=${pezzo.id}${lang === 'it' ? '&lang=it' : ''}`} class="titolo-pezzo">
+                  {pezzo.titolo}
+                </a>
+                <p class="type-body text-ink-soft mt-1">{pezzo.compositore === 'Anonimo' ? t('riservato.anonimo') : pezzo.compositore}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>
+    )}
+  </section>
+
+  <style>
+    .rsvp-btn {
+      padding: 0.6rem 1.1rem;
+      border-radius: 4px;
+      border: 1px solid rgba(26, 37, 53, 0.15);
+      background: transparent;
+      font-size: var(--type-body);
+      cursor: pointer;
+      flex: 1;
+    }
+    .rsvp-btn[data-active="si"] { background: #2f8f5b; border-color: #2f8f5b; color: white; }
+    .rsvp-btn[data-active="forse"] { background: #c99a2e; border-color: #c99a2e; color: white; }
+    .rsvp-btn[data-active="no"] { background: #c14444; border-color: #c14444; color: white; }
+  </style>
+
+  <script>
+    const wrap = document.getElementById('rsvp-buttons');
+    if (wrap) {
+      const provaId = Number(wrap.dataset.provaId);
+      const feedback = document.getElementById('rsvp-feedback')!;
+      const buttons = wrap.querySelectorAll<HTMLButtonElement>('.rsvp-btn');
+
+      function highlight(stato: string) {
+        buttons.forEach((b) => {
+          if (b.dataset.stato === stato) b.setAttribute('data-active', stato);
+          else b.removeAttribute('data-active');
+        });
+      }
+
+      const inizialeStato = wrap.dataset.mioStato;
+      if (inizialeStato) highlight(inizialeStato);
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const stato = btn.dataset.stato!;
+          feedback.textContent = wrap.dataset.msgSaving!;
+          try {
+            const res = await fetch('/riservato/api/presenza', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prova_id: provaId, stato }),
+            });
+            if (!res.ok) throw new Error();
+            highlight(stato);
+            feedback.textContent = wrap.dataset.msgSaved!;
+            setTimeout(() => (feedback.textContent = ''), 2000);
+          } catch {
+            feedback.textContent = wrap.dataset.msgError!;
+          }
+        });
+      });
+    }
+
+  </script>
+</Base>

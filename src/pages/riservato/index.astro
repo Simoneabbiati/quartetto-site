@@ -1,0 +1,671 @@
+---
+export const prerender = false;
+
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { getAccessEmail, getCorista, TEAM_DOMAIN } from '../../lib/access';
+import { useTranslations } from '../../i18n/utils';
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+// L'area riservata vive su un solo indirizzo, perché Cloudflare Access protegge
+// esattamente /riservato: una variante /it/riservato resterebbe fuori dal login.
+// La lingua arriva quindi da un parametro, non dal percorso.
+const lang = Astro.url.searchParams.get('lang') === 'it' ? 'it' : 'en';
+const t = useTranslations(lang);
+const locale = lang === 'it' ? 'it-IT' : 'en-GB';
+const suffissoLingua = lang === 'it' ? '?lang=it' : '';
+
+interface Spartito {
+  id: number;
+  titolo: string;
+  compositore: string;
+  organico: string | null;
+  concerto_id: string | null;
+}
+
+interface Prova {
+  id: number;
+  data: string;
+  ora: string | null;
+  luogo: string | null;
+  mioStato: string | null;
+}
+
+const env = (Astro.locals as any).runtime?.env;
+const db = env?.DB;
+
+const userEmail = getAccessEmail(Astro.request);
+const corista = db ? await getCorista(db, userEmail ?? '') : null;
+const userName = corista?.nome ?? userEmail;
+
+interface Corista { email: string; nome: string; voce: string; }
+
+let spartiti: Spartito[] = [];
+let prove: Prova[] = [];
+let storico: Prova[] = [];
+let coristi: Corista[] = [];
+let presenze: { prova_id: number; utente_email: string; stato: string }[] = [];
+let pezziPerProva: { prova_id: number; id: number; titolo: string }[] = [];
+let dbError: string | null = null;
+
+if (db) {
+  try {
+    const oggi = new Date().toISOString().slice(0, 10);
+
+    // Le tabelle sono piccole (pochi coristi, poche prove): le leggiamo intere
+    // e incrociamo i dati qui, invece di fare una query per ogni riga mostrata.
+    const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes] = await db.batch([
+      db.prepare('SELECT id, titolo, compositore, organico, concerto_id FROM spartiti ORDER BY compositore, titolo'),
+      db.prepare(
+        `SELECT p.id, p.data, p.ora, p.luogo, pr.stato as mioStato
+         FROM prove p LEFT JOIN presenze pr ON pr.prova_id = p.id AND pr.utente_email = ?
+         ORDER BY p.data, p.ora`
+      ).bind(userEmail ?? ''),
+      db.prepare('SELECT email, nome, voce FROM coristi ORDER BY nome'),
+      db.prepare('SELECT prova_id, utente_email, stato FROM presenze'),
+      db.prepare(
+        `SELECT ps.prova_id, s.id, s.titolo
+         FROM prove_spartiti ps JOIN spartiti s ON s.id = ps.spartito_id
+         ORDER BY s.titolo`
+      ),
+    ]);
+
+    spartiti = spartitiRes.results as Spartito[];
+    const tutteLeProve = proveRes.results as Prova[];
+    prove = tutteLeProve.filter((p) => p.data >= oggi);
+    storico = tutteLeProve.filter((p) => p.data < oggi).reverse(); // più recenti in cima
+    coristi = coristiRes.results as Corista[];
+    presenze = presenzeRes.results as any[];
+    pezziPerProva = pezziRes.results as any[];
+  } catch (err) {
+    dbError = err instanceof Error ? err.message : String(err);
+  }
+} else {
+  dbError = 'Binding D1 "DB" non disponibile in questo ambiente.';
+}
+
+const MOSTRA_SUBITO = 3;
+const STATO_COLOR: Record<string, string> = { si: '#2f8f5b', no: '#c14444', forse: '#c99a2e' };
+const STATO_LABEL: Record<string, string> = { si: t('riservato.ciSaro'), no: t('riservato.nonCiSaro'), forse: t('riservato.forse') };
+const VOCE_ORDER = ['soprano', 'contralto', 'mezzosoprano', 'tenore', 'baritono', 'basso'];
+
+// I concerti vengono dal contenuto già pubblicato sul sito (src/content/concerti),
+// così non esistono due elenchi da tenere allineati a mano.
+const oggiData = new Date();
+oggiData.setHours(0, 0, 0, 0);
+const concerti = (await getCollection('concerti', ({ data }) => data.lingua === lang && data.data >= oggiData))
+  .sort((a, b) => a.data.data.getTime() - b.data.data.getTime());
+
+function formattaData(iso: string) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
+}
+
+function ultimaVoltaStudiato(spartitoId: number): string | null {
+  const dateProve = pezziPerProva
+    .filter((x) => x.id === spartitoId)
+    .map((x) => storico.find((p) => p.id === x.prova_id)?.data)
+    .filter((d): d is string => Boolean(d))
+    .sort();
+  const ultima = dateProve[dateProve.length - 1];
+  return ultima ? formattaData(ultima) : null;
+}
+
+// Quanti giorni mancano: "Oggi"/"Domani" comunicano meglio di una data.
+function quantiGiorni(iso: string): number {
+  const d = new Date(iso + 'T00:00:00');
+  const oggi = new Date();
+  oggi.setHours(0, 0, 0, 0);
+  return Math.round((d.getTime() - oggi.getTime()) / 86400000);
+}
+
+function etichettaGiorni(iso: string): string {
+  const n = quantiGiorni(iso);
+  if (n === 0) return t('riservato.oggi');
+  if (n === 1) return t('riservato.domani');
+  return t('riservato.traGiorni', { n });
+}
+
+function presenzePerProva(provaId: number) {
+  return [...coristi]
+    .sort((a, b) => VOCE_ORDER.indexOf(a.voce) - VOCE_ORDER.indexOf(b.voce) || a.nome.localeCompare(b.nome))
+    .map((c) => ({
+      ...c,
+      stato: presenze.find((p) => p.prova_id === provaId && p.utente_email === c.email)?.stato ?? null,
+    }));
+}
+---
+
+<Base title={t('riservato.titolo')}>
+  <section class="container-default py-16">
+    <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-10">
+      <p class="label-caps">{t('riservato.titolo')}</p>
+      {(userName) && (
+        <p class="type-body text-ink-soft">
+          {t('riservato.accessoCome')} <span class="text-ink font-medium">{userName}</span>
+          {' · '}
+          <a href={`${TEAM_DOMAIN}/cdn-cgi/access/logout`} class="underline hover:text-accent">{t('riservato.esci')}</a>
+        </p>
+      )}
+    </div>
+
+    {dbError && (
+      <p class="type-body text-ink-muted mb-6">Errore: {dbError}</p>
+    )}
+
+    <!-- ═══ CALENDARIO ═══ -->
+    {!dbError && prove.length === 0 && (
+      <>
+        <h1 class="font-serif mb-6">{t('riservato.prossimeProve')}</h1>
+        <p class="text-ink-soft mb-16">{t('riservato.nessunaProva')}</p>
+      </>
+    )}
+
+    {prove.length > 0 && (() => {
+      const prossima = prove[0];
+      const altre = prove.slice(1);
+      const partecipanti = presenzePerProva(prossima.id);
+      const pezzi = pezziPerProva.filter((x) => x.prova_id === prossima.id);
+      const risposte = partecipanti.filter((c) => c.stato).length;
+      const vociMancanti = [...new Set(partecipanti.filter((c) => !c.stato).map((c) => c.voce))];
+      const dataLunga = new Date(prossima.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+
+      return (
+        <>
+          <h1 class="font-serif mb-6">{t('riservato.prossimaProva')}</h1>
+
+          <!-- Scheda in evidenza: tutto ciò che serve oggi, senza navigare -->
+          <div class="rounded-sm border p-5 mb-10" style="border-color: rgba(26,37,53,0.14); background: rgba(221,231,241,0.35);">
+            <div class="flex items-baseline justify-between gap-3 mb-1 flex-wrap">
+              <p class="font-serif type-title capitalize">{dataLunga}</p>
+              <span class="type-body text-ink-muted">{etichettaGiorni(prossima.data)}</span>
+            </div>
+            <p class="type-body text-ink-soft mb-5">
+              {prossima.ora && `${t('riservato.ore')} ${prossima.ora}`}{prossima.ora && prossima.luogo && ' · '}{prossima.luogo}
+            </p>
+
+            <!-- RSVP in un tocco, senza cambiare pagina -->
+            <div class="flex gap-2 mb-2" id="rsvp-home" data-prova-id={prossima.id} data-mio-stato={prossima.mioStato ?? ''}
+                 data-msg-saving={t('riservato.salvataggio')} data-msg-saved={t('riservato.salvato')} data-msg-error={t('riservato.erroreSalvataggio')}>
+              <button type="button" class="rsvp-btn" data-stato="si">{t('riservato.si')}</button>
+              <button type="button" class="rsvp-btn" data-stato="forse">{t('riservato.forse')}</button>
+              <button type="button" class="rsvp-btn" data-stato="no">{t('riservato.no')}</button>
+            </div>
+            <p id="rsvp-home-feedback" class="type-body text-ink-muted mb-5 h-4" aria-live="polite"></p>
+
+            <!-- Colpo d'occhio: quante risposte e quali voci mancano -->
+            <div class="flex flex-wrap gap-x-5 gap-y-1 type-body text-ink-muted mb-4">
+              <span>{risposte}/{partecipanti.length} {t('riservato.rispostePresenti')}</span>
+              {vociMancanti.length > 0 && (
+                <span>{t('riservato.vociMancanti')}: {vociMancanti.map((v) => t(`cantanti.${v}`)).join(', ')}</span>
+              )}
+            </div>
+
+            <details class="prova-details mb-4">
+              <summary class="flex items-center gap-2 py-1 cursor-pointer text-ink-soft">
+                <span>{t('riservato.chiCe')}</span>
+              </summary>
+              <div class="flex flex-col gap-1 pt-2">
+                {partecipanti.map((c) => (
+                  <div class="flex items-baseline gap-2 flex-wrap">
+                    <span class="inline-block rounded-full flex-shrink-0 self-center"
+                          style={`width:8px; height:8px; background:${c.stato ? STATO_COLOR[c.stato] : '#c7ccd3'};`}></span>
+                    <span class="text-ink">{c.nome}</span>
+                    <span class="text-ink-muted">{t(`cantanti.${c.voce}`)}</span>
+                    {/* Se non ha risposto lo dice già il pallino grigio: ripeterlo
+                        a parole su ogni riga la riempie senza aggiungere nulla. */}
+                    {c.stato && <span class="text-ink-muted ml-auto">{STATO_LABEL[c.stato]}</span>}
+                  </div>
+                ))}
+              </div>
+            </details>
+
+            <div>
+              <p class="type-body text-ink-muted uppercase tracking-wide mb-1.5">{t('riservato.pezziDaPreparare')}</p>
+              {pezzi.length === 0 && <p class="type-body text-ink-muted">{t('riservato.nessunPezzoAssegnato')}</p>}
+              {pezzi.map((pezzo) => (
+                <p>
+                  <a href={`/riservato/?apri=${pezzo.id}${lang === 'it' ? '&lang=it' : ''}`} class="titolo-pezzo">{pezzo.titolo}</a>
+                </p>
+              ))}
+            </div>
+          </div>
+
+          <!-- Le altre prove restano compatte: solo le prossime, il resto a richiesta -->
+          {altre.length > 0 && (
+            <>
+              <h2 class="font-serif type-title mb-3">{t('riservato.altreProve')}</h2>
+              <ul class="flex flex-col gap-2 mb-16" id="altre-prove">
+                {altre.map((p, i) => {
+                  const dataFormattata = new Date(p.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
+                  const quantiSi = presenzePerProva(p.id).filter((x) => x.stato === 'si').length;
+                  return (
+                    <li class="border-b altra-prova" data-oltre={i >= MOSTRA_SUBITO ? 'si' : 'no'} hidden={i >= MOSTRA_SUBITO}
+                        style="border-color: rgba(26,37,53,0.08);">
+                      <a href={`/riservato/prove/${p.id}${suffissoLingua}`}
+                         class="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-black/[0.03] transition-colors">
+                        <span class="inline-block rounded-full flex-shrink-0"
+                              style={`width:10px; height:10px; background:${p.mioStato ? STATO_COLOR[p.mioStato] : '#c7ccd3'};`}></span>
+                        <span class="font-serif capitalize">{dataFormattata}</span>
+                        {p.ora && <span class="text-ink-soft type-body">{t('riservato.ore')} {p.ora}</span>}
+                        <span class="type-body text-ink-muted ml-auto">
+                          {quantiSi > 0 ? `${quantiSi} ${t('riservato.presenti')}` : (p.mioStato ? STATO_LABEL[p.mioStato] : t('riservato.rispondi'))}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+              {altre.length > MOSTRA_SUBITO && (
+                <button type="button" id="mostra-tutte" class="type-body text-accent hover:underline -mt-14 mb-16">
+                  {t('riservato.mostraTutte')} ({altre.length})
+                </button>
+              )}
+            </>
+          )}
+        </>
+      );
+    })()}
+
+    <!-- ═══ PROSSIMI CONCERTI ═══ -->
+    <h2 class="font-serif mb-6">{t('riservato.prossimiConcerti')}</h2>
+
+    {concerti.length === 0 && (
+      <p class="text-ink-soft mb-16">{t('riservato.nessunConcerto')}</p>
+    )}
+
+    {concerti.length > 0 && (
+      <ul class="flex flex-col gap-2 mb-16">
+        {concerti.map((c) => (
+          <li class="border-b pb-3" style="border-color: rgba(26,37,53,0.08);">
+            <details class="prova-details">
+              <summary class="flex items-center gap-3 py-2 cursor-pointer">
+                <span class="font-serif capitalize">
+                  {c.data.data.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' })}
+                </span>
+                {c.data.ora && <span class="text-ink-soft type-body">{t('riservato.ore')} {c.data.ora}</span>}
+                <span class="text-ink-muted type-body truncate">{c.data.citta}</span>
+              </summary>
+              <div class="pb-3 pl-6 pr-3 flex flex-col gap-2 type-body">
+                <p class="font-serif">{c.data.titolo}</p>
+                <p class="text-ink-soft">{c.data.luogo}, {c.data.citta}</p>
+                {c.data.programma && c.data.programma.length > 0 && (
+                  <div>
+                    <p class="type-body text-ink-muted uppercase tracking-wide mb-1">{t('riservato.programma')}</p>
+                    {c.data.programma.map((brano: any) => (
+                      <p class="text-ink-soft">{brano.opera} <span class="text-ink-muted">— {brano.compositore}</span></p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <!-- ═══ SPARTITI ═══ -->
+    <h2 class="font-serif mb-8">{t('riservato.repertorioCompleto')}</h2>
+
+    {!dbError && spartiti.length === 0 && (
+      <p class="text-ink-soft">{t('riservato.nessunoSpartito')}</p>
+    )}
+
+    {spartiti.length > 0 && (
+      <ul class="flex flex-col gap-3 mb-10">
+        {spartiti.map((s) => {
+          const ultimaVolta = ultimaVoltaStudiato(s.id);
+          return (
+            <li id={`spartito-${s.id}`} class="border-b pb-3" style="border-color: rgba(26,37,53,0.08);">
+              <button
+                type="button"
+                class="apri-spartito text-left titolo-pezzo"
+                data-id={s.id}
+                data-pdf-url={`/riservato/spartiti/${s.id}.pdf`}
+                data-titolo={s.titolo}
+              >
+                {s.titolo}
+              </button>
+              <span class="text-ink-soft"> — {s.compositore === 'Anonimo' ? t('riservato.anonimo') : s.compositore}</span>
+              {s.organico && <span class="type-body text-ink-muted ml-2">{s.organico}</span>}
+              {ultimaVolta && <p class="type-body text-ink-muted mt-1">{t('riservato.studiatoUltimaVolta')} {ultimaVolta}</p>}
+            </li>
+          );
+        })}
+      </ul>
+    )}
+
+    <!-- ═══ STORICO PROVE ═══ -->
+    {storico.length > 0 && (
+      <div class="mt-16">
+        <h2 class="font-serif mb-6">{t('riservato.provePassate')}</h2>
+        <ul class="flex flex-col gap-2">
+          {storico.map((p) => {
+            const pezzi = pezziPerProva.filter((x) => x.prova_id === p.id);
+            const presenti = presenzePerProva(p.id).filter((c) => c.stato === 'si');
+            return (
+              <li class="border-b" style="border-color: rgba(26,37,53,0.08);">
+                <details class="prova-details">
+                  <summary class="flex items-center gap-3 py-3 cursor-pointer text-ink-soft">
+                    <span class="font-serif capitalize">{formattaData(p.data)}</span>
+                    {p.luogo && <span class="text-ink-muted type-body truncate hidden sm:inline">{p.luogo}</span>}
+                    <span class="type-body text-ink-muted ml-auto">
+                      {pezzi.length > 0 ? `${pezzi.length} ${pezzi.length === 1 ? t('riservato.pezzo') : t('riservato.pezzi')}` : '—'}
+                    </span>
+                  </summary>
+                  <div class="pb-4 pl-6 pr-3 flex flex-col gap-3 type-body">
+                    {p.luogo && <p class="text-ink-muted sm:hidden">{p.luogo}</p>}
+                    {pezzi.length > 0 && (
+                      <div>
+                        <p class="type-body text-ink-muted uppercase tracking-wide mb-1">{t('riservato.studiato')}</p>
+                        {pezzi.map((pezzo) => (
+                          <p>
+                            <a href={`/riservato/?apri=${pezzo.id}${lang === 'it' ? '&lang=it' : ''}`} class="titolo-pezzo">{pezzo.titolo}</a>
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                    <div>
+                      <p class="type-body text-ink-muted uppercase tracking-wide mb-1">{t('riservato.presentiLabel')}</p>
+                      <p class="text-ink-soft">
+                        {presenti.length > 0 ? presenti.map((c) => c.nome).join(', ') : t('riservato.nessunaPresenza')}
+                      </p>
+                    </div>
+                  </div>
+                </details>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    )}
+
+    <div id="pdf-modal" class="pdf-modal" hidden>
+      <div id="pdf-modal-backdrop" class="pdf-modal-backdrop"></div>
+      <div class="pdf-modal-panel" role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
+        <div class="pdf-modal-toolbar">
+          <p id="pdf-modal-title" class="font-serif type-body truncate"></p>
+          <div class="pdf-modal-controls">
+            <button type="button" id="pdf-zoom-out" class="pdf-modal-btn pdf-zoom-ctl" aria-label="Zoom -">−</button>
+            <span id="pdf-zoom-level" class="pdf-zoom-ctl type-body text-ink-muted w-10 text-center">100%</span>
+            <button type="button" id="pdf-zoom-in" class="pdf-modal-btn pdf-zoom-ctl" aria-label="Zoom +">+</button>
+            <a id="pdf-newtab" class="pdf-modal-btn" target="_blank" rel="noopener" aria-label={t('riservato.apriScheda')} title={t('riservato.apriScheda')}>↗</a>
+            <button type="button" id="pdf-close" class="pdf-modal-btn pdf-modal-close" aria-label={t('riservato.chiudi')}>✕</button>
+          </div>
+        </div>
+        <div class="pdf-modal-body">
+          <iframe id="pdf-viewer" title="Spartito"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .rsvp-btn {
+      padding: 0.7rem 1.1rem;
+      border-radius: 4px;
+      border: 1px solid rgba(26, 37, 53, 0.15);
+      background: transparent;
+      font-size: var(--type-body);
+      cursor: pointer;
+      flex: 1;
+    }
+    .rsvp-btn[data-active="si"] { background: #2f8f5b; border-color: #2f8f5b; color: white; }
+    .rsvp-btn[data-active="forse"] { background: #c99a2e; border-color: #c99a2e; color: white; }
+    .rsvp-btn[data-active="no"] { background: #c14444; border-color: #c14444; color: white; }
+
+    .prova-details > summary {
+      list-style: none;
+    }
+    .prova-details > summary::-webkit-details-marker {
+      display: none;
+    }
+    /* Freccetta disegnata a mano: quella di default non si può posizionare
+       in modo affidabile fra i browser. */
+    .prova-details > summary::after {
+      content: '';
+      width: 0.45rem;
+      height: 0.45rem;
+      border-right: 1.5px solid rgba(26, 37, 53, 0.45);
+      border-bottom: 1.5px solid rgba(26, 37, 53, 0.45);
+      transform: rotate(45deg);
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+      margin-left: 0.15rem;
+    }
+    .prova-details[open] > summary::after {
+      transform: rotate(-135deg);
+    }
+
+    .pdf-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+    }
+    /* `display: flex` qui sopra sovrascriverebbe il display:none che il browser
+       applica all'attributo `hidden`: senza questa regola il popup resta sempre aperto. */
+    .pdf-modal[hidden] {
+      display: none;
+    }
+    .pdf-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(19, 28, 41, 0.65);
+    }
+    .pdf-modal-panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      /* dvh tiene conto della barra del browser che appare e scompare su mobile */
+      height: 100dvh;
+      background: var(--color-paper, #fff);
+      overflow: hidden;
+    }
+    .pdf-modal-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid rgba(26, 37, 53, 0.1);
+      flex-shrink: 0;
+    }
+    .pdf-modal-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
+    }
+    .pdf-modal-btn {
+      min-width: 2rem;
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(26, 37, 53, 0.15);
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      font-size: var(--type-body);
+      line-height: 1;
+    }
+    .pdf-modal-btn:hover {
+      background: rgba(26, 37, 53, 0.06);
+    }
+    .pdf-modal-btn,
+    a.pdf-modal-btn {
+      text-decoration: none;
+      color: inherit;
+    }
+    .pdf-modal-close {
+      min-width: 2.75rem;
+      height: 2.75rem;
+    }
+    @media (min-width: 768px) {
+      .pdf-modal-close {
+        min-width: 2rem;
+        height: 2rem;
+      }
+    }
+    .pdf-modal-body {
+      flex: 1;
+      overflow: auto;
+      background: #525659;
+      /* lascia passare il pinch al contenuto invece di intercettarlo */
+      touch-action: pan-x pan-y pinch-zoom;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Su mobile si zooma con le dita: i pulsanti sarebbero solo ingombro. */
+    .pdf-zoom-ctl {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .pdf-zoom-ctl {
+        display: inline-flex;
+      }
+      span.pdf-zoom-ctl {
+        display: inline-block;
+      }
+    }
+    #pdf-viewer {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+
+  <script>
+    const modal = document.getElementById('pdf-modal')!;
+    const iframe = document.getElementById('pdf-viewer') as HTMLIFrameElement;
+    const titleEl = document.getElementById('pdf-modal-title')!;
+    const panel = document.querySelector('.pdf-modal-panel') as HTMLElement;
+    const zoomLevelEl = document.getElementById('pdf-zoom-level')!;
+
+    let zoom = 1;
+    const ZOOM_MIN = 0.5;
+    const ZOOM_MAX = 2.5;
+    const ZOOM_STEP = 0.25;
+
+    function applyZoom() {
+      iframe.style.width = `${zoom * 100}%`;
+      iframe.style.height = `${zoom * 100}%`;
+      zoomLevelEl.textContent = `${Math.round(zoom * 100)}%`;
+    }
+
+    const newTabLink = document.getElementById('pdf-newtab') as HTMLAnchorElement;
+
+    function openModal(url: string, titolo: string) {
+      iframe.src = url;
+      newTabLink.href = url;
+      titleEl.textContent = titolo;
+      zoom = 1;
+      applyZoom();
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    // L'uscita da schermo intero è asincrona: nascondere il modale prima che sia
+    // completata lascia il browser in uno stato bloccato (popup che non si chiude).
+    function closeModal() {
+      modal.hidden = true;
+      iframe.src = 'about:blank';
+      document.body.style.overflow = '';
+    }
+
+    // Su mobile il visualizzatore PDF del telefono fa un lavoro migliore del nostro
+    // iframe (più pagine, pinch, tasto indietro): apriamo il file e basta.
+    // Il modale resta su desktop, dove il browser non offre un'esperienza a schermo intero.
+    const suMobile = () => window.matchMedia('(max-width: 767px)').matches;
+
+    function apriSpartito(url: string, titolo: string) {
+      if (suMobile()) {
+        window.location.href = url;
+      } else {
+        openModal(url, titolo);
+      }
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.apri-spartito').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        apriSpartito(btn.dataset.pdfUrl!, btn.dataset.titolo ?? '');
+      });
+    });
+
+    document.getElementById('pdf-close')!.addEventListener('click', closeModal);
+
+    document.getElementById('pdf-zoom-in')!.addEventListener('click', () => {
+      zoom = Math.min(ZOOM_MAX, zoom + ZOOM_STEP);
+      applyZoom();
+    });
+    document.getElementById('pdf-zoom-out')!.addEventListener('click', () => {
+      zoom = Math.max(ZOOM_MIN, zoom - ZOOM_STEP);
+      applyZoom();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.hidden) {
+        closeModal();
+      }
+    });
+
+    // RSVP direttamente dalla scheda in evidenza, senza cambiare pagina.
+    const rsvpHome = document.getElementById('rsvp-home');
+    if (rsvpHome) {
+      const provaId = Number(rsvpHome.dataset.provaId);
+      const feedback = document.getElementById('rsvp-home-feedback')!;
+      const buttons = rsvpHome.querySelectorAll<HTMLButtonElement>('.rsvp-btn');
+
+      const evidenzia = (stato: string) => {
+        buttons.forEach((b) => {
+          if (b.dataset.stato === stato) b.setAttribute('data-active', stato);
+          else b.removeAttribute('data-active');
+        });
+      };
+
+      if (rsvpHome.dataset.mioStato) evidenzia(rsvpHome.dataset.mioStato);
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const stato = btn.dataset.stato!;
+          feedback.textContent = rsvpHome.dataset.msgSaving!;
+          try {
+            const res = await fetch('/riservato/api/presenza', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prova_id: provaId, stato }),
+            });
+            if (!res.ok) throw new Error();
+            evidenzia(stato);
+            feedback.textContent = rsvpHome.dataset.msgSaved!;
+            setTimeout(() => location.reload(), 600);
+          } catch {
+            feedback.textContent = rsvpHome.dataset.msgError!;
+          }
+        });
+      });
+    }
+
+    const mostraTutte = document.getElementById('mostra-tutte');
+    if (mostraTutte) {
+      mostraTutte.addEventListener('click', () => {
+        document.querySelectorAll<HTMLElement>('.altra-prova[data-oltre="si"]').forEach((el) => (el.hidden = false));
+        mostraTutte.hidden = true;
+      });
+    }
+
+    // Arrivo da una prova con ?apri=<id spartito>: apre subito il PDF e ci scrolla vicino.
+    const apri = new URLSearchParams(location.search).get('apri');
+    if (apri) {
+      const target = document.querySelector<HTMLButtonElement>(`.apri-spartito[data-id="${apri}"]`);
+      if (target) {
+        target.closest('li')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        apriSpartito(target.dataset.pdfUrl!, target.dataset.titolo ?? '');
+      }
+    }
+  </script>
+</Base>

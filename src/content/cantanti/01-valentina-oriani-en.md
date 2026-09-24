@@ -1,6 +1,7 @@
 ---
 nome: "Valentina Oriani"
 voce: soprano
+foto: "/images/cantanti/valentina-oriani.svg"
 bioBreve: "Soprano and founder of the ensemble, specialising in Renaissance sacred repertoire and vocal chamber music."
 ordine: 1
 lingua: en

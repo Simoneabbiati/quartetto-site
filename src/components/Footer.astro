@@ -3,7 +3,7 @@ import { getLangFromUrl, useTranslations, withBase } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'it' ? '' : '/en';
+const prefix = lang === 'en' ? '' : '/it';
 const year = new Date().getFullYear();
 ---
 
@@ -20,7 +20,7 @@ const year = new Date().getFullYear();
 
     <!-- Esplora -->
     <nav class="flex flex-col gap-2.5">
-      <p class="label-caps mb-2">Esplora</p>
+      <p class="label-caps mb-2">{t('footer.esplora')}</p>
       <a href={withBase(`${prefix}/quartetto`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.quartetto')}</a>
       <a href={withBase(`${prefix}/repertorio`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.repertorio')}</a>
       <a href={withBase(`${prefix}/concerti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.concerti')}</a>
@@ -29,7 +29,7 @@ const year = new Date().getFullYear();
 
     <!-- Contatti -->
     <div class="flex flex-col gap-2.5">
-      <p class="label-caps mb-2">Contatti</p>
+      <p class="label-caps mb-2">{t('footer.contatti')}</p>
       <a href={withBase(`${prefix}/contatti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('home.ctaBooking')}</a>
       <a href={withBase('/press-kit')} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
     </div>
@@ -39,7 +39,7 @@ const year = new Date().getFullYear();
   <div class="border-t border-ink/[0.07]">
     <div class="container-default py-5 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-ink-muted">
       <span>{t('footer.copyright', { year })}</span>
-      <span class="font-serif italic text-ink-muted/60">Quattro voci — un millennio di tradizione sacra</span>
+      <span class="font-serif italic text-ink-muted/60">{t('footer.motto')}</span>
     </div>
   </div>
 </footer>
