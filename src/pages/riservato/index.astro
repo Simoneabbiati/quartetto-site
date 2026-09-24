@@ -147,7 +147,7 @@ function presenzePerProva(provaId: number) {
         <p class="type-body text-ink-soft">
           {t('riservato.accessoCome')} <span class="text-ink font-medium">{userName}</span>
           {' · '}
-          <a href={`${TEAM_DOMAIN}/cdn-cgi/access/logout`} class="underline hover:text-accent">{t('riservato.esci')}</a>
+          <a href={`${TEAM_DOMAIN}/cdn-cgi/access/logout`} class="tocco underline hover:text-accent">{t('riservato.esci')}</a>
         </p>
       )}
     </div>
@@ -202,13 +202,13 @@ function presenzePerProva(provaId: number) {
             <p class="text-ink-soft mb-3">
               {prossima.ora && `${t('riservato.ore')} ${prossima.ora}`}{prossima.ora && prossima.luogo && ' · '}
               {mappaProssima
-                ? <a href={mappaProssima} target="_blank" rel="noopener" class="underline hover:text-accent">{prossima.luogo}</a>
+                ? <a href={mappaProssima} target="_blank" rel="noopener" class="tocco underline hover:text-accent">{prossima.luogo}</a>
                 : prossima.luogo}
             </p>
 
             {calendarioProssima && (
               <p class="mb-5">
-                <a href={calendarioProssima} target="_blank" rel="noopener" class="text-accent hover:underline">
+                <a href={calendarioProssima} target="_blank" rel="noopener" class="tocco text-accent hover:underline">
                   + {t('riservato.aggiungiCalendario')}
                 </a>
               </p>
@@ -232,7 +232,7 @@ function presenzePerProva(provaId: number) {
             </div>
 
             <details class="prova-details mb-4">
-              <summary class="flex items-center gap-2 py-1 cursor-pointer text-ink-soft">
+              <summary class="tocco gap-2 cursor-pointer text-ink-soft">
                 <span>{t('riservato.chiCe')}</span>
               </summary>
               <div class="flex flex-col gap-1 pt-2">
@@ -265,32 +265,34 @@ function presenzePerProva(provaId: number) {
           {altre.length > 0 && (
             <>
               <h2 class="font-serif type-title mb-3">{t('riservato.altreProve')}</h2>
-              <ul class="flex flex-col gap-2 mb-16" id="altre-prove">
-                {altre.map((p, i) => {
-                  const dataFormattata = new Date(p.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
-                  const quantiSi = presenzePerProva(p.id).filter((x) => x.stato === 'si').length;
-                  return (
-                    <li class="border-b altra-prova" data-oltre={i >= MOSTRA_SUBITO ? 'si' : 'no'} hidden={i >= MOSTRA_SUBITO}
-                        style="border-color: rgba(26,37,53,0.08);">
-                      <a href={`/riservato/prove/${p.id}${suffissoLingua}`}
-                         class="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-black/[0.03] transition-colors">
-                        <span class="inline-block rounded-full flex-shrink-0"
-                              style={`width:10px; height:10px; background:${p.mioStato ? STATO_COLOR[p.mioStato] : '#c7ccd3'};`}></span>
-                        <span class="font-serif capitalize">{dataFormattata}</span>
-                        {p.ora && <span class="text-ink-soft type-body">{t('riservato.ore')} {p.ora}</span>}
-                        <span class="type-body text-ink-muted ml-auto">
-                          {quantiSi > 0 ? `${quantiSi} ${t('riservato.presenti')}` : (p.mioStato ? STATO_LABEL[p.mioStato] : t('riservato.rispondi'))}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-              {altre.length > MOSTRA_SUBITO && (
-                <button type="button" id="mostra-tutte" class="type-body text-accent hover:underline -mt-14 mb-16">
-                  {t('riservato.mostraTutte')} ({altre.length})
-                </button>
-              )}
+              <div class="mb-16">
+                <ul class="flex flex-col gap-2" id="altre-prove">
+                  {altre.map((p, i) => {
+                    const dataFormattata = new Date(p.data + 'T00:00:00').toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
+                    const quantiSi = presenzePerProva(p.id).filter((x) => x.stato === 'si').length;
+                    return (
+                      <li class="border-b altra-prova" data-oltre={i >= MOSTRA_SUBITO ? 'si' : 'no'} hidden={i >= MOSTRA_SUBITO}
+                          style="border-color: rgba(26,37,53,0.08);">
+                        <a href={`/riservato/prove/${p.id}${suffissoLingua}`}
+                           class="flex items-center gap-3 py-3 px-3 -mx-3 rounded-sm hover:bg-black/[0.03] transition-colors">
+                          <span class="inline-block rounded-full flex-shrink-0"
+                                style={`width:10px; height:10px; background:${p.mioStato ? STATO_COLOR[p.mioStato] : '#c7ccd3'};`}></span>
+                          <span class="font-serif capitalize">{dataFormattata}</span>
+                          {p.ora && <span class="text-ink-soft type-body">{t('riservato.ore')} {p.ora}</span>}
+                          <span class="type-body text-ink-muted ml-auto">
+                            {quantiSi > 0 ? `${quantiSi} ${t('riservato.presenti')}` : (p.mioStato ? STATO_LABEL[p.mioStato] : t('riservato.rispondi'))}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+                {altre.length > MOSTRA_SUBITO && (
+                  <button type="button" id="mostra-tutte" class="tocco type-body text-accent hover:underline mt-2">
+                    {t('riservato.mostraTutte')} ({altre.length})
+                  </button>
+                )}
+              </div>
             </>
           )}
         </>

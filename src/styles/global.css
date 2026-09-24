@@ -111,10 +111,26 @@
     line-height: 1.6;
   }
 
+  /* Bersaglio di tocco comodo per un link/sommario che è l'unico elemento
+     interattivo della sua riga (non dentro un paragrafo di prosa): allarga
+     l'area cliccabile con il padding, il margine negativo la compensa così
+     lo spazio intorno non cambia. Regola unica: se un domani il minimo
+     consigliato cambia, si aggiorna qui e vale ovunque. */
+  .tocco {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.55rem;
+    margin-block: -0.55rem;
+  }
+
   /* Il titolo di un brano si presenta allo stesso modo ovunque compaia
      (prossima prova, dettaglio prova, repertorio, storico): definito qui
      una volta sola, così non può divergere da una sezione all'altra. */
   .titolo-pezzo {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.45rem;
+    margin-block: -0.45rem;
     font-family: theme('fontFamily.serif');
     font-size: var(--type-title);
     line-height: 1.35;

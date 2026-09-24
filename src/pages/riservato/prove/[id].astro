@@ -102,7 +102,7 @@ const calendario = prova
 
 <Base title={prova ? `${t('riservato.prova')} ${dataFormattata}` : t('riservato.prova')}>
   <section class="container-default py-16 max-w-2xl mx-auto">
-    <a href={`/riservato/${suffissoLingua}`} class="type-body text-ink-soft hover:text-accent">&larr; {t('riservato.tornaIndietro')}</a>
+    <a href={`/riservato/${suffissoLingua}`} class="tocco type-body text-ink-soft hover:text-accent">&larr; {t('riservato.tornaIndietro')}</a>
 
     {errore && <p class="type-body text-ink-muted mt-6">Errore: {errore}</p>}
 
@@ -115,13 +115,13 @@ const calendario = prova
         <p class="text-ink-soft mb-3">
           {prova.ora && `${t('riservato.ore')} ${prova.ora}`}{prova.ora && prova.luogo && ' · '}
           {mappa
-            ? <a href={mappa} target="_blank" rel="noopener" class="underline hover:text-accent">{prova.luogo}</a>
+            ? <a href={mappa} target="_blank" rel="noopener" class="tocco underline hover:text-accent">{prova.luogo}</a>
             : prova.luogo}
         </p>
 
         {calendario && (
           <p class="mb-8">
-            <a href={calendario} target="_blank" rel="noopener" class="text-accent hover:underline">
+            <a href={calendario} target="_blank" rel="noopener" class="tocco text-accent hover:underline">
               + {t('riservato.aggiungiCalendario')}
             </a>
           </p>
