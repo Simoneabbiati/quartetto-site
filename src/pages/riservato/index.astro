@@ -310,7 +310,7 @@ function presenzePerProva(provaId: number) {
                   {c.data.data.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' })}
                 </span>
                 {c.data.ora && <span class="text-ink-soft type-body">{t('riservato.ore')} {c.data.ora}</span>}
-                <span class="text-ink-muted type-body truncate">{c.data.citta}</span>
+                <span class="text-ink-muted type-body truncate min-w-0">{c.data.citta}</span>
               </summary>
               <div class="pb-3 pl-6 pr-3 flex flex-col gap-2 type-body">
                 <p class="font-serif">{c.data.titolo}</p>
@@ -374,7 +374,7 @@ function presenzePerProva(provaId: number) {
                 <details class="prova-details">
                   <summary class="flex items-center gap-3 py-3 cursor-pointer text-ink-soft">
                     <span class="font-serif capitalize">{formattaData(p.data)}</span>
-                    {p.luogo && <span class="text-ink-muted type-body truncate hidden sm:inline">{p.luogo}</span>}
+                    {p.luogo && <span class="text-ink-muted type-body truncate min-w-0 hidden sm:inline">{p.luogo}</span>}
                     <span class="type-body text-ink-muted ml-auto">
                       {pezzi.length > 0 ? `${pezzi.length} ${pezzi.length === 1 ? t('riservato.pezzo') : t('riservato.pezzi')}` : '—'}
                     </span>
@@ -410,7 +410,7 @@ function presenzePerProva(provaId: number) {
       <div id="pdf-modal-backdrop" class="pdf-modal-backdrop"></div>
       <div class="pdf-modal-panel" role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
         <div class="pdf-modal-toolbar">
-          <p id="pdf-modal-title" class="font-serif type-body truncate"></p>
+          <p id="pdf-modal-title" class="font-serif type-body truncate min-w-0"></p>
           <div class="pdf-modal-controls">
             <button type="button" id="pdf-zoom-out" class="pdf-modal-btn pdf-zoom-ctl" aria-label="Zoom -">−</button>
             <span id="pdf-zoom-level" class="pdf-zoom-ctl type-body text-ink-muted w-10 text-center">100%</span>
