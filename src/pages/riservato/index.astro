@@ -346,38 +346,50 @@ function presenzePerProva(provaId: number) {
         {spartiti.map((s) => {
           const ultimaVolta = ultimaVoltaStudiato(s.id);
           const tracce = tracceAudio.filter((tr) => tr.spartito_id === s.id);
+          const pdfUrl = `/riservato/spartiti/${s.id}.pdf`;
           return (
             <li id={`spartito-${s.id}`} class="border-b pb-3" style="border-color: rgba(26,37,53,0.08);">
-              <button
-                type="button"
-                class="apri-spartito text-left titolo-pezzo"
-                data-id={s.id}
-                data-pdf-url={`/riservato/spartiti/${s.id}.pdf`}
-                data-titolo={s.titolo}
-              >
-                {s.titolo}
-              </button>
-              <span class="text-ink-soft"> — {s.compositore === 'Anonimo' ? t('riservato.anonimo') : s.compositore}</span>
-              {s.organico && <span class="type-body text-ink-muted ml-2">{s.organico}</span>}
-              {ultimaVolta && <p class="type-body text-ink-muted mt-1">{t('riservato.studiatoUltimaVolta')} {ultimaVolta}</p>}
+              <details class="prova-details">
+                <summary class="cursor-pointer">
+                  <span class="titolo-pezzo">{s.titolo}</span>
+                  <span class="text-ink-soft"> — {s.compositore === 'Anonimo' ? t('riservato.anonimo') : s.compositore}</span>
+                  {s.organico && <span class="type-body text-ink-muted ml-2">{s.organico}</span>}
+                  {ultimaVolta && <span class="type-body text-ink-muted block mt-1">{t('riservato.studiatoUltimaVolta')} {ultimaVolta}</span>}
+                </summary>
 
-              {tracce.length > 0 && (
-                <details class="prova-details mt-2">
-                  <summary class="tocco type-body text-accent cursor-pointer">{t('riservato.ascoltaParti')}</summary>
-                  <div class="flex flex-col gap-2 pt-2 pl-1">
-                    {tracce.map((tr) => (
-                      <div>
-                        <p class="type-body text-ink-muted mb-1">
-                          {tr.voce === 'tutti' ? t('riservato.tutteLeVoci') : t(`cantanti.${tr.voce}`)}
-                        </p>
-                        <audio controls preload="none" style="width:100%; height:2.25rem;">
-                          <source src={`/riservato/audio/${s.id}/${tr.voce}.mp3`} type="audio/mpeg" />
-                        </audio>
+                <div class="pt-3 flex flex-col gap-4">
+                  <!-- Desktop: PDF incorporato, si vede insieme all'audio sotto.
+                       Mobile: link che apre il visualizzatore nativo del telefono —
+                       incorporarlo anche lì farebbe tornare il problema di Safari
+                       che mostra solo la prima pagina di un PDF multi-pagina. -->
+                  <iframe
+                    src={pdfUrl}
+                    title={s.titolo}
+                    class="hidden md:block"
+                    style="width:100%; height:70vh; border:1px solid rgba(26,37,53,0.15);"
+                    loading="lazy"
+                  ></iframe>
+                  <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
+
+                  {tracce.length > 0 && (
+                    <div>
+                      <p class="label-caps mb-2">{t('riservato.ascoltaParti')}</p>
+                      <div class="flex flex-col gap-2">
+                        {tracce.map((tr) => (
+                          <div>
+                            <p class="type-body text-ink-muted mb-1">
+                              {tr.voce === 'tutti' ? t('riservato.tutteLeVoci') : t(`cantanti.${tr.voce}`)}
+                            </p>
+                            <audio controls preload="none" style="width:100%; height:2.25rem;">
+                              <source src={`/riservato/audio/${s.id}/${tr.voce}.mp3`} type="audio/mpeg" />
+                            </audio>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </details>
-              )}
+                    </div>
+                  )}
+                </div>
+              </details>
             </li>
           );
         })}
@@ -430,24 +442,6 @@ function presenzePerProva(provaId: number) {
       </div>
     )}
 
-    <div id="pdf-modal" class="pdf-modal" hidden>
-      <div id="pdf-modal-backdrop" class="pdf-modal-backdrop"></div>
-      <div class="pdf-modal-panel" role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
-        <div class="pdf-modal-toolbar">
-          <p id="pdf-modal-title" class="font-serif type-body truncate min-w-0"></p>
-          <div class="pdf-modal-controls">
-            <button type="button" id="pdf-zoom-out" class="pdf-modal-btn pdf-zoom-ctl" aria-label="Zoom -">−</button>
-            <span id="pdf-zoom-level" class="pdf-zoom-ctl type-body text-ink-muted w-10 text-center">100%</span>
-            <button type="button" id="pdf-zoom-in" class="pdf-modal-btn pdf-zoom-ctl" aria-label="Zoom +">+</button>
-            <a id="pdf-newtab" class="pdf-modal-btn" target="_blank" rel="noopener" aria-label={t('riservato.apriScheda')} title={t('riservato.apriScheda')}>↗</a>
-            <button type="button" id="pdf-close" class="pdf-modal-btn pdf-modal-close" aria-label={t('riservato.chiudi')}>✕</button>
-          </div>
-        </div>
-        <div class="pdf-modal-body">
-          <iframe id="pdf-viewer" title="Spartito"></iframe>
-        </div>
-      </div>
-    </div>
   </section>
 
   <style>
@@ -486,183 +480,9 @@ function presenzePerProva(provaId: number) {
     .prova-details[open] > summary::after {
       transform: rotate(-135deg);
     }
-
-    .pdf-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-    }
-    /* `display: flex` qui sopra sovrascriverebbe il display:none che il browser
-       applica all'attributo `hidden`: senza questa regola il popup resta sempre aperto. */
-    .pdf-modal[hidden] {
-      display: none;
-    }
-    .pdf-modal-backdrop {
-      position: absolute;
-      inset: 0;
-      background: rgba(19, 28, 41, 0.65);
-    }
-    .pdf-modal-panel {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100vh;
-      /* dvh tiene conto della barra del browser che appare e scompare su mobile */
-      height: 100dvh;
-      background: var(--color-paper, #fff);
-      overflow: hidden;
-    }
-    .pdf-modal-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      padding: 0.6rem 0.9rem;
-      border-bottom: 1px solid rgba(26, 37, 53, 0.1);
-      flex-shrink: 0;
-    }
-    .pdf-modal-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-shrink: 0;
-    }
-    .pdf-modal-btn {
-      min-width: 2rem;
-      height: 2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(26, 37, 53, 0.15);
-      border-radius: 4px;
-      background: transparent;
-      cursor: pointer;
-      font-size: var(--type-body);
-      line-height: 1;
-    }
-    .pdf-modal-btn:hover {
-      background: rgba(26, 37, 53, 0.06);
-    }
-    .pdf-modal-btn,
-    a.pdf-modal-btn {
-      text-decoration: none;
-      color: inherit;
-    }
-    .pdf-modal-close {
-      min-width: 2.75rem;
-      height: 2.75rem;
-    }
-    @media (min-width: 768px) {
-      .pdf-modal-close {
-        min-width: 2rem;
-        height: 2rem;
-      }
-    }
-    .pdf-modal-body {
-      flex: 1;
-      overflow: auto;
-      background: #525659;
-      /* lascia passare il pinch al contenuto invece di intercettarlo */
-      touch-action: pan-x pan-y pinch-zoom;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Su mobile si zooma con le dita: i pulsanti sarebbero solo ingombro. */
-    .pdf-zoom-ctl {
-      display: none;
-    }
-    @media (min-width: 768px) {
-      .pdf-zoom-ctl {
-        display: inline-flex;
-      }
-      span.pdf-zoom-ctl {
-        display: inline-block;
-      }
-    }
-    #pdf-viewer {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
   </style>
 
   <script>
-    const modal = document.getElementById('pdf-modal')!;
-    const iframe = document.getElementById('pdf-viewer') as HTMLIFrameElement;
-    const titleEl = document.getElementById('pdf-modal-title')!;
-    const panel = document.querySelector('.pdf-modal-panel') as HTMLElement;
-    const zoomLevelEl = document.getElementById('pdf-zoom-level')!;
-
-    let zoom = 1;
-    const ZOOM_MIN = 0.5;
-    const ZOOM_MAX = 2.5;
-    const ZOOM_STEP = 0.25;
-
-    function applyZoom() {
-      iframe.style.width = `${zoom * 100}%`;
-      iframe.style.height = `${zoom * 100}%`;
-      zoomLevelEl.textContent = `${Math.round(zoom * 100)}%`;
-    }
-
-    const newTabLink = document.getElementById('pdf-newtab') as HTMLAnchorElement;
-
-    function openModal(url: string, titolo: string) {
-      iframe.src = url;
-      newTabLink.href = url;
-      titleEl.textContent = titolo;
-      zoom = 1;
-      applyZoom();
-      modal.hidden = false;
-      document.body.style.overflow = 'hidden';
-    }
-
-    // L'uscita da schermo intero è asincrona: nascondere il modale prima che sia
-    // completata lascia il browser in uno stato bloccato (popup che non si chiude).
-    function closeModal() {
-      modal.hidden = true;
-      iframe.src = 'about:blank';
-      document.body.style.overflow = '';
-    }
-
-    // Su mobile il visualizzatore PDF del telefono fa un lavoro migliore del nostro
-    // iframe (più pagine, pinch, tasto indietro): apriamo il file e basta.
-    // Il modale resta su desktop, dove il browser non offre un'esperienza a schermo intero.
-    const suMobile = () => window.matchMedia('(max-width: 767px)').matches;
-
-    function apriSpartito(url: string, titolo: string) {
-      if (suMobile()) {
-        window.location.href = url;
-      } else {
-        openModal(url, titolo);
-      }
-    }
-
-    document.querySelectorAll<HTMLButtonElement>('.apri-spartito').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        apriSpartito(btn.dataset.pdfUrl!, btn.dataset.titolo ?? '');
-      });
-    });
-
-    document.getElementById('pdf-close')!.addEventListener('click', closeModal);
-
-    document.getElementById('pdf-zoom-in')!.addEventListener('click', () => {
-      zoom = Math.min(ZOOM_MAX, zoom + ZOOM_STEP);
-      applyZoom();
-    });
-    document.getElementById('pdf-zoom-out')!.addEventListener('click', () => {
-      zoom = Math.max(ZOOM_MIN, zoom - ZOOM_STEP);
-      applyZoom();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !modal.hidden) {
-        closeModal();
-      }
-    });
-
     // RSVP direttamente dalla scheda in evidenza, senza cambiare pagina.
     const rsvpHome = document.getElementById('rsvp-home');
     if (rsvpHome) {
@@ -708,13 +528,15 @@ function presenzePerProva(provaId: number) {
       });
     }
 
-    // Arrivo da una prova con ?apri=<id spartito>: apre subito il PDF e ci scrolla vicino.
+    // Arrivo da una prova con ?apri=<id spartito>: apre il pannello dello spartito
+    // (PDF + audio) e ci scrolla vicino.
     const apri = new URLSearchParams(location.search).get('apri');
     if (apri) {
-      const target = document.querySelector<HTMLButtonElement>(`.apri-spartito[data-id="${apri}"]`);
-      if (target) {
-        target.closest('li')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        apriSpartito(target.dataset.pdfUrl!, target.dataset.titolo ?? '');
+      const riga = document.getElementById(`spartito-${apri}`);
+      const dettagli = riga?.querySelector('details');
+      if (dettagli) {
+        dettagli.open = true;
+        riga.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   </script>
