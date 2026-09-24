@@ -49,7 +49,7 @@ let prove: Prova[] = [];
 let storico: Prova[] = [];
 let coristi: Corista[] = [];
 let presenze: { prova_id: number; utente_email: string; stato: string }[] = [];
-let pezziPerProva: { prova_id: number; id: number; titolo: string }[] = [];
+let pezziPerProva: { prova_id: number; id: number; titolo: string; compositore: string }[] = [];
 let dbError: string | null = null;
 
 if (db) {
@@ -68,7 +68,7 @@ if (db) {
       db.prepare('SELECT email, nome, voce FROM coristi ORDER BY nome'),
       db.prepare('SELECT prova_id, utente_email, stato FROM presenze'),
       db.prepare(
-        `SELECT ps.prova_id, s.id, s.titolo
+        `SELECT ps.prova_id, s.id, s.titolo, s.compositore
          FROM prove_spartiti ps JOIN spartiti s ON s.id = ps.spartito_id
          ORDER BY s.titolo`
       ),
@@ -250,6 +250,7 @@ function presenzePerProva(provaId: number) {
               {pezzi.map((pezzo) => (
                 <p>
                   <a href={`/riservato/?apri=${pezzo.id}${lang === 'it' ? '&lang=it' : ''}`} class="titolo-pezzo">{pezzo.titolo}</a>
+                  <span class="type-body text-ink-muted"> — {pezzo.compositore === 'Anonimo' ? t('riservato.anonimo') : pezzo.compositore}</span>
                 </p>
               ))}
             </div>
@@ -387,6 +388,7 @@ function presenzePerProva(provaId: number) {
                         {pezzi.map((pezzo) => (
                           <p>
                             <a href={`/riservato/?apri=${pezzo.id}${lang === 'it' ? '&lang=it' : ''}`} class="titolo-pezzo">{pezzo.titolo}</a>
+                            <span class="type-body text-ink-muted"> — {pezzo.compositore === 'Anonimo' ? t('riservato.anonimo') : pezzo.compositore}</span>
                           </p>
                         ))}
                       </div>
