@@ -116,6 +116,8 @@
     "traGiorni": "In {n} days",
     "aggiungiCalendario": "Add to calendar",
     "apriMappa": "Open in maps",
-    "titoloEvento": "Rehearsal"
+    "titoloEvento": "Rehearsal",
+    "ascoltaParti": "Listen to the parts",
+    "tutteLeVoci": "All voices"
   }
 }

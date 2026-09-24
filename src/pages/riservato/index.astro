@@ -50,6 +50,7 @@ let storico: Prova[] = [];
 let coristi: Corista[] = [];
 let presenze: { prova_id: number; utente_email: string; stato: string }[] = [];
 let pezziPerProva: { prova_id: number; id: number; titolo: string; compositore: string }[] = [];
+let tracceAudio: { spartito_id: number; voce: string; ordine: number }[] = [];
 let dbError: string | null = null;
 
 if (db) {
@@ -58,7 +59,7 @@ if (db) {
 
     // Le tabelle sono piccole (pochi coristi, poche prove): le leggiamo intere
     // e incrociamo i dati qui, invece di fare una query per ogni riga mostrata.
-    const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes] = await db.batch([
+    const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes, tracceRes] = await db.batch([
       db.prepare('SELECT id, titolo, compositore, organico, concerto_id FROM spartiti ORDER BY compositore, titolo'),
       db.prepare(
         `SELECT p.id, p.data, p.ora, p.ora_fine, p.luogo, p.indirizzo, pr.stato as mioStato
@@ -72,6 +73,7 @@ if (db) {
          FROM prove_spartiti ps JOIN spartiti s ON s.id = ps.spartito_id
          ORDER BY s.titolo`
       ),
+      db.prepare('SELECT spartito_id, voce, ordine FROM tracce_audio ORDER BY spartito_id, ordine'),
     ]);
 
     spartiti = spartitiRes.results as Spartito[];
@@ -81,6 +83,7 @@ if (db) {
     coristi = coristiRes.results as Corista[];
     presenze = presenzeRes.results as any[];
     pezziPerProva = pezziRes.results as any[];
+    tracceAudio = tracceRes.results as any[];
   } catch (err) {
     dbError = err instanceof Error ? err.message : String(err);
   }
@@ -342,6 +345,7 @@ function presenzePerProva(provaId: number) {
       <ul class="flex flex-col gap-3 mb-10">
         {spartiti.map((s) => {
           const ultimaVolta = ultimaVoltaStudiato(s.id);
+          const tracce = tracceAudio.filter((tr) => tr.spartito_id === s.id);
           return (
             <li id={`spartito-${s.id}`} class="border-b pb-3" style="border-color: rgba(26,37,53,0.08);">
               <button
@@ -356,6 +360,24 @@ function presenzePerProva(provaId: number) {
               <span class="text-ink-soft"> — {s.compositore === 'Anonimo' ? t('riservato.anonimo') : s.compositore}</span>
               {s.organico && <span class="type-body text-ink-muted ml-2">{s.organico}</span>}
               {ultimaVolta && <p class="type-body text-ink-muted mt-1">{t('riservato.studiatoUltimaVolta')} {ultimaVolta}</p>}
+
+              {tracce.length > 0 && (
+                <details class="prova-details mt-2">
+                  <summary class="tocco type-body text-accent cursor-pointer">{t('riservato.ascoltaParti')}</summary>
+                  <div class="flex flex-col gap-2 pt-2 pl-1">
+                    {tracce.map((tr) => (
+                      <div>
+                        <p class="type-body text-ink-muted mb-1">
+                          {tr.voce === 'tutti' ? t('riservato.tutteLeVoci') : t(`cantanti.${tr.voce}`)}
+                        </p>
+                        <audio controls preload="none" style="width:100%; height:2.25rem;">
+                          <source src={`/riservato/audio/${s.id}/${tr.voce}.mp3`} type="audio/mpeg" />
+                        </audio>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
             </li>
           );
         })}
