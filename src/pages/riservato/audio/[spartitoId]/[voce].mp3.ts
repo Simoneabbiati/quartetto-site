@@ -6,7 +6,7 @@ function erroreLeggibile(messaggio: string, status: number) {
   return new Response(messaggio, { status, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }
 
-export const GET: APIRoute = async ({ params, locals }) => {
+export const GET: APIRoute = async ({ params, locals, request }) => {
   const env = (locals as any).runtime?.env;
   const spartitoId = Number(params.spartitoId);
   const voce = params.voce;
@@ -28,19 +28,40 @@ export const GET: APIRoute = async ({ params, locals }) => {
       return erroreLeggibile('Traccia non trovata.', 404);
     }
 
-    const object = await env.SPARTITI.get(row.audio_key as string);
+    // Passiamo l'header Range direttamente a R2: è quello che il player usa per
+    // saltare avanti/indietro (chiede solo il pezzo di file che gli serve, non
+    // deve riscaricare tutto). Senza questo, avanti/indietro non funziona
+    // dopo l'avvio della riproduzione.
+    const object = await env.SPARTITI.get(row.audio_key as string, { range: request.headers });
+
     if (!object) {
       return erroreLeggibile('File audio non trovato nello storage.', 404);
     }
 
-    return new Response(object.body, {
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        // l'audio cambia raramente (solo se ricarico una traccia): una cache
-        // privata più lunga di quella dei PDF evita di riscaricarlo a ogni ascolto.
-        'Cache-Control': 'private, max-age=86400',
-      },
+    const headers = new Headers({
+      'Content-Type': 'audio/mpeg',
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'private, max-age=86400',
     });
+
+    // R2 restituisce sempre un `range` (anche 0-fino alla fine, se il browser
+    // non ne ha chiesto uno): il 206 va usato solo se il browser lo ha
+    // davvero richiesto, altrimenti un lettore che ignora i byte-range
+    // riceverebbe uno status che non si aspetta.
+    const richiestoDalBrowser = request.headers.has('range');
+    const range = richiestoDalBrowser && 'range' in object ? (object as any).range : null;
+    let status = 200;
+
+    if (range && typeof range.offset === 'number' && typeof range.length === 'number') {
+      const fine = range.offset + range.length - 1;
+      headers.set('Content-Range', `bytes ${range.offset}-${fine}/${object.size}`);
+      headers.set('Content-Length', String(range.length));
+      status = 206; // Partial Content
+    } else {
+      headers.set('Content-Length', String(object.size));
+    }
+
+    return new Response(object.body, { status, headers });
   } catch (err) {
     const dettaglio = err instanceof Error ? err.message : String(err);
     return erroreLeggibile(`Errore nel caricamento della traccia: ${dettaglio}`, 500);
