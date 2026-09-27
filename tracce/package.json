@@ -1,0 +1,9 @@
+{
+  "name": "quartetto-tracce",
+  "private": true,
+  "type": "module",
+  "description": "Solo per tracce/partitura.mjs: disegna la partitura di controllo.",
+  "dependencies": {
+    "verovio": "^6.3.0"
+  }
+}

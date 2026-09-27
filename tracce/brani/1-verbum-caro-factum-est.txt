@@ -6,6 +6,7 @@
 spartito: 1
 tempo: 92
 battuta: 3
+armatura: F# C# G#
 
 # Sezioni suonate in quest'ordine:
 #   a = bb. 1-4, b = bb. 5-8 (ritornello, Fine),

@@ -35,3 +35,4 @@ Thumbs.db
 # tracce audio: output e soundfont scaricato
 tracce/.out/
 tracce/.cache/
+__pycache__/

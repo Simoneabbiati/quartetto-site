@@ -56,11 +56,13 @@ def leggi(percorso: Path):
         chiave, _, valore = riga.partition(':')
         chiave, valore = chiave.strip(), valore.strip()
         try:
-            if voce is None:
+            if voce is None and chiave == 'verificato':
+                meta.setdefault('verificati', set()).update(valore.split())
+            elif voce is None:
                 meta[chiave] = valore
             else:
                 voci[voce][chiave] = [
-                    (None if nota == 'r' else altezza(nota), float(durata))
+                    (None if nota == 'r' else altezza(nota), float(durata), nota)
                     for nota, durata in (tok.rsplit(':', 1) for tok in valore.split())
                 ]
         except ValueError as e:
@@ -77,11 +79,200 @@ def controlla(meta, voci):
         for voce, sezioni in voci.items():
             if sezione not in sezioni:
                 sys.exit(f'la voce {voce} non ha la sezione {sezione!r} usata in "forma"')
-            durate[voce] = sum(d for _, d in sezioni[sezione])
+            durate[voce] = sum(d for _, d, _ in sezioni[sezione])
             if durate[voce] % battuta:
                 sys.exit(f'{voce}, sezione {sezione}: {durate[voce]} semiminime, non è un numero intero di battute da {battuta:g}')
         if len(set(durate.values())) > 1:
             sys.exit(f'sezione {sezione}: le voci hanno durate diverse {durate}')
+
+
+# Estensioni tipiche per voce (MIDI). Fuori da qui è quasi sempre un errore
+# d'ottava — soprattutto il tenore scritto all'altezza della chiave di violino.
+ESTENSIONE = {
+    'soprano': (60, 81), 'mezzosoprano': (57, 77), 'contralto': (53, 74),
+    'tenore': (48, 69), 'baritono': (45, 65), 'basso': (40, 62),
+}
+NOMI = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+
+
+def nome(nota: int) -> str:
+    return f'{NOMI[nota % 12]}{nota // 12 - 1}'
+
+
+def in_partitura(meta, voci):
+    """Note di ogni voce nell'ordine dello spartito (ogni sezione una volta
+    sola, come stampata), con l'istante d'inizio in semiminime."""
+    ordine = list(dict.fromkeys(meta['forma'].split()))
+    risultato = {}
+    for voce, sezioni in voci.items():
+        t, note = 0.0, []
+        for s in ordine:
+            for nota, durata, _ in sezioni[s]:
+                note.append((t, nota, durata))
+                t += durata
+        risultato[voce] = note
+    return risultato
+
+
+def avvisi(meta, voci):
+    """Controlli musicali: non fermano la generazione, ma ogni avviso va
+    verificato sul PDF. Una nota sbagliata di solito ne fa scattare almeno uno
+    (fuori estensione, alterazione inattesa, salto strano o dissonanza)."""
+    battuta = float(meta.get('battuta', 4))
+    partitura = in_partitura(meta, voci)
+    dove = lambda t: f'b. {int(t // battuta) + 1}, tempo {t % battuta + 1:g}'
+    # Codice stabile di ogni avviso, da copiare in una riga "verificato:"
+    # della trascrizione dopo averlo controllato sul PDF.
+    codice = lambda t, *chi: f'b{int(t // battuta) + 1}t{t % battuta + 1:g}-' + '-'.join(chi)
+    out = []
+
+    diatoniche = {NOTE[n] for n in NOTE}
+    for alt in meta.get('armatura', '').split():
+        diatoniche.discard(NOTE[alt[0]])
+        diatoniche.add((NOTE[alt[0]] + (1 if alt[1] == '#' else -1)) % 12)
+
+    for voce, note in partitura.items():
+        basso, alto = ESTENSIONE[voce]
+        prec = None
+        for t, nota, _ in note:
+            if nota is None:
+                continue
+            if not basso <= nota <= alto:
+                out.append((codice(t, voce, 'estensione'), f'{voce}, {dove(t)}: {nome(nota)} fuori estensione ({nome(basso)}–{nome(alto)}) — ottava giusta?'))
+            if 'armatura' in meta and nota % 12 not in diatoniche:
+                out.append((codice(t, voce, 'alterazione'), f'{voce}, {dove(t)}: {nome(nota)} non è in armatura — c\'è davvero l\'alterazione?'))
+            if prec is not None and abs(nota - prec) > 12:
+                out.append((codice(t, voce, 'salto'), f'{voce}, {dove(t)}: salto di {abs(nota - prec)} semitoni da {nome(prec)} a {nome(nota)}'))
+            prec = nota
+
+    # Dissonanze sui tempi forti, dove una voce attacca una nota nuova.
+    # Seconde, settime e tritoni lì sono rari in questo repertorio: un errore
+    # di una riga o di uno spazio in una voce tipicamente ne crea uno.
+    def suona(note, t):
+        for inizio, nota, durata in note:
+            if inizio <= t < inizio + durata:
+                return nota, inizio == t
+        return None, False
+
+    fine = max(t + d for note in partitura.values() for t, _, d in note[-1:])
+    t = 0.0
+    while t < fine:
+        suoni = {v: suona(n, t) for v, n in partitura.items()}
+        voci_t = [v for v, (n, _) in suoni.items() if n is not None]
+        for i, a in enumerate(voci_t):
+            for b in voci_t[i + 1:]:
+                (na, attacca_a), (nb, attacca_b) = suoni[a], suoni[b]
+                if (attacca_a or attacca_b) and abs(na - nb) % 12 in (1, 2, 6, 10, 11):
+                    out.append((codice(t, a, b), f'{dove(t)}: {a} {nome(na)} contro {b} {nome(nb)} — dissonanza, controlla entrambe'))
+        t += 1.0
+    return out
+
+
+def differenze(prima, seconda):
+    """Confronta due trascrizioni dello stesso spartito battuta per battuta."""
+    def per_battuta(meta, voci):
+        battuta = float(meta.get('battuta', 4))
+        out = {}
+        for voce, note in in_partitura(meta, voci).items():
+            for t, nota, durata in note:
+                testo = 'r' if nota is None else nome(nota)
+                out.setdefault(voce, {}).setdefault(int(t // battuta) + 1, []).append(f'{testo}:{durata:g}')
+        return out
+
+    (ma, va), (mb, vb) = prima, seconda
+    out = [f'{k}: {ma.get(k)!r} ≠ {mb.get(k)!r}' for k in ('battuta', 'armatura', 'forma') if ma.get(k) != mb.get(k)]
+    a, b = per_battuta(ma, va), per_battuta(mb, vb)
+    for voce in dict.fromkeys([*a, *b]):
+        if voce not in a or voce not in b:
+            out.append(f'{voce}: presente solo in una delle due trascrizioni')
+            continue
+        for n in sorted(set(a[voce]) | set(b[voce])):
+            x, y = a[voce].get(n, []), b[voce].get(n, [])
+            if x != y:
+                out.append(f'{voce}, b. {n}:  1) {" ".join(x)}   2) {" ".join(y)}')
+    return out
+
+
+# --- Partitura di controllo -------------------------------------------------
+# La trascrizione viene reimpaginata come partitura (Humdrum **kern, disegnata
+# da Verovio) con il numero su ogni battuta: messa accanto al PDF originale si
+# confronta battuta per battuta, voce per voce. È il controllo che non si può
+# automatizzare: che le note siano *quelle stampate*.
+
+CHIAVI = {'soprano': 'G2', 'mezzosoprano': 'G2', 'contralto': 'G2',
+          'tenore': 'Gv2', 'baritono': 'F4', 'basso': 'F4'}
+VALORI = [6, 4, 3, 2, 1.5, 1, .75, .5, .375, .25, .125]  # in semiminime
+
+
+def figura(durata: float) -> str:
+    """Durata in semiminime → figura **kern (4 = semiminima, 2. = minima puntata)."""
+    for puntata in ('', '.'):
+        base = durata / (1.5 if puntata else 1)
+        if base and (4 / base).is_integer():
+            return f'{int(4 / base)}{puntata}'
+    raise ValueError(durata)
+
+
+def spezza(durata: float):
+    """Scompone una durata in figure scrivibili, da legare tra loro."""
+    parti = []
+    while durata > 1e-9:
+        v = next(v for v in VALORI if v <= durata + 1e-9)
+        parti.append(v)
+        durata -= v
+    return parti
+
+
+def nota_kern(grafia: str) -> str:
+    lettera, alt, ottava = re.fullmatch(r'([A-G])(#|b)?(-?\d)', grafia).groups()
+    ottava = int(ottava)
+    testo = lettera.lower() * (ottava - 3) if ottava >= 4 else lettera * (4 - ottava)
+    return testo + {'#': '#', 'b': '-', None: ''}[alt]
+
+
+def kern(meta, voci) -> str:
+    battuta = float(meta.get('battuta', 4))
+    ordine = list(dict.fromkeys(meta['forma'].split()))
+    eventi = {}  # voce -> {istante: token}
+    for voce, sezioni in voci.items():
+        t, ev = 0.0, {}
+        for nota, durata, grafia in (n for s in ordine for n in sezioni[s]):
+            # Spezza sulle stanghette e in figure scrivibili, con le legature.
+            pezzi, resto, inizio = [], durata, t
+            while resto > 1e-9:
+                fino_stanghetta = battuta - (inizio % battuta)
+                tratto = min(resto, fino_stanghetta)
+                for v in spezza(tratto):
+                    pezzi.append((inizio, v))
+                    inizio += v
+                resto -= tratto
+            for i, (quando, v) in enumerate(pezzi):
+                if nota is None:
+                    ev[quando] = figura(v) + 'r'
+                    continue
+                legatura = '' if len(pezzi) == 1 else '[' if i == 0 else ']' if i == len(pezzi) - 1 else '_'
+                tok = figura(v) + nota_kern(grafia)
+                ev[quando] = (legatura + tok) if legatura in ('[', '_') else (tok + legatura)
+            t += durata
+        eventi[voce] = ev
+    righe_voci = list(reversed(list(voci)))  # in **kern la prima colonna è il rigo più basso
+    fine = max(max(ev) for ev in eventi.values()) + 1
+    armatura = ''.join(a[0].lower() + ('#' if a[1] == '#' else '-') for a in meta.get('armatura', '').split())
+    metro = meta.get('metro', f'{battuta:g}/4')
+    riga = lambda f: '\t'.join(f(v) for v in righe_voci)
+    out = [riga(lambda v: '**kern'),
+           riga(lambda v: f'*I"{v.capitalize()}'),
+           riga(lambda v: f'*clef{CHIAVI[v]}'),
+           riga(lambda v: f'*k[{armatura}]'),
+           riga(lambda v: f'*M{metro}')]
+    istanti = sorted({t for ev in eventi.values() for t in ev})
+    for t in istanti:
+        if t and (t % battuta) < 1e-9:
+            out.append(riga(lambda v: f'={int(t // battuta) + 1}'))
+        out.append(riga(lambda v: eventi[v].get(t, '.')))
+    out.append(riga(lambda v: '=='))
+    out.append(riga(lambda v: '*-'))
+    return '\n'.join(out) + '\n'
 
 
 def vlq(n: int) -> bytes:
@@ -96,7 +287,7 @@ def vlq(n: int) -> bytes:
 def traccia_midi(note, canale: int) -> bytes:
     ev = bytearray(vlq(0) + bytes([0xC0 | canale, STRUMENTO]))
     attesa = 0
-    for nota, durata in note:
+    for nota, durata, _ in note:
         tick = int(durata * TPQ)
         if nota is None:
             attesa += tick
@@ -132,9 +323,67 @@ def main():
     ap.add_argument('--carica', action='store_true', help='carica su R2 e registra in D1')
     args = ap.parse_args()
 
+    args.trascrizione = args.trascrizione.resolve()
     meta, voci = leggi(args.trascrizione)
-    controlla(meta, voci)
     spartito = int(meta['spartito'])
+    out = QUI / '.out' / str(spartito)
+    out.mkdir(parents=True, exist_ok=True)
+
+    # Controllo 1 — struttura: battute intere, voci della stessa durata.
+    controlla(meta, voci)
+    print('✓ 1/3  Struttura: battute complete e voci allineate')
+
+    # Partitura ricostruita dalla trascrizione, per confrontarla a occhio col
+    # PDF mentre si risolvono i controlli 2 e 3.
+    krn = out / 'partitura.krn'
+    krn.write_text(kern(meta, voci))
+    if (QUI / 'node_modules' / 'verovio').exists():
+        esegui('node', str(QUI / 'partitura.mjs'), str(krn), str(out / 'partitura.html'))
+        print(f'       Partitura di controllo: {(out / "partitura.html").relative_to(RADICE)}')
+    else:
+        print('       (Per la partitura di controllo: npm install --prefix tracce)')
+
+    bloccanti = 0
+
+    # Controllo 2 — doppia trascrizione indipendente, identica nota per nota.
+    bis = args.trascrizione.with_name(args.trascrizione.stem + '.bis.txt')
+    if not bis.exists():
+        print(f'✗ 2/3  Doppia trascrizione: manca {bis.relative_to(RADICE)}')
+        print('       Serve una seconda trascrizione dello stesso PDF, fatta senza guardare la prima.')
+        bloccanti += 1
+    else:
+        meta_bis, voci_bis = leggi(bis)
+        controlla(meta_bis, voci_bis)
+        diff = differenze((meta, voci), (meta_bis, voci_bis))
+        if diff:
+            print(f'✗ 2/3  Doppia trascrizione: {len(diff)} battute diverse, ricontrollale sul PDF')
+            for d in diff:
+                print(f'         {d}')
+            bloccanti += 1
+        else:
+            print('✓ 2/3  Doppia trascrizione: le due versioni coincidono nota per nota')
+
+    # Controllo 3 — ogni avviso musicale verificato sul PDF e segnato.
+    lista = avvisi(meta, voci)
+    verificati = meta.get('verificati', set())
+    aperti = [(c, m) for c, m in lista if c not in verificati]
+    if aperti:
+        print(f'✗ 3/3  Avvisi musicali: {len(aperti)} da verificare sul PDF (su {len(lista)})')
+        for c, m in aperti:
+            print(f'         {c:<28} {m}')
+        print('       Se sul PDF è proprio così, aggiungi alla trascrizione:')
+        print(f'         verificato: {" ".join(c for c, _ in aperti)}')
+        print('       altrimenti correggi la nota (in entrambe le trascrizioni).')
+        bloccanti += 1
+    else:
+        print(f'✓ 3/3  Avvisi musicali: {len(lista)} avvisi, tutti verificati sul PDF')
+    superflui = verificati - {c for c, _ in lista}
+    if superflui:
+        print(f'       (righe "verificato" non più necessarie: {" ".join(sorted(superflui))})')
+
+    if bloccanti:
+        sys.exit(f'\nAudio NON generato: {bloccanti} controlli su 3 non superati.')
+    print()
     tempo = int(meta.get('tempo', 92))
     battuta = int(float(meta.get('battuta', 4)))
     forma = meta['forma'].split()
@@ -145,8 +394,6 @@ def main():
         print('Scarico il soundfont MuseScore General (~40 MB, una volta sola)...')
         urllib.request.urlretrieve(SOUNDFONT_URL, SOUNDFONT)
 
-    out = QUI / '.out' / str(spartito)
-    out.mkdir(parents=True, exist_ok=True)
     uscite = {'tutti': list(complete.values()), **{v: [n] for v, n in complete.items()}}
     for nome, parti in uscite.items():
         mid, wav, mp3 = (out / f'{nome}.{e}' for e in ('mid', 'wav', 'mp3'))
