@@ -371,7 +371,12 @@ function presenzePerProva(provaId: number) {
                       <p class="titolo-pezzo">{s.titolo}</p>
                       <p class="text-ink-soft">{s.compositore === 'Anonimo' ? t('riservato.anonimo') : s.compositore}</p>
                     </div>
-                    <button type="button" class="chiudi-spartito tocco text-ink-muted hover:text-ink" aria-label={t('riservato.chiudi')}>✕</button>
+                    <div class="flex items-center gap-4">
+                      <!-- Il PDF a tutta pagina in una scheda nuova, col visualizzatore
+                           del browser: più spazio del popup, e si può stampare/scaricare. -->
+                      <a href={pdfUrl} target="_blank" rel="noopener" class="btn-ghost">{t('riservato.apriPdf')} ↗</a>
+                      <button type="button" class="chiudi-spartito tocco text-ink-muted hover:text-ink" aria-label={t('riservato.chiudi')}>✕</button>
+                    </div>
                   </div>
 
                   <!-- Desktop: PDF a sinistra e tracce audio in una colonna a destra,
