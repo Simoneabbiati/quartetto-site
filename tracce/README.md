@@ -68,6 +68,10 @@ b: ...
   minuto; `battuta` in semiminime (3/4 → 3, 4/4 → 4); `armatura` sono le
   alterazioni in chiave (serve al controllo 3); `verificato` elenca i codici
   degli avvisi controllati sul PDF (anche su più righe).
+- **Levare**: se il pezzo inizia in levare, `anacrusi: <semiminime>` (es.
+  `anacrusi: 1`) e la battuta in levare in una sezione a sé; la battuta in
+  levare è la b. 0, come negli spartiti. Esempio con strofe e finali diversi:
+  [`4-nigh-bethlehem.txt`](brani/4-nigh-bethlehem.txt).
 
 - **Note**: nome + ottava + `:` + durata in semiminime. `C4` è il Do
   centrale; alterazioni `#` e `b` (`F#4`, `Bb3`). `r` è una pausa.
