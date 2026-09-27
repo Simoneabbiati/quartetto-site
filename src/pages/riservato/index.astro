@@ -551,6 +551,12 @@ function presenzePerProva(provaId: number) {
         border-radius: 4px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
       }
+      /* Il popup è una colonna flex con altezza massima: senza questo, quando
+         PDF + audio superano lo schermo il browser schiaccia il PDF a una
+         striscia invece di far scorrere il popup. */
+      .spartito-modal[open] .spartito-modal-content > * {
+        flex-shrink: 0;
+      }
       /* Il tasto per chiudere deve restare raggiungibile anche quando il
          contenuto (PDF + audio) è più alto dello schermo e serve scorrere. */
       .spartito-modal[open] .spartito-modal-header {
