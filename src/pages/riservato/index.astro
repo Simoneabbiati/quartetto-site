@@ -374,23 +374,19 @@ function presenzePerProva(provaId: number) {
                     <button type="button" class="chiudi-spartito tocco text-ink-muted hover:text-ink" aria-label={t('riservato.chiudi')}>✕</button>
                   </div>
 
-                  <!-- Desktop: PDF incorporato, si vede insieme all'audio sotto.
-                       Esce apposta dalla larghezza stretta del resto della pagina
-                       (pensata per il testo, non per uno spartito) fino a 1400px.
+                  <!-- Desktop: PDF incorporato, si vede insieme all'audio sotto. Il
+                       popup stesso è già il contenitore largo (fino a 1450px, vedi
+                       CSS di .spartito-modal-content): qui basta riempirlo.
                        Mobile: link che apre il visualizzatore nativo del telefono —
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
-                  <div class="hidden md:block pdf-breakout">
-                    <div class="pdf-ampio">
-                      <iframe
-                        src={pdfUrl}
-                        title={s.titolo}
-                        class="spartito-pdf-iframe"
-                        style="width:100%; height:85vh; border:1px solid rgba(26,37,53,0.15);"
-                        loading="lazy"
-                      ></iframe>
-                    </div>
-                  </div>
+                  <iframe
+                    src={pdfUrl}
+                    title={s.titolo}
+                    class="hidden md:block spartito-pdf-iframe"
+                    style="width:100%; height:75vh; border:1px solid rgba(26,37,53,0.15);"
+                    loading="lazy"
+                  ></iframe>
                   <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
 
                   {tracce.length > 0 && (
@@ -525,20 +521,6 @@ function presenzePerProva(provaId: number) {
       transform: rotate(-135deg);
     }
 
-    /* Fa uscire il visualizzatore PDF dalla larghezza stretta della pagina
-       (container-default, pensata per il testo) fino a un massimo più ampio,
-       centrato, indipendentemente da quanto è nidificato nella pagina. */
-    .pdf-breakout {
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-    }
-    .pdf-ampio {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
     /* Su desktop il pezzo si apre come popup (sfondo scurito, contenuto al
        centro): stesso <details> di sempre, solo che qui sopra i 768px diventa
        un overlay a tutto schermo invece di espandersi nella pagina. Su mobile
@@ -559,9 +541,11 @@ function presenzePerProva(provaId: number) {
       }
       .spartito-modal[open] .spartito-modal-content {
         background: var(--color-paper, #fff);
-        width: 100%;
-        max-width: 1450px;
-        max-height: 100%;
+        /* Misure esplicite sullo schermo, non in %: dentro un <details> in
+           flex, Chrome avvolge il contenuto in un box largo quanto il testo,
+           e un 100% riferito a quello stringe il popup a una colonnina. */
+        width: min(1450px, calc(100vw - 4rem));
+        max-height: calc(100vh - 4rem);
         overflow-y: auto;
         padding: 1.5rem;
         border-radius: 4px;
@@ -577,12 +561,6 @@ function presenzePerProva(provaId: number) {
         background: var(--color-paper, #fff);
         z-index: 1;
         border-bottom: 1px solid rgba(26, 37, 53, 0.08);
-      }
-      /* Dentro al popup c'è anche l'intestazione sopra: un po' meno alto
-         dell'85vh usato nella pagina intera, per lasciare spazio senza dover
-         scorrere per forza per vedere l'audio. */
-      .spartito-modal[open] .spartito-pdf-iframe {
-        height: 65vh !important;
       }
     }
   </style>
