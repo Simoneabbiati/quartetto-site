@@ -1,21 +1,15 @@
-# Verbum caro factum est — Anonimo, villancico sec. XVI
-# Trascritto a mano dal PDF (spartito id 1), battuta per battuta.
-# La maggiore, 3/4. Il tenore è già scritto all'altezza reale (un'ottava
-# sotto lo scritto in chiave di violino con l'8).
-
+# Verbum caro factum est (Anonimo, villancico sec. XVI), 3/4, La maggiore
+# a = batt. 1-4 (Verbum caro factum est)
+# b = batt. 5-8 (porque todos os salveis), ritornello, Fine a batt. 8
+# c = batt. 9-20 (Y la Virgen le decia ... que os haria)
+# d = batt. 21-24 (que no tengo en que os echeis), ritornello, poi da Capo al Fine
+# forma: a b b c d d, da capo senza ritornelli: a b
+# basso batt. 8 e 24: nota tra parentesi A3 ignorata, trascritto A2
 spartito: 1
 tempo: 92
 battuta: 3
 armatura: F# C# G#
-
-# Sezioni suonate in quest'ordine:
-#   a = bb. 1-4, b = bb. 5-8 (ritornello, Fine),
-#   c = bb. 9-20, d = bb. 21-24 (ritornello), poi da Capo al Fine.
 forma: a b b c d d a b
-
-# Avvisi controllati sul PDF: dissonanze di passaggio e ritardi stampati.
-verificato: b3t3-contralto-tenore b7t2-soprano-tenore b10t3-soprano-contralto
-verificato: b11t2-soprano-contralto b15t1-tenore-basso b15t2-tenore-basso b23t2-soprano-tenore
 
 [soprano]
 a: A4:2 A4:1 A4:2 G#4:1 B4:2 B4:1 C#5:2 r:1

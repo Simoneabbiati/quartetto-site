@@ -1,0 +1,60 @@
+# Nigh Bethlehem — Alfred Burt (1954), testo di Bates G. Burt, ed. M. Hancock-Parmer.
+# Trascritto a mano dal PDF (spartito id 4). Sol maggiore, 4/4, levare di 1/4.
+# SA sul rigo di violino, TB su quello di basso (gambi su = voce superiore).
+#   p = levare (b. 0)
+#   a = bb. 1-12
+#   v = finale "Verses 1-3": b. 13 + primi 3/4 della b. 14 (l'ultimo quarto
+#       della b. 14 è il levare della strofa seguente, identico a p)
+#   f = finale "Final verse": bb. 15-16
+# 4 strofe. Nel finale il Mi2 tra parentesi del basso è ignorato (nota principale Mi3).
+
+spartito: 4
+tempo: 85
+battuta: 4
+anacrusi: 1
+armatura: F#
+forma: p a v p a v p a v p a f
+
+# Controllati sul PDF uno per uno: alterazioni stampate (C#, F naturale, D#, G#)
+# e il Si3 del soprano, unisono col contralto nel levare.
+verificato: b0t4-soprano-estensione b3t3-soprano-alterazione b3t4-soprano-alterazione b4t4-soprano-estensione
+verificato: b10t3-contralto-alterazione b12t4-contralto-alterazione b15t4-tenore-alterazione b3t4.5-basso-alterazione
+verificato: b4t2.5-basso-alterazione b10t4-basso-alterazione
+# Dissonanze dell'armonia di Burt (seste, settime, none aggiunte): confermate dalle
+# due trascrizioni indipendenti, identiche nota per nota; non ricontrollate una per una.
+verificato: b1t3-soprano-contralto b1t3-soprano-basso b1t4-soprano-basso b3t1-soprano-basso
+verificato: b3t1-tenore-basso b3t2-soprano-tenore b3t2-tenore-basso b4t1-tenore-basso
+verificato: b5t3-soprano-contralto b5t3-soprano-basso b5t4-soprano-basso b7t2-tenore-basso
+verificato: b7t3-soprano-contralto b7t3-soprano-basso b7t4-soprano-contralto b7t4-soprano-basso
+verificato: b9t2-contralto-basso b9t4-contralto-tenore b9t4-tenore-basso b10t1-contralto-tenore
+verificato: b10t1-tenore-basso b10t2-soprano-basso b10t2-contralto-basso b10t3-soprano-contralto
+verificato: b10t3-soprano-basso b10t3-tenore-basso b10t4-soprano-contralto b10t4-tenore-basso
+verificato: b11t1-soprano-tenore b12t4-soprano-basso b12t4-contralto-tenore b13t1-soprano-basso
+verificato: b13t1-tenore-basso b13t2-tenore-basso b13t3-soprano-basso b13t3-contralto-tenore
+verificato: b13t3-tenore-basso b13t4-contralto-tenore b14t4-soprano-basso b14t4-tenore-basso
+verificato: b15t1-soprano-basso b15t1-tenore-basso b15t2-soprano-tenore b15t2-soprano-basso
+verificato: b15t2-contralto-basso b15t3-soprano-tenore
+
+[soprano]
+p: B3:1
+a: E4:1 B4:1 B4:1 A4:1 B4:1 G4:.5 F#4:.5 E4:1 G4:.5 A4:.5 B4:1 B4:1 C#5:.5 B4:.5 C#5:.5 A4:.5 B4:3 B3:1 E4:1 B4:1 B4:1 A4:1 B4:1 G4:.5 F#4:.5 E4:1 D4:1 G4:1 D5:1 D5:1 C5:1 D5:1 B4:.5 A4:.5 G4:1 A4:1 B4:.5 A4:.5 B4:1 C5:.5 B4:.5 C5:1 D5:.5 C5:.5 D5:1 E5:1 C5:.5 B4:.5 A4:1 G4:1 G4:1 F#4:1 G4:1.5 A4:.5 B4:1 C5:.5 B4:.5
+v: A4:1 G4:1 G4:.5 A4:.5 F#4:.5 D4:.5 E4:3
+f: A4:1 G4:1 B4:.5 A4:.5 B4:.5 D5:.5 E5:3
+
+[contralto]
+p: B3:1
+a: B3:1 E4:1 C4:1 D4:1 E4:1 E4:.5 D4:.5 E4:1 E4:.5 F#4:.5 G4:1 F#4:1 A4:.5 G4:.5 A4:.5 F#4:.5 G4:1.5 A4:.5 G4:1 B3:1 B3:1 E4:1 C4:1 D4:1 E4:1 E4:.5 D4:.5 E4:1 D4:1 D4:1 F#4:1 E4:1 F#4:1 G4:1 G4:.5 F#4:.5 G4:1 D4:.5 F#4:.5 G4:.5 F#4:.5 G4:1 A4:.5 G4:.5 A4:1 B4:.5 A4:.5 B4:.5 G4:.5 F4:1 F#4:.5 E4:.5 D4:1 E4:1 E4:1 D4:1 D4:1.5 F#4:.5 G4:1 D#4:.5 E4:.5
+v: D4:1 E4:.5 D4:.5 C4:1 B3:1 B3:3
+f: D4:1 E4:.5 D4:.5 G4:.5 A4:.5 F#4:1 E4:3
+
+[tenore]
+p: B3:1
+a: G3:1 E3:1 E3:.5 G3:.5 F#3:1 G3:1 G3:.5 A3:.5 B3:1 B3:1 B3:1 A3:1 E4:1 E4:1 E4:3 B3:1 G3:1 E3:1 E3:.5 G3:.5 F#3:1 G3:1 G3:.5 A3:.5 B3:1 D4:.5 C4:.5 B3:1 A3:1 G3:.5 B3:.5 A3:1 B3:1 B3:.5 C4:.5 D4:1 D4:1 D4:1 D4:1 C4:.5 B3:.5 G3:1 A3:.5 F#3:.5 G3:.5 B3:.5 C4:1 A3:.5 G3:.5 B3:1 B3:1 C4:1 D4:.5 C4:.5 D4:3 A3:.5 G3:.5
+v: A3:1 B3:1 B3:.5 A3:.5 A3:1 G3:3
+f: A3:1 B3:1 C4:1 A3:1 G#3:3
+
+[basso]
+p: B2:1
+a: E3:1 G2:1 A2:1 B2:1 E3:1 E3:.5 F#3:.5 G3:1 E3:.5 D3:.5 C3:1 B2:1 A2:.5 E3:.5 A3:.5 C#4:.5 D4:1.5 C#4:.5 B3:1 B3:1 E3:1 G2:1 A2:1 B2:1 E3:1 E3:.5 F#3:.5 G3:1 D3:1 B2:1 B2:1 C3:1 D3:1 G3:1 G3:.5 A3:.5 B3:1 F#3:.5 D3:.5 G3:1 F#3:1 E3:1 A2:1 B2:1 C3:1 D3:1 D#3:.5 E3:.5 F#3:1 G3:1 C4:1 D4:.5 C4:.5 B3:.5 A3:.5 G3:.5 D3:.5 G2:1 F#3:.5 E3:.5
+v: B2:1 C3:.5 E3:.5 A2:1 D3:.5 F#3:.5 E3:3
+f: B2:1 A2:.5 C3:.5 A3:1 D3:.5 B2:.5 E3:3

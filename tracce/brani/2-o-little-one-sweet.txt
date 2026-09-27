@@ -1,0 +1,36 @@
+# O little one sweet — melodia da S. Scheidt (1650), armonizzazione J. S. Bach.
+# Trascritto a mano dal PDF (spartito id 2). Sol minore, 3/4, levare di 1/4.
+# 4 strofe senza ritornelli: il corale si canta intero 4 volte.
+#   p = levare (b. 0), a = bb. 1-20 (l'ultima battuta, di 2/4, completa il levare).
+# Legature tratteggiate (b. 6, editoriali, solo per alcune strofe): note separate.
+
+spartito: 2
+tempo: 80
+battuta: 3
+anacrusi: 1
+armatura: Bb Eb
+forma: p a p a p a p a
+
+# Avvisi controllati sul PDF: alterazioni stampate (F#, E naturale) e
+# dissonanze dell'armonizzazione di Bach (settime, note di passaggio).
+verificato: b1t2.5-contralto-alterazione b2t1-contralto-alterazione b2t3-contralto-alterazione
+verificato: b3t3-contralto-alterazione b14t1-contralto-alterazione b14t2.5-contralto-alterazione b14t3-contralto-alterazione
+verificato: b3t3-contralto-tenore b3t3-tenore-basso b5t1-soprano-tenore b7t2-soprano-contralto b7t2-soprano-tenore
+verificato: b7t3-soprano-contralto b9t1-tenore-basso b13t1-contralto-tenore b17t2-soprano-contralto b17t2-contralto-basso
+verificato: b17t2-tenore-basso b17t3-soprano-contralto b17t3-contralto-basso
+
+[soprano]
+p: Bb4:1
+a: Bb4:1.5 A4:.5 Bb4:1 C5:2 A4:1 Bb4:1.5 A4:.5 G4:1 F4:2 D5:1 C5:2 C5:1 Bb4:1 Bb4:1 C5:1 F4:1 G4:1 A4:1 Bb4:2 D5:1 Eb5:2 Eb5:1 C5:2 C5:1 D5:2 D5:1 Bb4:2 Bb4:1 C5:2 C5:1 A4:2 A4:1 Bb4:2 Bb4:1 G4:2 C5:1 F4:1 G4:1 A4:1 Bb4:2 D5:1 C5:1.5 Bb4:.5 A4:1 Bb4:2
+
+[contralto]
+p: D4:1
+a: G4:1.5 F#4:.5 G4:1 E4:2 F#4:1 D4:1.5 D4:.5 E4:1 F4:2 F4:1 G4:2 F4:1 D4:1 D4:1 Eb4:1 F4:2 Eb4:1 D4:2 F4:1 Eb4:1.5 F4:.5 G4:1 F4:2 A4:1 D4:1.5 Eb4:.5 F4:1 Eb4:2 G4:1 A4:2 G4:1 F#4:1.5 E4:.5 F#4:1 G4:2 F4:1 Eb4:2 G4:1 F4:1 F4:1 Eb4:1 D4:2 F4:1 F4:1.5 F4:.5 F4:1 F4:2
+
+[tenore]
+p: D4:1
+a: D4:1.5 C4:.5 Bb3:1 A3:2 D4:1 G3:1.5 A3:.5 Bb3:1 A3:2 Bb3:1 Bb3:2 A3:1 Bb3:1.5 A3:.5 G3:1 F3:2 C4:1 F3:2 Bb3:1 Bb3:1.5 A3:.5 G3:1 A3:2 A3:1 Bb3:2 A3:1 G3:2 Eb4:1 Eb4:2 C4:1 D4:2 D4:1 D4:2 D4:1 Bb3:2 Eb4:1 D4:1 D4:1 C4:1 Bb3:2 Bb3:1 A3:1.5 Bb3:.5 C4:1 D4:2
+
+[basso]
+p: G3:1
+a: G3:1.5 G3:.5 G3:1 A3:2 D3:1 Bb2:1.5 Bb2:.5 C3:1 F3:2 Bb2:1 Eb3:2 F3:1 G3:1 G3:1 C3:1 D3:2 C3:1 Bb2:2 Bb2:1 C3:2 C3:1 F3:2 F3:1 Bb2:1.5 C3:.5 D3:1 Eb3:2 Eb3:1 C3:1.5 D3:.5 Eb3:1 D3:2 D3:1 Bb2:1.5 C3:.5 D3:1 Eb3:2 C3:1 D3:1 Eb3:1 F3:1 G3:2 D3:1 F3:1.5 F3:.5 F3:1 Bb2:2

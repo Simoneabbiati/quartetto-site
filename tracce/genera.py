@@ -80,7 +80,7 @@ def controlla(meta, voci):
             if sezione not in sezioni:
                 sys.exit(f'la voce {voce} non ha la sezione {sezione!r} usata in "forma"')
             durate[voce] = sum(d for _, d, _ in sezioni[sezione])
-            if durate[voce] % battuta:
+            if durate[voce] % battuta and 'anacrusi' not in meta:
                 sys.exit(f'{voce}, sezione {sezione}: {durate[voce]} semiminime, non è un numero intero di battute da {battuta:g}')
         if len(set(durate.values())) > 1:
             sys.exit(f'sezione {sezione}: le voci hanno durate diverse {durate}')
@@ -93,10 +93,20 @@ ESTENSIONE = {
     'tenore': (48, 69), 'baritono': (45, 65), 'basso': (40, 62),
 }
 NOMI = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+NOMI_BEMOLLE = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
 
 
-def nome(nota: int) -> str:
-    return f'{NOMI[nota % 12]}{nota // 12 - 1}'
+def nome(nota: int, bemolli: bool = False) -> str:
+    return f'{(NOMI_BEMOLLE if bemolli else NOMI)[nota % 12]}{nota // 12 - 1}'
+
+
+def posizione(meta, t: float):
+    """Istante in semiminime (ordine di stampa) → (battuta stampata, tempo).
+    Con l'anacrusi la battuta in levare è la 0, come negli spartiti."""
+    battuta = float(meta.get('battuta', 4))
+    anacrusi = float(meta.get('anacrusi', 0))
+    t += (battuta - anacrusi) % battuta
+    return int(t // battuta) + (0 if anacrusi else 1), t % battuta + 1
 
 
 def in_partitura(meta, voci):
@@ -118,12 +128,13 @@ def avvisi(meta, voci):
     """Controlli musicali: non fermano la generazione, ma ogni avviso va
     verificato sul PDF. Una nota sbagliata di solito ne fa scattare almeno uno
     (fuori estensione, alterazione inattesa, salto strano o dissonanza)."""
-    battuta = float(meta.get('battuta', 4))
     partitura = in_partitura(meta, voci)
-    dove = lambda t: f'b. {int(t // battuta) + 1}, tempo {t % battuta + 1:g}'
+    bemolli = 'b' in meta.get('armatura', '')
+    nm = lambda n: nome(n, bemolli)
+    dove = lambda t: 'b. {}, tempo {:g}'.format(*posizione(meta, t))
     # Codice stabile di ogni avviso, da copiare in una riga "verificato:"
     # della trascrizione dopo averlo controllato sul PDF.
-    codice = lambda t, *chi: f'b{int(t // battuta) + 1}t{t % battuta + 1:g}-' + '-'.join(chi)
+    codice = lambda t, *chi: 'b{}t{:g}-'.format(*posizione(meta, t)) + '-'.join(chi)
     out = []
 
     diatoniche = {NOTE[n] for n in NOTE}
@@ -138,11 +149,11 @@ def avvisi(meta, voci):
             if nota is None:
                 continue
             if not basso <= nota <= alto:
-                out.append((codice(t, voce, 'estensione'), f'{voce}, {dove(t)}: {nome(nota)} fuori estensione ({nome(basso)}–{nome(alto)}) — ottava giusta?'))
+                out.append((codice(t, voce, 'estensione'), f'{voce}, {dove(t)}: {nm(nota)} fuori estensione ({nm(basso)}–{nm(alto)}) — ottava giusta?'))
             if 'armatura' in meta and nota % 12 not in diatoniche:
-                out.append((codice(t, voce, 'alterazione'), f'{voce}, {dove(t)}: {nome(nota)} non è in armatura — c\'è davvero l\'alterazione?'))
+                out.append((codice(t, voce, 'alterazione'), f'{voce}, {dove(t)}: {nm(nota)} non è in armatura — c\'è davvero l\'alterazione?'))
             if prec is not None and abs(nota - prec) > 12:
-                out.append((codice(t, voce, 'salto'), f'{voce}, {dove(t)}: salto di {abs(nota - prec)} semitoni da {nome(prec)} a {nome(nota)}'))
+                out.append((codice(t, voce, 'salto'), f'{voce}, {dove(t)}: salto di {abs(nota - prec)} semitoni da {nm(prec)} a {nm(nota)}'))
             prec = nota
 
     # Dissonanze sui tempi forti, dove una voce attacca una nota nuova.
@@ -163,7 +174,7 @@ def avvisi(meta, voci):
             for b in voci_t[i + 1:]:
                 (na, attacca_a), (nb, attacca_b) = suoni[a], suoni[b]
                 if (attacca_a or attacca_b) and abs(na - nb) % 12 in (1, 2, 6, 10, 11):
-                    out.append((codice(t, a, b), f'{dove(t)}: {a} {nome(na)} contro {b} {nome(nb)} — dissonanza, controlla entrambe'))
+                    out.append((codice(t, a, b), f'{dove(t)}: {a} {nm(na)} contro {b} {nm(nb)} — dissonanza, controlla entrambe'))
         t += 1.0
     return out
 
@@ -171,16 +182,38 @@ def avvisi(meta, voci):
 def differenze(prima, seconda):
     """Confronta due trascrizioni dello stesso spartito battuta per battuta."""
     def per_battuta(meta, voci):
-        battuta = float(meta.get('battuta', 4))
         out = {}
         for voce, note in in_partitura(meta, voci).items():
             for t, nota, durata in note:
                 testo = 'r' if nota is None else nome(nota)
-                out.setdefault(voce, {}).setdefault(int(t // battuta) + 1, []).append(f'{testo}:{durata:g}')
+                out.setdefault(voce, {}).setdefault(posizione(meta, t)[0], []).append(f'{testo}:{durata:g}')
         return out
 
+    def esecuzione(meta, voci):
+        # Battute stampate nell'ordine in cui si eseguono: confronta ritornelli
+        # e da capo senza dipendere da come ognuno ha chiamato le sezioni.
+        voce = next(iter(voci.values()))
+        ordine = list(dict.fromkeys(meta['forma'].split()))
+        inizio, t = {}, 0.0
+        for s in ordine:
+            inizio[s] = t
+            t += sum(d for _, d, _ in voce[s])
+        out = []
+        for s in meta['forma'].split():
+            fine = inizio[s] + sum(d for _, d, _ in voce[s])
+            out.append(f'{posizione(meta, inizio[s])[0]}-{posizione(meta, fine - 1e-6)[0]}')
+        return ' '.join(out)
+
     (ma, va), (mb, vb) = prima, seconda
-    out = [f'{k}: {ma.get(k)!r} ≠ {mb.get(k)!r}' for k in ('battuta', 'armatura', 'forma') if ma.get(k) != mb.get(k)]
+    # Un campo vuoto e uno assente valgono uguale (armatura senza alterazioni).
+    out = [f'{k}: {ma.get(k)!r} ≠ {mb.get(k)!r}' for k in ('battuta', 'armatura', 'anacrusi')
+           if (ma.get(k) or '').split() != (mb.get(k) or '').split()]
+    ea, eb = esecuzione(ma, va), esecuzione(mb, vb)
+    if ea.split() != eb.split():
+        # Stesse battute in sezioni divise diversamente: confronta la sequenza espansa.
+        espandi = lambda e: [b for tratto in e.split() for b in range(int(tratto.split('-')[0]), int(tratto.split('-')[1]) + 1)]
+        if espandi(ea) != espandi(eb):
+            out.append(f'ordine di esecuzione (battute):  1) {ea}   2) {eb}')
     a, b = per_battuta(ma, va), per_battuta(mb, vb)
     for voce in dict.fromkeys([*a, *b]):
         if voce not in a or voce not in b:
@@ -232,6 +265,7 @@ def nota_kern(grafia: str) -> str:
 
 def kern(meta, voci) -> str:
     battuta = float(meta.get('battuta', 4))
+    scarto = (battuta - float(meta.get('anacrusi', battuta))) % battuta
     ordine = list(dict.fromkeys(meta['forma'].split()))
     eventi = {}  # voce -> {istante: token}
     for voce, sezioni in voci.items():
@@ -240,7 +274,7 @@ def kern(meta, voci) -> str:
             # Spezza sulle stanghette e in figure scrivibili, con le legature.
             pezzi, resto, inizio = [], durata, t
             while resto > 1e-9:
-                fino_stanghetta = battuta - (inizio % battuta)
+                fino_stanghetta = battuta - ((inizio + scarto) % battuta)
                 tratto = min(resto, fino_stanghetta)
                 for v in spezza(tratto):
                     pezzi.append((inizio, v))
@@ -267,8 +301,8 @@ def kern(meta, voci) -> str:
            riga(lambda v: f'*M{metro}')]
     istanti = sorted({t for ev in eventi.values() for t in ev})
     for t in istanti:
-        if t and (t % battuta) < 1e-9:
-            out.append(riga(lambda v: f'={int(t // battuta) + 1}'))
+        if t and ((t + scarto) % battuta) < 1e-9:
+            out.append(riga(lambda v: f'={posizione(meta, t)[0]}'))
         out.append(riga(lambda v: eventi[v].get(t, '.')))
     out.append(riga(lambda v: '=='))
     out.append(riga(lambda v: '*-'))

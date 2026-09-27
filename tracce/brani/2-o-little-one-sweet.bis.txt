@@ -1,0 +1,27 @@
+# O little one sweet (Scheidt / J.S. Bach), 3/4, Si bemolle maggiore / sol minore, 4 strofe
+# Nessun numero di battuta stampato: levare = batt. 0, poi batt. 1-20 (batt. 20 finale da 2 tempi, completa il levare)
+# a = levare (batt. 0, 1 tempo); b = batt. 1-20
+# 4 strofe senza ritornelli: a b ripetuto 4 volte
+# Legature tratteggiate (batt. 6 S/A/B, batt. 7 S) considerate facoltative: note separate
+spartito: 2
+tempo: 92
+battuta: 3
+armatura: Bb Eb
+anacrusi: 1
+forma: a b a b a b a b
+
+[soprano]
+a: Bb4:1
+b: Bb4:1.5 A4:.5 Bb4:1 C5:2 A4:1 Bb4:1.5 A4:.5 G4:1 F4:2 D5:1 C5:2 C5:1 Bb4:1 Bb4:1 C5:1 F4:1 G4:1 A4:1 Bb4:2 D5:1 Eb5:2 Eb5:1 C5:2 C5:1 D5:2 D5:1 Bb4:2 Bb4:1 C5:2 C5:1 A4:2 A4:1 Bb4:2 Bb4:1 G4:2 C5:1 F4:1 G4:1 A4:1 Bb4:2 D5:1 C5:1.5 Bb4:.5 A4:1 Bb4:2
+
+[contralto]
+a: D4:1
+b: G4:1.5 F#4:.5 G4:1 E4:2 F#4:1 D4:1.5 D4:.5 E4:1 F4:2 F4:1 G4:2 F4:1 D4:1 D4:1 Eb4:1 F4:2 Eb4:1 D4:2 F4:1 Eb4:1.5 F4:.5 G4:1 F4:2 A4:1 D4:1.5 Eb4:.5 F4:1 Eb4:2 G4:1 A4:2 G4:1 F#4:1.5 E4:.5 F#4:1 G4:2 F4:1 Eb4:2 G4:1 F4:1 F4:1 Eb4:1 D4:2 F4:1 F4:1.5 F4:.5 F4:1 F4:2
+
+[tenore]
+a: D4:1
+b: D4:1.5 C4:.5 Bb3:1 A3:2 D4:1 G3:1.5 A3:.5 Bb3:1 A3:2 Bb3:1 Bb3:2 A3:1 Bb3:1.5 A3:.5 G3:1 F3:2 C4:1 F3:2 Bb3:1 Bb3:1.5 A3:.5 G3:1 A3:2 A3:1 Bb3:2 A3:1 G3:2 Eb4:1 Eb4:2 C4:1 D4:2 D4:1 D4:2 D4:1 Bb3:2 Eb4:1 D4:1 D4:1 C4:1 Bb3:2 Bb3:1 A3:1.5 Bb3:.5 C4:1 D4:2
+
+[basso]
+a: G3:1
+b: G3:1.5 G3:.5 G3:1 A3:2 D3:1 Bb2:1.5 Bb2:.5 C3:1 F3:2 Bb2:1 Eb3:2 F3:1 G3:1 G3:1 C3:1 D3:2 C3:1 Bb2:2 Bb2:1 C3:2 C3:1 F3:2 F3:1 Bb2:1.5 C3:.5 D3:1 Eb3:2 Eb3:1 C3:1.5 D3:.5 Eb3:1 D3:2 D3:1 Bb2:1.5 C3:.5 D3:1 Eb3:2 C3:1 D3:1 Eb3:1 F3:1 G3:2 D3:1 F3:1.5 F3:.5 F3:1 Bb2:2
