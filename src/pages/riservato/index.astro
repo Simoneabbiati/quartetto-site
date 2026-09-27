@@ -374,38 +374,40 @@ function presenzePerProva(provaId: number) {
                     <button type="button" class="chiudi-spartito tocco text-ink-muted hover:text-ink" aria-label={t('riservato.chiudi')}>✕</button>
                   </div>
 
-                  <!-- Desktop: PDF incorporato, si vede insieme all'audio sotto. Il
-                       popup stesso è già il contenitore largo (fino a 1450px, vedi
-                       CSS di .spartito-modal-content): qui basta riempirlo.
+                  <!-- Desktop: PDF a sinistra e tracce audio in una colonna a destra,
+                       così lo spartito sfrutta tutta l'altezza del popup senza dover
+                       scorrere per arrivare all'audio (vedi .spartito-corpo nel CSS).
                        Mobile: link che apre il visualizzatore nativo del telefono —
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
-                  <iframe
-                    src={pdfUrl}
-                    title={s.titolo}
-                    class="hidden md:block spartito-pdf-iframe"
-                    style="width:100%; height:75vh; border:1px solid rgba(26,37,53,0.15);"
-                    loading="lazy"
-                  ></iframe>
-                  <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
+                  <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 }]}>
+                    <iframe
+                      src={pdfUrl}
+                      title={s.titolo}
+                      class="hidden md:block spartito-pdf-iframe"
+                      style="width:100%; border:1px solid rgba(26,37,53,0.15);"
+                      loading="lazy"
+                    ></iframe>
+                    <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
 
-                  {tracce.length > 0 && (
-                    <div>
-                      <p class="label-caps mb-2">{t('riservato.ascoltaParti')}</p>
-                      <div class="flex flex-col gap-2">
-                        {tracce.map((tr) => (
-                          <div>
-                            <p class="type-body text-ink-muted mb-1">
-                              {tr.voce === 'tutti' ? t('riservato.tutteLeVoci') : t(`cantanti.${tr.voce}`)}
-                            </p>
-                            <audio controls preload="none" style="width:100%; height:2.25rem;">
-                              <source src={`/riservato/audio/${s.id}/${tr.voce}.mp3`} type="audio/mpeg" />
-                            </audio>
-                          </div>
-                        ))}
+                    {tracce.length > 0 && (
+                      <div>
+                        <p class="label-caps mb-2">{t('riservato.ascoltaParti')}</p>
+                        <div class="flex flex-col gap-2">
+                          {tracce.map((tr) => (
+                            <div>
+                              <p class="type-body text-ink-muted mb-1">
+                                {tr.voce === 'tutti' ? t('riservato.tutteLeVoci') : t(`cantanti.${tr.voce}`)}
+                              </p>
+                              <audio controls preload="none" style="width:100%; height:2.25rem;">
+                                <source src={`/riservato/audio/${s.id}/${tr.voce}.mp3`} type="audio/mpeg" />
+                              </audio>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </details>
             </li>
@@ -556,6 +558,16 @@ function presenzePerProva(provaId: number) {
          striscia invece di far scorrere il popup. */
       .spartito-modal[open] .spartito-modal-content > * {
         flex-shrink: 0;
+      }
+      /* PDF alto quanto lo spazio rimasto nel popup sotto l'intestazione;
+         se ci sono le tracce, stanno in una colonna fissa a destra. */
+      .spartito-modal[open] .spartito-pdf-iframe {
+        height: calc(100vh - 13rem);
+      }
+      .spartito-modal[open] .spartito-corpo.con-tracce {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        align-items: start;
       }
       /* Il tasto per chiudere deve restare raggiungibile anche quando il
          contenuto (PDF + audio) è più alto dello schermo e serve scorrere. */
