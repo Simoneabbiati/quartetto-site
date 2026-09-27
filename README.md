@@ -65,6 +65,12 @@ Lo schema dei dati è definito in `src/content/config.ts`. Astro valida automati
 
 Modifica i file in `src/content/cantanti/`. Il prefisso numerico (`01-`, `02-`...) determina l'ordine di visualizzazione.
 
+## Tracce audio per parte
+
+Le tracce "Ascolta le parti" dell'area riservata si generano da una
+trascrizione a mano dello spartito: procedimento e formato in
+[`tracce/README.md`](tracce/README.md).
+
 ## Deploy su Cloudflare Pages
 
 1. Pusha la repo su GitHub

@@ -1,0 +1,37 @@
+# Verbum caro factum est — Anonimo, villancico sec. XVI
+# Trascritto a mano dal PDF (spartito id 1), battuta per battuta.
+# La maggiore, 3/4. Il tenore è già scritto all'altezza reale (un'ottava
+# sotto lo scritto in chiave di violino con l'8).
+
+spartito: 1
+tempo: 92
+battuta: 3
+
+# Sezioni suonate in quest'ordine:
+#   a = bb. 1-4, b = bb. 5-8 (ritornello, Fine),
+#   c = bb. 9-20, d = bb. 21-24 (ritornello), poi da Capo al Fine.
+forma: a b b c d d a b
+
+[soprano]
+a: A4:2 A4:1 A4:2 G#4:1 B4:2 B4:1 C#5:2 r:1
+b: C#5:1.5 B4:.5 A4:.5 G#4:.5 F#4:1 E4:1 F#4:.5 G#4:.5 A4:2 G#4:1 A4:3
+c: C#5:2 D5:1 C#5:1 B4:1.5 A4:.5 A4:2 G#4:1 A4:2 A4:1 r:12 A4:2 A4:1 A4:2 G#4:1 B4:2 B4:1 C#5:2 B4:1
+d: C#5:1.5 B4:.5 A4:.5 G#4:.5 F#4:1 E4:1 F#4:.5 G#4:.5 A4:2 G#4:1 A4:3
+
+[contralto]
+a: E4:2 E4:1 F#4:2 E4:1 F#4:2 G#4:1 A4:2 r:1
+b: A4:2 A4:1 A4:2 A4:1 F#4:1 E4:2 E4:3
+c: A4:1.5 G#4:.5 F#4:1 E4:1 D4:1 C#4:1 A4:1 B4:2 A4:2 A4:1 r:24
+d: A4:2 A4:1 A4:2 A4:1 F#4:1 E4:2 E4:3
+
+[tenore]
+a: A3:1.5 B3:.5 C#4:1 D4:2 B3:1 D4:2 D4:1 E4:2 r:1
+b: E4:1 C#4:2 D4:1 C#4:2 D4:1 B3:2 A3:3
+c: r:12 E4:2 F#4:1 E4:1 D4:1.5 C#4:.5 B3:.5 A3:.5 B3:2 A3:2 A3:1 r:12
+d: C#4:2 C#4:1 D4:1 C#4:2 D4:1 B3:2 A3:3
+
+[basso]
+a: A3:2 A3:1 D3:2 E3:1 B3:2 B3:1 A3:2 r:1
+b: A3:1.5 G#3:.5 F#3:.5 E3:.5 D3:1 A3:1 F#3:1 D3:1 E3:2 A2:3
+c: r:12 A3:2 F#3:1 G#3:.5 A3:.5 B3:1.5 A3:.5 A3:2 G#3:1 A3:2 A3:1 r:12
+d: A3:1.5 G#3:.5 F#3:.5 E3:.5 D3:1 A3:1 F#3:1 D3:1 E3:2 A2:3
