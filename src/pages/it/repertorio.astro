@@ -28,13 +28,6 @@ if (db) {
   }
 }
 
-// Raggruppa per compositore, nell'ordine già dato dalla query
-const byCompositore: { compositore: string; brani: Spartito[] }[] = [];
-for (const s of spartiti) {
-  const gruppo = byCompositore.find((g) => g.compositore === s.compositore);
-  if (gruppo) gruppo.brani.push(s);
-  else byCompositore.push({ compositore: s.compositore, brani: [s] });
-}
 ---
 
 <Base title="Repertorio" description="Il repertorio dell'ensemble — i brani attualmente in libreria.">
@@ -48,33 +41,29 @@ for (const s of spartiti) {
     </p>
   </section>
 
-  <!-- Compositori -->
-  <div class="container-default py-12 pb-24 space-y-16">
-    {byCompositore.length === 0 && (
+  <!-- Brani: autore e titolo sulla stessa riga -->
+  <div class="container-default py-12 pb-24">
+    {spartiti.length === 0 && (
       <p class="text-ink-soft">Repertorio in arrivo.</p>
     )}
 
-    {byCompositore.map((gruppo) => (
-      <section>
-        <div class="flex items-baseline gap-6 mb-6 pb-4" style="border-bottom: 1px solid rgba(61,107,138,0.25)">
-          <h2 class="font-serif text-2xl">{gruppo.compositore}</h2>
+    <div class="space-y-0">
+      {spartiti.map((brano, i) => (
+        <div
+          class="grid grid-cols-[1fr_auto] gap-4 py-3.5 items-baseline"
+          style={`border-bottom: 1px solid rgba(26,37,53,${i === spartiti.length - 1 ? '0' : '0.06'})`}
+        >
+          <p class="font-serif text-[1.05rem] min-w-0">
+            <span class="text-ink-soft">{brano.compositore}</span>
+            <span class="text-ink-muted mx-2" aria-hidden="true">—</span>
+            <span>{brano.titolo}</span>
+          </p>
+          {brano.organico && (
+            <span class="label-caps text-[0.65rem] justify-self-end" style="color: rgba(112,136,165,0.9)">{brano.organico}</span>
+          )}
         </div>
-
-        <div class="space-y-0">
-          {gruppo.brani.map((brano, i) => (
-            <div
-              class="grid md:grid-cols-[1fr_auto] gap-2 py-3.5 items-baseline"
-              style={`border-bottom: 1px solid rgba(26,37,53,${i === gruppo.brani.length - 1 ? '0' : '0.06'})`}
-            >
-              <span class="font-serif text-[1.05rem]">{brano.titolo}</span>
-              {brano.organico && (
-                <span class="label-caps text-[0.65rem] md:justify-self-end" style="color: rgba(112,136,165,0.9)">{brano.organico}</span>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-    ))}
+      ))}
+    </div>
   </div>
 
   <!-- Footer note -->
