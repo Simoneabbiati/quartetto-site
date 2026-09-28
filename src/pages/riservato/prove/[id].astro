@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import Base from '../../../layouts/Base.astro';
-import { getAccessEmail } from '../../../lib/access';
+import { getAccessEmail, getCorista } from '../../../lib/access';
 import { useTranslations } from '../../../i18n/utils';
 import { linkGoogleCalendar, linkMappe } from '../../../lib/eventi';
 
@@ -27,6 +27,8 @@ let pezzi: Pezzo[] = [];
 let presenze: Presenza[] = [];
 let myStato: string | null = null;
 let errore: string | null = null;
+// Gli admin possono segnare la presenza anche per gli altri coristi.
+const sonoAdmin = Boolean((await getCorista(db, myEmail ?? ''))?.admin);
 
 if (!db) {
   errore = 'Binding D1 "DB" non disponibile.';
@@ -128,9 +130,9 @@ const calendario = prova
         )}
 
         <!-- RSVP -->
-        <div class="mb-12">
+        <div class="mb-12" id="rsvp-meta" data-colori={JSON.stringify(STATO_COLOR)} data-etichette={JSON.stringify(STATO_LABEL)}>
           <p class="label-caps mb-3">{t('riservato.tuaPresenza')}</p>
-          <div class="flex gap-2" id="rsvp-buttons" data-prova-id={prova.id} data-mio-stato={myStato ?? ''} data-msg-saving={t('riservato.salvataggio')} data-msg-saved={t('riservato.salvato')} data-msg-error={t('riservato.erroreSalvataggio')}>
+          <div class="flex gap-2" id="rsvp-buttons" data-prova-id={prova.id} data-mio-stato={myStato ?? ''} data-mio-email={myEmail ?? ''} data-msg-saving={t('riservato.salvataggio')} data-msg-saved={t('riservato.salvato')} data-msg-error={t('riservato.erroreSalvataggio')}>
             <button type="button" class="rsvp-btn" data-stato="si">{t('riservato.si')}</button>
             <button type="button" class="rsvp-btn" data-stato="forse">{t('riservato.forse')}</button>
             <button type="button" class="rsvp-btn" data-stato="no">{t('riservato.no')}</button>
@@ -141,20 +143,34 @@ const calendario = prova
         <!-- Board presenze per voce -->
         <div class="mb-12">
           <p class="label-caps mb-3">{t('riservato.chiCe')}</p>
+          {sonoAdmin && <p class="type-body text-ink-muted mb-3">{t('riservato.segnaPerAltri')}</p>}
           <div class="flex flex-col gap-4">
             {perVoce.map((gruppo) => (
               <div>
                 <p class="type-body text-ink-muted uppercase tracking-wide mb-1.5">{t(`cantanti.${gruppo.voce}`)}</p>
                 <div class="flex flex-col gap-1">
                   {gruppo.persone.map((persona) => (
-                    <div class="flex items-center gap-2 type-body">
+                    <div class="flex items-center gap-2 type-body riga-presenza">
                       <span
-                        class="inline-block rounded-full flex-shrink-0"
+                        class="inline-block rounded-full flex-shrink-0 pallino"
                         style={`width:10px; height:10px; background:${persona.stato ? STATO_COLOR[persona.stato] : '#c7ccd3'};`}
                         title={persona.stato ? STATO_LABEL[persona.stato] : t('riservato.nonHaRisposto')}
                       ></span>
                       <span class="text-ink">{persona.nome}</span>
-                      <span class="text-ink-muted type-body">{persona.stato ? STATO_LABEL[persona.stato] : t('riservato.inAttesa')}</span>
+                      <span class="text-ink-muted type-body stato-testo">{persona.stato ? STATO_LABEL[persona.stato] : t('riservato.inAttesa')}</span>
+                      {sonoAdmin && (
+                        <span class="ml-auto flex gap-1 presenza-altri" data-email={persona.email}>
+                          {(['si', 'forse', 'no'] as const).map((st) => (
+                            <button
+                              type="button"
+                              class="rsvp-mini"
+                              data-stato={st}
+                              data-active={persona.stato === st ? st : undefined}
+                              aria-label={`${persona.nome}: ${STATO_LABEL[st]}`}
+                            >{STATO_LABEL[st]}</button>
+                          ))}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -195,6 +211,17 @@ const calendario = prova
     .rsvp-btn[data-active="si"] { background: #2f8f5b; border-color: #2f8f5b; color: white; }
     .rsvp-btn[data-active="forse"] { background: #c99a2e; border-color: #c99a2e; color: white; }
     .rsvp-btn[data-active="no"] { background: #c14444; border-color: #c14444; color: white; }
+    .rsvp-mini {
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      border: 1px solid rgba(26, 37, 53, 0.15);
+      background: transparent;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .rsvp-mini[data-active="si"] { background: #2f8f5b; border-color: #2f8f5b; color: white; }
+    .rsvp-mini[data-active="forse"] { background: #c99a2e; border-color: #c99a2e; color: white; }
+    .rsvp-mini[data-active="no"] { background: #c14444; border-color: #c14444; color: white; }
   </style>
 
   <script>
@@ -235,5 +262,40 @@ const calendario = prova
       });
     }
 
+    // Admin: presenza degli altri coristi, riga per riga.
+    const meta = document.getElementById('rsvp-meta');
+    const colori = JSON.parse(meta?.dataset.colori ?? '{}');
+    const etichette = JSON.parse(meta?.dataset.etichette ?? '{}');
+    const provaIdAltri = Number(document.getElementById('rsvp-buttons')?.dataset.provaId);
+    document.querySelectorAll<HTMLElement>('.presenza-altri').forEach((gruppo) => {
+      const riga = gruppo.closest('.riga-presenza')!;
+      const bottoni = gruppo.querySelectorAll<HTMLButtonElement>('.rsvp-mini');
+      bottoni.forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const stato = btn.dataset.stato!;
+          bottoni.forEach((b) => (b.disabled = true));
+          try {
+            const res = await fetch('/riservato/api/presenza', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prova_id: provaIdAltri, stato, utente_email: gruppo.dataset.email }),
+            });
+            if (!res.ok) throw new Error();
+            bottoni.forEach((b) => (b.dataset.stato === stato ? b.setAttribute('data-active', stato) : b.removeAttribute('data-active')));
+            (riga.querySelector('.pallino') as HTMLElement).style.background = colori[stato];
+            riga.querySelector('.stato-testo')!.textContent = etichette[stato];
+            // Se è la propria riga, allinea anche i pulsanti grandi in alto.
+            const grandi = document.querySelectorAll<HTMLButtonElement>('#rsvp-buttons .rsvp-btn');
+            if (gruppo.dataset.email === document.getElementById('rsvp-buttons')?.dataset.mioEmail) {
+              grandi.forEach((b) => (b.dataset.stato === stato ? b.setAttribute('data-active', stato) : b.removeAttribute('data-active')));
+            }
+          } catch {
+            alert(meta?.querySelector<HTMLElement>('#rsvp-buttons')?.dataset.msgError ?? 'Errore');
+          } finally {
+            bottoni.forEach((b) => (b.disabled = false));
+          }
+        });
+      });
+    });
   </script>
 </Base>

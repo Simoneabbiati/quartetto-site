@@ -13,9 +13,10 @@ export interface Corista {
   email: string;
   nome: string;
   voce: string;
+  admin: number;
 }
 
 export async function getCorista(db: any, email: string): Promise<Corista | null> {
   if (!db || !email) return null;
-  return db.prepare('SELECT email, nome, voce FROM coristi WHERE email = ?').bind(email).first();
+  return db.prepare('SELECT email, nome, voce, admin FROM coristi WHERE email = ?').bind(email).first();
 }
