@@ -1,0 +1,48 @@
+# Rocking - canto ceco, arr. David Willcocks (Oxford, 2 pagine)
+# Fa maggiore, 4/8, "Gently" senza metronomo -> tempo 92.
+# 13 battute stampate, nessuna anacrusi, nessun ritornello stampato.
+# Sezioni (numeri di battuta stampati):
+#   a = bb. 1-3   (pag. 1, sistema 1: "Little Jesus, sweetly sleep, do not stir")
+#   b = bb. 4-6   (pag. 1, sistema 2: "We will lend a coat of fur, We will rock you")
+#   c = bb. 7-9   (pag. 2, sistema 1: "rock you, rock you, We will rock you...")
+#   d = bb. 10-13 (pag. 2, sistema 1 b.10 + sistema 2: "See the fur to keep you warm...")
+# Il solo ha 2 strofe ("1. Little Jesus..." / "2. Mary's little baby...")
+# che proseguono per tutto il pezzo: il pezzo intero si canta 2 volte,
+# quindi forma = a b c d ripetuto 2 volte.
+# Il sistema di pianoforte "for practice only" non e' trascritto.
+spartito: 5
+tempo: 92
+battuta: 2
+metro: 4/8
+armatura: Bb
+forma: a b c d a b c d
+
+[solo]
+a: F4:.5 A4:.5 C5:.5 C5:.5 D5:.5 D5:.25 B4:.25 C5:1 D5:.5 D5:.25 B4:.25 C5:1
+b: Bb4:.5 Bb4:.25 G4:.25 A4:.5 A4:.25 F4:.25 G4:.5 G4:.25 E4:.25 F4:1 A4:.5 C5:.5 Bb4:.5 A4:.5
+c: G4:.5 A4:.5 G4:.5 C4:.5 A4:.5 C5:.5 Bb4:.5 A4:.5 G4:.5 A4:.5 G4:.5 C4:.5
+d: F4:.5 A4:.5 C5:.5 C5:.5 D5:.5 D5:.25 B4:.25 C5:1 Bb4:.5 Bb4:.25 G4:.25 A4:.5 A4:.25 F4:.25 G4:.5 G4:.25 E4:.25 F4:1
+
+[soprano]
+a: r:2 D5:.25 C5:.25 B4:.25 A4:.25 G4:1 D5:.25 C5:.25 B4:.25 A4:.25 G4:1
+b: Bb4:.25 A4:.25 G4:.25 F4:.25 E4:.25 D4:.25 C4:.5 G4:.5 C4:.5 C4:1 F4:1 F5:1
+c: C5:.75 D5:.25 E5:.25 D5:.25 C5:.5 F4:1 F5:1 D5:.5 D5:.5 E5:.25 D5:.25 C5:.5
+d: r:2 D5:.25 C5:.25 B4:.25 A4:.25 G4:1 Bb4:.25 A4:.25 G4:.25 F4:.25 E4:.25 D4:.25 C4:.5 G4:.5 C4:.5 C4:1
+
+[contralto]
+a: r:1 A4:.25 G4:.25 F4:.25 E4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25
+b: C4:.5 Bb3:.5 C4:.5 C4:.25 D4:.25 Eb4:.25 D4:.25 C4:.25 Bb3:.25 A3:1 A4:1 F4:1
+c: G4:.5 F4:.5 E4:1 F4:.5 A4:.25 G4:.25 F4:.5 C4:.5 F4:.25 E4:.25 F4:.5 E4:1
+d: r:1 A4:.25 G4:.25 F4:.25 E4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25 C4:.5 Bb3:.5 C4:.5 C4:.25 D4:.25 Eb4:.25 D4:.25 C4:.25 Bb3:.25 A3:1
+
+[tenore]
+a: C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 C4:.5 A3:.5 G3:.5 G3:1 A3:.5 G3:.5 G3:1
+b: F3:.5 D4:.5 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 E3:.25 G3:.25 F3:1 C4:.5 F4:.25 E4:.25 D4:.5 C4:.5
+c: Bb3:.5 A3:.25 Bb3:.25 C4:1 C4:.5 A3:.5 Bb3:.5 C4:.5 D4:.5 G3:.5 G3:.5 C4:.5
+d: C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 C4:.5 A3:.5 G3:.5 G3:1 F3:.5 D4:.5 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 E3:.25 G3:.25 F3:1
+
+[basso]
+a: r:1 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 G3:.5 C3:.5 E3:.5 F3:.5 G3:.5 C3:.5 E3:.5
+b: D3:.5 G3:.5 C3:.5 F3:.5 Bb2:.5 C3:.5 F2:1 F3:1 F3:1
+c: F3:.5 F3:.5 C3:1 Eb3:.5 F3:.5 D3:.5 C3:.5 Bb2:.5 B2:.5 C3:1
+d: r:1 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 G3:.5 C3:.5 E3:.5 D3:.5 G3:.5 C3:.5 F3:.5 Bb2:.5 C3:.5 F2:1

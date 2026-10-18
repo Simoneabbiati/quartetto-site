@@ -1,0 +1,44 @@
+# Rocking — canto natalizio ceco, arr. David Willcocks, trad. Percy Dearmer.
+# Trascritto a mano dal PDF (spartito id 5). Fa maggiore, 4/8, "Gently" (nessun
+# metronomo: scelto croma = 112, cioè tempo 56 in semiminime).
+# Voci: soprano solo (o semicoro) con il testo delle strofe, coro SATB su
+# "lullaby". Il pianoforte "for practice only" non è trascritto.
+#   x = bb. 1-13 (le bb. 10-13 riprendono le bb. 1, 2, 4, 5)
+# Il solo ha 2 strofe che arrivano fino in fondo: il pezzo intero si canta 2 volte.
+
+spartito: 5
+tempo: 56
+battuta: 2
+metro: 4/8
+armatura: Bb
+forma: x x
+
+# Controllati sul PDF uno per uno: Si naturali (solo e soprano), Mib (contralto),
+# Mib e Si naturale del basso, stampati col loro segno.
+verificato: b2t1.75-solo-alterazione b3t1.75-solo-alterazione b11t1.75-solo-alterazione b2t1.5-soprano-alterazione
+verificato: b3t1.5-soprano-alterazione b11t1.5-soprano-alterazione b5t1-contralto-alterazione b13t1-contralto-alterazione
+verificato: b8t1-basso-alterazione b9t1.5-basso-alterazione
+# Dissonanze dell'armonia di Willcocks (note tenute contro voci in movimento): confermate
+# dalle due trascrizioni indipendenti, identiche nota per nota; non ricontrollate una per una.
+verificato: b2t2-soprano-contralto b2t2-contralto-tenore b3t2-soprano-contralto b3t2-contralto-tenore
+verificato: b4t1-solo-contralto b4t1-soprano-contralto b4t1-contralto-basso b5t1-solo-tenore
+verificato: b5t1-soprano-tenore b5t1-contralto-tenore b7t1-solo-basso b7t1-soprano-tenore
+verificato: b7t1-contralto-basso b8t1-solo-basso b8t1-soprano-basso b8t1-contralto-basso
+verificato: b9t1-solo-contralto b11t2-soprano-contralto b11t2-contralto-tenore b12t1-solo-contralto
+verificato: b12t1-soprano-contralto b12t1-contralto-basso b13t1-solo-tenore b13t1-soprano-tenore
+verificato: b13t1-contralto-tenore
+
+[solo]
+x: F4:.5 A4:.5 C5:.5 C5:.5 D5:.5 D5:.25 B4:.25 C5:1 D5:.5 D5:.25 B4:.25 C5:1 Bb4:.5 Bb4:.25 G4:.25 A4:.5 A4:.25 F4:.25 G4:.5 G4:.25 E4:.25 F4:1 A4:.5 C5:.5 Bb4:.5 A4:.5 G4:.5 A4:.5 G4:.5 C4:.5 A4:.5 C5:.5 Bb4:.5 A4:.5 G4:.5 A4:.5 G4:.5 C4:.5 F4:.5 A4:.5 C5:.5 C5:.5 D5:.5 D5:.25 B4:.25 C5:1 Bb4:.5 Bb4:.25 G4:.25 A4:.5 A4:.25 F4:.25 G4:.5 G4:.25 E4:.25 F4:1
+
+[soprano]
+x: r:2 D5:.25 C5:.25 B4:.25 A4:.25 G4:1 D5:.25 C5:.25 B4:.25 A4:.25 G4:1 Bb4:.25 A4:.25 G4:.25 F4:.25 E4:.25 D4:.25 C4:.5 G4:.5 C4:.5 C4:1 F4:1 F5:1 C5:.75 D5:.25 E5:.25 D5:.25 C5:.5 F4:1 F5:1 D5:.5 D5:.5 E5:.25 D5:.25 C5:.5 r:2 D5:.25 C5:.25 B4:.25 A4:.25 G4:1 Bb4:.25 A4:.25 G4:.25 F4:.25 E4:.25 D4:.25 C4:.5 G4:.5 C4:.5 C4:1
+
+[contralto]
+x: r:1 A4:.25 G4:.25 F4:.25 E4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25 C4:.5 Bb3:.5 C4:.5 C4:.25 D4:.25 Eb4:.25 D4:.25 C4:.25 Bb3:.25 A3:1 A4:1 F4:1 G4:.5 F4:.5 E4:1 F4:.5 A4:.25 G4:.25 F4:.5 C4:.5 F4:.25 E4:.25 F4:.5 E4:1 r:1 A4:.25 G4:.25 F4:.25 E4:.25 D4:.5 F4:.5 F4:.25 E4:.25 D4:.25 C4:.25 C4:.5 Bb3:.5 C4:.5 C4:.25 D4:.25 Eb4:.25 D4:.25 C4:.25 Bb3:.25 A3:1
+
+[tenore]
+x: C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 C4:.5 A3:.5 G3:.5 G3:1 A3:.5 G3:.5 G3:1 F3:.5 D4:.5 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 E3:.25 G3:.25 F3:1 C4:.5 F4:.25 E4:.25 D4:.5 C4:.5 Bb3:.5 A3:.25 Bb3:.25 C4:1 C4:.5 A3:.5 Bb3:.5 C4:.5 D4:.5 G3:.5 G3:.5 C4:.5 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 C4:.5 A3:.5 G3:.5 G3:1 F3:.5 D4:.5 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 E3:.25 G3:.25 F3:1
+
+[basso]
+x: r:1 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 G3:.5 C3:.5 E3:.5 F3:.5 G3:.5 C3:.5 E3:.5 D3:.5 G3:.5 C3:.5 F3:.5 Bb2:.5 C3:.5 F2:1 F3:1 F3:1 F3:.5 F3:.5 C3:1 Eb3:.5 F3:.5 D3:.5 C3:.5 Bb2:.5 B2:.5 C3:1 r:1 C4:.25 Bb3:.25 A3:.25 G3:.25 F3:.5 G3:.5 C3:.5 E3:.5 D3:.5 G3:.5 C3:.5 F3:.5 Bb2:.5 C3:.5 F2:1

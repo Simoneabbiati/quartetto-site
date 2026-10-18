@@ -28,7 +28,8 @@ SOUNDFONT_URL = 'https://ftp.osuosl.org/pub/musescore/soundfont/MuseScore_Genera
 
 TPQ = 480          # tick MIDI per semiminima
 STRUMENTO = 0      # General MIDI 0 = pianoforte: attacchi netti, ritmo chiaro per imparare la parte
-VOCI_VALIDE = {'soprano', 'contralto', 'mezzosoprano', 'tenore', 'baritono', 'basso'}
+# 'solo' = parte solistica (es. soprano solo o semicoro) separata dal coro.
+VOCI_VALIDE = {'solo', 'soprano', 'contralto', 'mezzosoprano', 'tenore', 'baritono', 'basso'}
 NOTE = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11}
 
 
@@ -89,7 +90,7 @@ def controlla(meta, voci):
 # Estensioni tipiche per voce (MIDI). Fuori da qui è quasi sempre un errore
 # d'ottava — soprattutto il tenore scritto all'altezza della chiave di violino.
 ESTENSIONE = {
-    'soprano': (60, 81), 'mezzosoprano': (57, 77), 'contralto': (53, 74),
+    'solo': (55, 84), 'soprano': (60, 81), 'mezzosoprano': (57, 77), 'contralto': (53, 74),
     'tenore': (48, 69), 'baritono': (45, 65), 'basso': (40, 62),
 }
 NOMI = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -232,7 +233,7 @@ def differenze(prima, seconda):
 # confronta battuta per battuta, voce per voce. È il controllo che non si può
 # automatizzare: che le note siano *quelle stampate*.
 
-CHIAVI = {'soprano': 'G2', 'mezzosoprano': 'G2', 'contralto': 'G2',
+CHIAVI = {'solo': 'G2', 'soprano': 'G2', 'mezzosoprano': 'G2', 'contralto': 'G2',
           'tenore': 'Gv2', 'baritono': 'F4', 'basso': 'F4'}
 VALORI = [6, 4, 3, 2, 1.5, 1, .75, .5, .375, .25, .125]  # in semiminime
 

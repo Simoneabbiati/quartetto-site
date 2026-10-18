@@ -31,7 +31,7 @@ PDF per risolvere i controlli 2 e 3 a colpo d'occhio.
 
 Passi per un nuovo spartito:
 
-1. Trascrivi il PDF in `tracce/brani/<id>-<titolo>.txt` (modello:
+1. Trascrivi il PDF (metodo: [ISTRUZIONI-TRASCRIZIONE.md](ISTRUZIONI-TRASCRIZIONE.md)) in `tracce/brani/<id>-<titolo>.txt` (modello:
    [`1-verbum-caro-factum-est.txt`](brani/1-verbum-caro-factum-est.txt)).
    `<id>` è l'id dello spartito nella tabella `spartiti` di D1.
 2. Qualcun altro (o un secondo passaggio separato) trascrive lo stesso PDF
@@ -86,7 +86,8 @@ b: ...
   scrivi in `forma` l'ordine in cui si suonano, ritornelli e da capo
   compresi. Ogni voce deve avere tutte le sezioni, anche solo pause.
 - **Voci**: `soprano`, `contralto`, `mezzosoprano`, `tenore`, `baritono`,
-  `basso` (le stesse della tabella `coristi`).
+  `basso` (le stesse della tabella `coristi`), più `solo` per una parte
+  solistica separata dal coro (sul sito: "Soprano solo").
 - **Ordine delle sezioni**: la prima volta che una sezione compare in
   `forma` fissa l'ordine in cui è stampata, e da lì vengono i numeri di
   battuta negli avvisi e nella partitura di controllo. Scrivi `forma` in modo
