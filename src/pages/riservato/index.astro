@@ -460,6 +460,12 @@ function presenzePerProva(provaId: number) {
                       <p class="text-ink-soft">
                         {presenti.length > 0 ? presenti.map((c) => c.nome).join(', ') : t('riservato.nessunaPresenza')}
                       </p>
+                      {/* Gli admin correggono a posteriori chi c'era, dalla pagina della prova. */}
+                      {corista?.admin ? (
+                        <a href={`/riservato/prove/${p.id}${suffissoLingua}`} class="tocco text-accent hover:underline inline-block mt-1">
+                          {t('riservato.modificaPresenze')} &rarr;
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </details>
