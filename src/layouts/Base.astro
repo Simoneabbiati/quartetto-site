@@ -11,10 +11,12 @@ export interface Props {
   ogImage?: string;
 }
 
-const { title, description, ogImage = withBase('/images/og-default.jpg') } = Astro.props;
+const { title, description, ogImage: ogImageProp } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+// Anteprima dei link (WhatsApp, social): nome e globo, nella lingua della pagina.
+const ogImage = ogImageProp ?? withBase(lang === 'it' ? '/images/og-it.png' : '/images/og-en.png');
 
 const fullTitle = title === 'home' ? `${t('site.name')} — ${t('site.tagline')}` : `${title} · ${t('site.name')}`;
 const metaDescription = description ?? t('site.tagline');
@@ -47,6 +49,13 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={lang === 'it' ? 'Ad Fontes, ensemble vocale a Milano: un globo con le linee che collegano Milano a Irlanda, Stati Uniti, Estonia e Turchia' : 'Ad Fontes, vocal ensemble in Milan: a globe with lines linking Milan to Ireland, the United States, Estonia and Turkey'} />
+    <meta property="og:site_name" content="Ad Fontes" />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_GB'} />
 
