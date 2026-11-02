@@ -1,0 +1,196 @@
+---
+// Anteprima d'ascolto in homepage: un tocco e parte un breve estratto del coro.
+// La forma d'onda è precalcolata (64 barre, RMS normalizzato) dall'MP3 in
+// public/audio/, così la pagina non scarica né analizza l'audio finché non si
+// preme play (preload="none"). Le barre si colorano man mano che il brano avanza.
+import { withBase } from '../i18n/utils';
+
+interface Props {
+  lang: 'it' | 'en';
+  /** File in public/ (default: l'estratto della homepage). */
+  src?: string;
+  /** Titolo accanto al pulsante (default: "Ascoltaci"). */
+  titolo?: string;
+  /** Riga sotto la forma d'onda (default: brano e luogo). */
+  brano?: string;
+  /** 64 altezze 0–1 precalcolate dall'MP3 (default: quelle dell'estratto). */
+  onda?: number[];
+  durata?: number;
+  /** Ogni 5 s un'onda leggera parte dal pulsante, finché non si preme play. */
+  richiamo?: boolean;
+}
+
+const { lang } = Astro.props;
+const testi = {
+  it: { ascolta: 'Ascoltaci', pausa: 'Pausa', brano: 'Suantraí · tradizionale irlandese, prova in San Ferdinando' },
+  en: { ascolta: 'Listen to us', pausa: 'Pause', brano: 'Suantraí · traditional Irish, rehearsal at San Ferdinando' },
+}[lang];
+
+const ONDA_ESTRATTO = [0.17, 0.34, 0.83, 0.9, 0.86, 0.83, 0.86, 0.73, 0.63, 0.66, 0.81, 0.82, 0.87, 0.51, 0.57, 0.33, 0.32, 0.53, 0.62, 0.72, 0.63, 0.62, 0.74, 0.61, 0.79, 0.88, 0.88, 0.59, 0.42, 0.44, 0.44, 0.38, 0.6, 0.7, 0.71, 0.85, 0.84, 0.67, 0.67, 0.74, 1.0, 0.94, 0.82, 0.46, 0.41, 0.31, 0.4, 0.6, 0.69, 0.8, 0.58, 0.62, 0.67, 0.83, 0.57, 0.65, 0.59, 0.57, 0.43, 0.36, 0.26, 0.21, 0.13, 0.12];
+const src = Astro.props.src ?? '/audio/allelujah.mp3';
+const titolo = Astro.props.titolo ?? testi.ascolta;
+const brano = Astro.props.brano ?? testi.brano;
+const ONDA = Astro.props.onda ?? ONDA_ESTRATTO;
+const DURATA = Astro.props.durata ?? 28;
+const richiamo = Astro.props.richiamo ?? false;  // 27,9 s dopo il taglio di 0,4 s
+---
+
+<div class:list={['anteprima', richiamo && 'richiamo']} data-durata={DURATA} data-ascolta={`${testi.ascolta}: ${titolo}`} data-pausa={testi.pausa}>
+  <button type="button" class="anteprima-play" aria-label={`${testi.ascolta}: ${titolo}`}>
+    <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+    <svg class="ico-pausa" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+  </button>
+  <div class="anteprima-corpo">
+    <div class="anteprima-testa">
+      <span class="anteprima-titolo">{titolo}</span>
+      <span class="anteprima-tempo" aria-hidden="true">0:{String(DURATA).padStart(2, '0')}</span>
+    </div>
+    <div class="anteprima-onda" aria-hidden="true">
+      {ONDA.map((h) => <span style={`--h:${h}`}></span>)}
+    </div>
+    <span class="anteprima-brano">{brano}</span>
+  </div>
+  <audio preload="none" src={withBase(src)}></audio>
+</div>
+
+<style>
+  .anteprima {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 26rem;
+  }
+  .anteprima-play {
+    flex: none;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 999px;
+    border: 0;
+    background: theme('colors.ink.DEFAULT');
+    color: theme('colors.paper.DEFAULT');
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+  }
+  .anteprima-play:hover { transform: scale(1.06); }
+  .anteprima-play:active { transform: scale(0.97); }
+  .anteprima-play:focus-visible { outline: 2px solid var(--klein); outline-offset: 3px; }
+  .anteprima-play svg { width: 1.35rem; height: 1.35rem; fill: currentColor; }
+  .ico-pausa { display: none; }
+
+  /* Richiamo: un anello blu si allarga dal pulsante e svanisce, e il pulsante
+     "respira" appena. Il primo dopo mezzo secondo (appena aperto il sito), poi
+     ogni 5 s, tre volte in tutto: poi si ferma da solo (WCAG 2.2.2: niente
+     movimento automatico che continua oltre pochi secondi). Si spegne anche al
+     primo play e con "riduci movimento". */
+  .anteprima-play { position: relative; }
+  .richiamo .anteprima-play::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 1.5px solid var(--klein);
+    opacity: 0;
+    pointer-events: none;
+    animation: richiamo-anello 5s ease-out 0.5s 3;
+  }
+  .richiamo .anteprima-play { animation: richiamo-respiro 5s ease-in-out 0.5s 3; }
+  @keyframes richiamo-anello {
+    0% { transform: scale(1); opacity: 0.7; }
+    28% { transform: scale(1.7); opacity: 0; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+  @keyframes richiamo-respiro {
+    0%, 30%, 100% { transform: scale(1); }
+    10% { transform: scale(1.06); }
+  }
+  .richiamo .anteprima-play:hover { animation: none; }
+  .anteprima.suona .ico-play { display: none; }
+  .anteprima.suona .ico-pausa { display: block; }
+
+  .anteprima-corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .anteprima-testa { display: flex; justify-content: space-between; align-items: baseline; }
+  .anteprima-titolo { font-weight: 500; }
+  .anteprima-tempo, .anteprima-brano {
+    font-size: var(--fs-label);
+    color: theme('colors.ink.muted');
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Forma d'onda: barre grigie che diventano nere man mano che il brano avanza;
+     durante l'ascolto la barra corrente "respira" leggermente. */
+  .anteprima-onda {
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+  }
+  .anteprima-onda span {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    min-height: 3px;
+    border-radius: 2px;
+    background: theme('colors.paper.dark');
+    transition: background-color 0.15s linear;
+  }
+  .anteprima-onda span.fatto { background: var(--klein); }
+  .anteprima.suona .anteprima-onda span.ora { animation: respiro 0.6s ease-in-out infinite alternate; }
+  @keyframes respiro { to { transform: scaleY(1.25); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anteprima-play { transition: none; }
+    .richiamo .anteprima-play, .richiamo .anteprima-play::after { animation: none; }
+    .anteprima.suona .anteprima-onda span.ora { animation: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.anteprima').forEach((box) => {
+    const audio = box.querySelector('audio')!;
+    const btn = box.querySelector<HTMLButtonElement>('.anteprima-play')!;
+    const onda = box.querySelector<HTMLElement>('.anteprima-onda')!;
+    const barre = [...onda.querySelectorAll<HTMLElement>('span')];
+    const tempo = box.querySelector<HTMLElement>('.anteprima-tempo')!;
+    const fmt = (s: number) => `0:${String(Math.max(0, Math.round(s))).padStart(2, '0')}`;
+
+    const disegna = () => {
+      const d = audio.duration || Number(box.dataset.durata) || 28;
+      const p = audio.currentTime / d;
+      const k = Math.floor(p * barre.length);
+      barre.forEach((b, i) => {
+        b.classList.toggle('fatto', i < k);
+        b.classList.toggle('ora', i === k);
+      });
+      tempo.textContent = audio.currentTime > 0 ? fmt(d - audio.currentTime) : fmt(d);
+    };
+    const stato = (suona: boolean) => {
+      box.classList.toggle('suona', suona);
+      btn.setAttribute('aria-label', suona ? box.dataset.pausa! : box.dataset.ascolta!);
+    };
+
+    btn.addEventListener('click', () => {
+      if (audio.paused) {
+        // Un solo audio alla volta in pagina.
+        document.querySelectorAll('audio').forEach((a) => { if (a !== audio) a.pause(); });
+        audio.play().catch(() => stato(false));
+      } else {
+        audio.pause();
+      }
+    });
+    onda.addEventListener('click', (e) => {
+      const r = onda.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      const vai = () => { audio.currentTime = p * (audio.duration || 28); disegna(); };
+      if (audio.readyState >= 1) vai();
+      else { audio.addEventListener('loadedmetadata', vai, { once: true }); audio.load(); }
+      if (audio.paused) audio.play().catch(() => stato(false));
+    });
+    // il richiamo ha fatto il suo lavoro: al primo play si spegne
+    audio.addEventListener('play', () => { stato(true); box.classList.remove('richiamo'); });
+    audio.addEventListener('pause', () => stato(false));
+    audio.addEventListener('timeupdate', disegna);
+    audio.addEventListener('ended', () => { audio.currentTime = 0; stato(false); disegna(); });
+  });
+</script>

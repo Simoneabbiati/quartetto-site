@@ -1,51 +1,57 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Anteprima from '../../components/Anteprima.astro';
+import HomeFoto from '../../components/HomeFoto.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const t = useTranslations('it');
+
+// Suantraí: ninna nanna tradizionale irlandese (gaelico), qui la sezione dell'Alleluia.
+const TITOLO_AUDIO = 'Suantraí';
+const ONDA_PROVA = [0.21, 0.23, 0.65, 0.96, 0.97, 0.85, 0.87, 0.83, 0.72, 0.68, 0.78, 0.9, 0.94, 0.63, 0.61, 0.45, 0.31, 0.48, 0.78, 0.71, 0.78, 0.65, 0.88, 0.7, 0.76, 0.98, 0.96, 0.61, 0.43, 0.46, 0.48, 0.35, 0.58, 0.69, 0.76, 0.87, 0.98, 0.78, 0.88, 0.8, 0.96, 1.0, 0.85, 0.5, 0.45, 0.32, 0.41, 0.6, 0.68, 0.75, 0.65, 0.61, 0.67, 0.81, 0.57, 0.65, 0.63, 0.58, 0.45, 0.36, 0.27, 0.21, 0.13, 0.12];
 ---
 
-<Base title="Media" description="Audio, video e foto del quartetto vocale.">
-  <section class="container-default py-20">
-    <p class="text-sm uppercase tracking-[0.2em] text-ink-muted mb-4">{t('nav.media')}</p>
-    <h1 class="font-serif mb-16">Media</h1>
+<Base title="Media" description="Audio e foto di Ad Fontes.">
+  <section class="container-default corpo-pagina">
+    <p class="label-caps mb-4">{t('nav.media')}</p>
+    <h1 style="margin-bottom: var(--space-7)">Media</h1>
 
-    <!-- VIDEO -->
-    <div class="mb-20">
-      <h2 class="font-serif mb-8">Video</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- Esempio embed YouTube. Sostituire VIDEO_ID con l'ID reale -->
-        <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
-          <span class="text-sm italic">YouTube embed (sostituire con &lt;iframe&gt;)</span>
-        </div>
-        <div class="aspect-video bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
-          <span class="text-sm italic">YouTube embed</span>
-        </div>
-      </div>
-    </div>
+    <!-- VIDEO: nascosto finché non ci sono video da pubblicare. -->
 
     <!-- AUDIO -->
-    <div class="mb-20">
-      <h2 class="font-serif mb-8">Audio</h2>
-      <div class="bg-paper-warm p-8 border border-ink/10">
-        <p class="text-ink-muted italic text-sm">
-          Player audio qui. Opzioni: SoundCloud embed, Spotify embed, oppure file MP3 self-hosted con player HTML5.
-        </p>
-      </div>
+    <div class="blocco-pagina">
+      <h2 class="mb-8">Audio</h2>
+      <Anteprima
+        lang="it"
+        src="/audio/allelujah-prova.mp3"
+        titolo={TITOLO_AUDIO}
+        brano="Alleluia · ninna nanna tradizionale irlandese — prova del 28 ottobre 2026"
+        onda={ONDA_PROVA}
+        durata={28}
+      />
     </div>
 
     <!-- FOTO -->
     <div>
-      <h2 class="font-serif mb-8">Foto</h2>
-      <div class="grid md:grid-cols-3 gap-4">
-        {
-          Array.from({ length: 6 }).map(() => (
-            <div class="aspect-[4/5] bg-ink/5 border border-ink/10 flex items-center justify-center text-ink-muted">
-              <span class="text-sm italic">Foto</span>
-            </div>
-          ))
-        }
+      <h2 class="mb-3">Foto</h2>
+      <p class="text-ink-muted mb-8 misura">Prova di mercoledì 28 ottobre 2026 · chiesa di San Ferdinando, Università Bocconi, Milano</p>
+      <div class="galleria">
+          <HomeFoto nome="spartiti" alt="Gli spartiti in mano ai cantanti durante la prova" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="chiesa" verticale alt="La chiesa di notte, la facciata illuminata sopra la scalinata" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="tastiera" alt="La prova alla tastiera accanto all'organo" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="altare" verticale alt="L'altare con il rilievo in pietra" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="pianoforte" verticale alt="Le mani sulla tastiera sotto la lampada del leggio" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="palco" verticale alt="Il palco vuoto prima del concerto" sizes="(min-width: 768px) 33vw, 50vw" />
+          <HomeFoto nome="spartiti-coro" alt="Spartiti aperti tra le mani dei coristi accanto all'organo" sizes="(min-width: 768px) 33vw, 50vw" />
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  /* Colonne a cascata: foto verticali e orizzontali senza ritagli. */
+  .galleria { columns: 2; column-gap: 1rem; }
+  @media (min-width: 768px) { .galleria { columns: 3; column-gap: 1.25rem; } }
+  .galleria :global(figure) { break-inside: avoid; margin: 0 0 1rem; }
+  @media (min-width: 768px) { .galleria :global(figure) { margin-bottom: 1.25rem; } }
+</style>

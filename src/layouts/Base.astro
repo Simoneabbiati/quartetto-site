@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Avviso from '../components/Avviso.astro';
 import { getLangFromUrl, useTranslations, withBase, stripBase } from '../i18n/utils';
 
 export interface Props {
@@ -30,6 +31,8 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <!-- iOS non legge il favicon per "Aggiungi alla schermata Home": vuole
          esplicitamente questo, in PNG (l'SVG non è supportato qui). -->
@@ -52,6 +55,12 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={defaultUrl} />
 
+    <!-- Instrument Sans (asse larghezza 75–100 e peso 400–600) + Instrument Serif per i testi latini -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..600;1,75..100,400..600&family=Instrument+Serif:ital@0;1&display=swap" />
+
+
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
   </head>
   <body class="min-h-screen flex flex-col bg-paper text-ink">
@@ -60,5 +69,6 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
       <slot />
     </main>
     <Footer />
+    <Avviso />
   </body>
 </html>

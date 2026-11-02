@@ -1,0 +1,134 @@
+---
+// Avviso "cerchiamo voci": una scheda che entra dal basso poco dopo l'apertura
+// della pagina (in basso a destra su computer, a tutta larghezza su telefono).
+// Ricompare a ogni pagina e a ogni visita (scelta del coro: deve farsi vedere);
+// la ✕ la chiude solo per la pagina corrente. Il bottone apre il modulo
+// contatti in modalità "prova voce" (?audizione=1), già compilato.
+import { getLangFromUrl, useTranslations, withBase, stripBase } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const contatti = withBase(lang === 'it' ? '/it/contatti' : '/contatti') + '?audizione=1#modulo';
+// Non nell'area riservata (chi ci entra fa già parte del coro) né sulla pagina
+// contatti, dove l'invito sarebbe ridondante.
+const percorso = stripBase(Astro.url.pathname).replace(/^\/it/, '');
+const visibile = !percorso.startsWith('/riservato') && !percorso.startsWith('/contatti');
+---
+
+{visibile && (
+  <aside class="avviso" id="avviso" aria-labelledby="avviso-titolo">
+    <button type="button" class="avviso-chiudi" aria-label={t('avviso.chiudi')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <p class="avviso-titolo" id="avviso-titolo">
+      <span class="pallino" aria-hidden="true"></span>{t('avviso.titolo')}
+    </p>
+    <p class="avviso-testo">{t('avviso.testo')}</p>
+    <a href={contatti} class="avviso-cta">{t('avviso.cta')} <span aria-hidden="true">→</span></a>
+  </aside>
+)}
+
+<style>
+  .avviso {
+    position: fixed;
+    z-index: 60;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    padding: 1.1rem 1.25rem 1.25rem;
+    background: theme('colors.ink.DEFAULT');
+    color: theme('colors.paper.DEFAULT');
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.22);
+    /* entra dal basso dopo un attimo, per non coprire subito il nome */
+    opacity: 0;
+    transform: translateY(1.5rem);
+    pointer-events: none;
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* telefono: più basso, così copre meno contenuto */
+  @media (max-width: 767px) {
+    .avviso { padding: 0.85rem 1rem 1rem; }
+    .avviso-titolo { font-size: var(--fs-body); }
+    .avviso-testo { font-size: var(--fs-small); margin-bottom: 0.75rem; }
+  }
+  @media (min-width: 768px) {
+    .avviso { left: auto; right: 1.5rem; bottom: 1.5rem; width: 22rem; }
+  }
+  /* finché l'avviso è aperto, il fondo pagina scorre oltre la scheda */
+  :global(html.con-avviso body) { padding-bottom: 11rem; }
+  .avviso.visibile { opacity: 1; transform: none; pointer-events: auto; }
+
+  .avviso-titolo {
+    margin: 0 2.5rem 0.35rem 0;
+    font-family: theme('fontFamily.serif');
+    font-size: var(--fs-title);
+    font-stretch: 90%;
+    line-height: 1.2;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+  .avviso-titolo .pallino { flex: none; margin-top: 0.5em; }
+  .avviso-testo { margin: 0 0 1rem; color: rgb(255 255 255 / 0.72); line-height: 1.45; }
+  .avviso-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    background: theme('colors.paper.DEFAULT');
+    color: theme('colors.ink.DEFAULT');
+    font-size: var(--fs-ui);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  .avviso-cta:hover { background: theme('colors.paper.dark'); }
+
+  .avviso-chiudi {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .avviso-chiudi:hover { background: rgb(255 255 255 / 0.12); }
+  .avviso-chiudi:focus-visible, .avviso-cta:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  .avviso-chiudi svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .avviso { transition: none; transform: none; }
+  }
+</style>
+
+<script>
+  // Compare a ogni visita, ma non subito: al primo scorrimento o dopo 4 s,
+  // così la prima schermata resta libera. La ✕ lo chiude per questa pagina.
+  const box = document.getElementById('avviso');
+  if (box) {
+    const mostra = () => {
+      if (box.classList.contains('visibile') || !box.isConnected) return;
+      box.classList.add('visibile');
+      document.documentElement.classList.add('con-avviso');
+    };
+    // Su telefono la prima schermata resta per nome e ascolto: l'avviso arriva
+    // dopo averla superata. Su computer al primo scorrimento o dopo 4 s.
+    const telefono = matchMedia('(max-width: 767px)').matches;
+    const soglia = telefono ? innerHeight * 0.8 : 120;
+    const timer = telefono ? 0 : setTimeout(mostra, 4000);
+    addEventListener('scroll', () => { if (scrollY > soglia) { clearTimeout(timer); mostra(); } }, { passive: true });
+    box.querySelector('.avviso-chiudi')?.addEventListener('click', () => {
+      box.classList.remove('visibile');
+      document.documentElement.classList.remove('con-avviso');
+      setTimeout(() => box.remove(), 600);
+    });
+  }
+</script>

@@ -1,10 +1,11 @@
 {
   "site": {
     "name": "Ad Fontes",
-    "tagline": "Quattro voci per la tradizione sacra"
+    "tagline": "Ensemble vocale a Milano"
   },
   "nav": {
-    "quartetto": "Il Quartetto",
+    "home": "Home",
+    "quartetto": "L'Ensemble",
     "repertorio": "Repertorio",
     "concerti": "Concerti",
     "media": "Media",
@@ -53,6 +54,26 @@
       "telefono": "Telefono",
       "note": "Note",
       "invia": "Invia richiesta"
+    },
+    "audizione": {
+      "tipo": "Prova voce per entrare nell'ensemble",
+      "titolo": "Prova voce",
+      "intro": "Ci fa molto piacere! Dicci che voce sei e come contattarti: ti scriviamo per fissare una prova voce, di solito prima o dopo la prova della domenica a San Ferdinando.",
+      "voce": "La tua voce",
+      "sceltaVoce": "Scegli…",
+      "nonSo": "Non lo so ancora",
+      "nota": "Ciao! Vorrei partecipare a una prova voce per entrare nell'ensemble.",
+      "voci": {
+        "soprano": "Soprano",
+        "mezzosoprano": "Mezzosoprano",
+        "contralto": "Contralto",
+        "controtenore": "Controtenore",
+        "tenore": "Tenore",
+        "baritenore": "Baritenore",
+        "baritono": "Baritono",
+        "bassobaritono": "Basso-baritono",
+        "basso": "Basso"
+      }
     }
   },
   "footer": {
@@ -60,7 +81,7 @@
     "lingua": "Lingua",
     "esplora": "Esplora",
     "contatti": "Contatti",
-    "motto": "Quattro voci — un millennio di tradizione sacra"
+    "motto": "Cinque secoli di musica d'insieme"
   },
   "riservato": {
     "titolo": "Area riservata",
@@ -123,5 +144,11 @@
     "ascoltaParti": "Ascolta le parti",
     "tutteLeVoci": "Tutte le voci",
     "apriPdf": "Apri il PDF"
+  },
+  "avviso": {
+    "titolo": "Cerchiamo nuove voci, in particolare un contralto!",
+    "testo": "Proviamo ogni domenica a San Ferdinando, proprio accanto alla Bocconi. Vieni a cantare con noi!",
+    "cta": "Scrivici",
+    "chiudi": "Chiudi l'avviso"
   }
 }

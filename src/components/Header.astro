@@ -8,6 +8,7 @@ const t = useTranslations(lang);
 const prefix = lang === 'en' ? '' : '/it';
 
 const navItems = [
+  { href: withBase(prefix ? `${prefix}/` : '/'), label: t('nav.home') },
   { href: withBase(`${prefix}/quartetto`), label: t('nav.quartetto') },
   { href: withBase(`${prefix}/repertorio`), label: t('nav.repertorio') },
   { href: withBase(`${prefix}/concerti`), label: t('nav.concerti') },
@@ -19,14 +20,14 @@ const navItems = [
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 ---
 
-<header class="border-b border-ink/[0.07] bg-paper/95 backdrop-blur-sm sticky top-0 z-50">
-  <div class="container-default flex items-center justify-between py-5">
+<header class="bg-paper/90 backdrop-blur-sm sticky top-0 z-50">
+  <div class="px-4 md:px-6 flex items-center justify-between py-4">
 
-    <a href={withBase(prefix || '/')} class="font-serif text-[1.35rem] tracking-tight leading-none hover:opacity-75 transition-opacity duration-200">
-      {t('site.name')}
+    <a href={withBase(prefix || '/')} class="fs-title font-medium tracking-tight !leading-none hover:text-ink-muted transition-colors duration-200 inline-flex items-center gap-2 py-3 -my-3">
+      <span class="segno-klein" aria-hidden="true"></span>{t('site.name')}
     </a>
 
-    <nav class="hidden md:flex items-center gap-9">
+    <nav class="hidden md:flex items-center gap-7">
       {navItems.map((item) => {
         const isActive = currentPath === item.href.replace(/\/$/, '');
         return (
@@ -78,6 +79,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
       btn.setAttribute('aria-expanded', String(open));
       btn.classList.toggle('is-open', open);
       menu.classList.toggle('is-open', open);
+      document.documentElement.classList.toggle('menu-aperto', open);
     };
 
     btn.addEventListener('click', () => {

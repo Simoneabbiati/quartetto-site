@@ -1,0 +1,167 @@
+---
+// Piccolo globo animato in apertura: da San Ferdinando (Milano) partono archi
+// verso i luoghi da cui vengono i coristi, percorsi da un punto di luce.
+// Canvas 2D + d3-geo (proiezione ortografica) + contorni delle terre emerse
+// world-atlas 110m: ~30 KB di codice, caricato solo quando il globo è visibile.
+// Senza JavaScript resta l'etichetta "Milano"; con "riduci movimento" il globo
+// è fermo, con gli archi disegnati.
+interface Props {
+  /** Breve testo sotto il globo: da dove vengono le voci, con Milano al centro. */
+  testo: string;
+}
+const { testo } = Astro.props;
+---
+
+<figure class="globo">
+  <canvas class="globo-canvas" aria-hidden="true"></canvas>
+  <figcaption class="globo-testo">{testo}</figcaption>
+</figure>
+
+<style>
+  /* Un blocco a sé, centrato: globo e sotto la didascalia. */
+  .globo {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .globo-canvas {
+    flex: none;
+    width: min(220px, 60vw);
+    height: min(220px, 60vw);
+    display: block;
+  }
+  .globo-testo {
+    color: theme('colors.ink.muted');
+    font-size: var(--fs-small);
+    line-height: 1.5;
+    max-width: 30ch;
+    text-align: center;
+    text-wrap: pretty;
+  }
+  @media (min-width: 768px) {
+    .globo-canvas { width: clamp(220px, 22vw, 320px); height: clamp(220px, 22vw, 320px); }
+  }
+</style>
+
+<script>
+  import { geoOrthographic, geoPath, geoGraticule10, geoInterpolate, geoDistance } from 'd3-geo';
+  import { feature } from 'topojson-client';
+  import land110 from 'world-atlas/land-110m.json';
+
+  // Luoghi collegati (lon, lat). Per aggiungere un corista: una riga qui.
+  const CASA: [number, number] = [9.1903, 45.4486]; // San Ferdinando, Milano
+  const LUOGHI: [number, number][] = [
+    [-6.2603, 53.3498],  // Irlanda (Dublino)
+    [-74.006, 40.7128],  // Stati Uniti (New York)
+    [24.7536, 59.437],   // Estonia (Tallinn)
+    [32.8597, 39.9334],  // Turchia (Ankara: città da confermare con Vecdi)
+  ];
+
+  // Blu Klein: l'unico colore del sito, qui solo su archi e Milano.
+  const KLEIN = '#002FA7';
+  const kleinA = (a: number) => `rgba(0,47,167,${a})`;
+  const INK = KLEIN;
+  const TERRA = '#dcdcdc';
+  const GRIGLIA = 'rgba(0,0,0,0.06)';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('.globo-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d')!;
+    const land = feature(land110 as any, (land110 as any).objects.land);
+    const graticule = geoGraticule10();
+    const archi = LUOGHI.map((p) => geoInterpolate(CASA, p));
+    const fermo = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let size = 0, dpr = 1;
+    const proj = geoOrthographic().clipAngle(90).precision(0.3);
+    const path = geoPath(proj, ctx);
+
+    const misura = () => {
+      const r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      size = r.width;
+      canvas.width = Math.round(r.width * dpr);
+      canvas.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      proj.translate([size / 2, size / 2]).scale(size / 2 - 2);
+    };
+
+    // Punto sull'arco, sollevato dalla superficie verso il centro dell'arco
+    // (effetto "linea di luce" che si stacca dal globo). null se dietro.
+    const puntoArco = (interp: (t: number) => [number, number], t: number) => {
+      const p = interp(t);
+      if (geoDistance(p, [-proj.rotate()[0], -proj.rotate()[1]]) > Math.PI / 2) return null;
+      const xy = proj(p);
+      if (!xy) return null;
+      const c = size / 2, alza = 1 + 0.24 * Math.sin(Math.PI * t);
+      return [c + (xy[0] - c) * alza, c + (xy[1] - c) * alza] as [number, number];
+    };
+
+    const disegna = (tempo: number) => {
+      // Rotazione lenta avanti e indietro attorno all'Atlantico, così Milano e
+      // tutti i luoghi restano sempre sul lato visibile.
+      const lon = fermo ? 22 : 22 + 14 * Math.sin(tempo / 6000);
+      proj.rotate([lon, -30, 0]);
+      ctx.clearRect(0, 0, size, size);
+
+      ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = '#ffffff'; ctx.fill();
+      ctx.beginPath(); path(graticule); ctx.strokeStyle = GRIGLIA; ctx.lineWidth = 0.6; ctx.stroke();
+      ctx.beginPath(); path(land as any); ctx.fillStyle = TERRA; ctx.fill();
+      ctx.beginPath(); path({ type: 'Sphere' }); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8; ctx.stroke();
+
+      archi.forEach((interp, i) => {
+        // l'arco
+        ctx.beginPath();
+        let su = false;
+        for (let k = 0; k <= 48; k++) {
+          const q = puntoArco(interp, k / 48);
+          if (!q) { su = false; continue; }
+          if (!su) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]);
+          su = true;
+        }
+        ctx.strokeStyle = kleinA(0.6); ctx.lineWidth = 1; ctx.stroke();
+
+        // il punto di luce che lo percorre, con una breve scia
+        if (!fermo) {
+          const fase = ((tempo / 2600) + i / archi.length) % 1;
+          for (let s = 0; s < 6; s++) {
+            const q = puntoArco(interp, Math.max(0, fase - s * 0.02));
+            if (!q) continue;
+            ctx.beginPath(); ctx.arc(q[0], q[1], 1.8 - s * 0.25, 0, 2 * Math.PI);
+            ctx.fillStyle = kleinA(0.95 - s * 0.15); ctx.fill();
+          }
+        }
+        // destinazione
+        const d = puntoArco(interp, 1);
+        if (d) { ctx.beginPath(); ctx.arc(d[0], d[1], 1.6, 0, 2 * Math.PI); ctx.fillStyle = INK; ctx.fill(); }
+      });
+
+      // Milano: punto pieno con un anello che pulsa
+      const m = proj(CASA);
+      if (m) {
+        if (!fermo) {
+          const k = (tempo % 2000) / 2000;
+          ctx.beginPath(); ctx.arc(m[0], m[1], 2 + k * 7, 0, 2 * Math.PI);
+          ctx.strokeStyle = kleinA(0.55 * (1 - k)); ctx.lineWidth = 1; ctx.stroke();
+        }
+        ctx.beginPath(); ctx.arc(m[0], m[1], 2.6, 0, 2 * Math.PI); ctx.fillStyle = INK; ctx.fill();
+      }
+    };
+
+    let attivo = false, raf = 0;
+    const ciclo = (t: number) => { disegna(t); if (attivo) raf = requestAnimationFrame(ciclo); };
+    misura();
+    disegna(0);
+    if (!fermo) {
+      // Anima solo quando il globo è sullo schermo (risparmia batteria).
+      new IntersectionObserver(([e]) => {
+        attivo = e.isIntersecting;
+        cancelAnimationFrame(raf);
+        if (attivo) raf = requestAnimationFrame(ciclo);
+      }).observe(canvas);
+    }
+    window.addEventListener('resize', () => { misura(); disegna(performance.now()); });
+  }
+</script>

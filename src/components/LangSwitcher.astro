@@ -29,10 +29,10 @@ if (inAreaRiservata) {
 }
 ---
 
-<div class="flex items-center text-xs uppercase tracking-wider">
+<div class="flex items-center fs-label uppercase tracking-wider">
   <a
     href={itHref}
-    class:list={['inline-flex items-center py-2.5 px-1.5 hover:text-accent transition-colors', lang === 'it' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    class:list={['inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-1 hover:text-accent transition-colors', lang === 'it' ? 'text-accent font-semibold' : 'text-ink-muted']}
     aria-label="Italiano"
   >
     IT
@@ -40,7 +40,7 @@ if (inAreaRiservata) {
   <span class="text-ink-muted/50" aria-hidden="true">/</span>
   <a
     href={enHref}
-    class:list={['inline-flex items-center py-2.5 px-1.5 hover:text-accent transition-colors', lang === 'en' ? 'text-accent font-semibold' : 'text-ink-muted']}
+    class:list={['inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-1 hover:text-accent transition-colors', lang === 'en' ? 'text-accent font-semibold' : 'text-ink-muted']}
     aria-label="English"
   >
     EN

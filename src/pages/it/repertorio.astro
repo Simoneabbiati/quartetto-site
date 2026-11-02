@@ -33,16 +33,16 @@ if (db) {
 <Base title="Repertorio" description="Il repertorio dell'ensemble — i brani attualmente in libreria.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(26,37,53,0.07)">
+  <section class="container-default testa-pagina">
     <p class="label-caps mb-4">{t('nav.repertorio')}</p>
     <h1 class="font-serif max-w-xl">Il repertorio</h1>
-    <p class="text-base text-ink-soft mt-3 font-serif italic max-w-lg">
+    <p class="fs-lede text-ink-soft mt-3 max-w-lg">
       I brani attualmente in libreria, aggiornati man mano che aggiungiamo nuovi spartiti.
     </p>
   </section>
 
   <!-- Brani: autore e titolo sulla stessa riga -->
-  <div class="container-default py-12 pb-24">
+  <div class="container-default corpo-pagina">
     {spartiti.length === 0 && (
       <p class="text-ink-soft">Repertorio in arrivo.</p>
     )}
@@ -53,13 +53,13 @@ if (db) {
           class="grid grid-cols-[1fr_auto] gap-4 py-3.5 items-baseline"
           style={`border-bottom: 1px solid rgba(26,37,53,${i === spartiti.length - 1 ? '0' : '0.06'})`}
         >
-          <p class="font-serif text-[1.05rem] min-w-0">
+          <p class="fs-title min-w-0">
             <span class="text-ink-soft">{brano.compositore}</span>
             <span class="text-ink-muted mx-2" aria-hidden="true">—</span>
             <span>{brano.titolo}</span>
           </p>
           {brano.organico && (
-            <span class="label-caps text-[0.65rem] justify-self-end" style="color: rgba(112,136,165,0.9)">{brano.organico}</span>
+            <span class="label-caps justify-self-end">{brano.organico}</span>
           )}
         </div>
       ))}
@@ -67,9 +67,9 @@ if (db) {
   </div>
 
   <!-- Footer note -->
-  <section class="border-t py-10" style="border-color: rgba(26,37,53,0.08); background-color: #e5ecf4;">
+  <section class="border-t py-10" style="border-color: rgba(26,37,53,0.08); background-color: #f5f5f5;">
     <div class="container-narrow text-center">
-      <p class="text-sm text-ink-muted font-serif italic">
+      <p class="text-ink-muted misura mx-auto">
         Il repertorio è in continua evoluzione. Per programmi personalizzati su liturgia, concerto o festival,
         <a href={withBase('/it/contatti')} class="text-accent hover:underline">contattateci</a>.
       </p>

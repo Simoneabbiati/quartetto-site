@@ -10,34 +10,51 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
 <Base title="Contact" description="Get in touch to book a concert or a liturgy.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(19,28,41,0.07)">
+  <section class="container-default testa-pagina">
     <p class="label-caps mb-5">{t('nav.contatti')}</p>
     <h1 class="font-serif">{t('contatti.titolo')}</h1>
-    <p class="text-lg text-ink-soft mt-4 font-serif italic max-w-xl">{t('contatti.intro')}</p>
+    <p class="fs-lede text-ink-soft mt-4 max-w-xl">{t('contatti.intro')}</p>
   </section>
 
-  <section class="container-narrow py-16 pb-28">
-    <form action={FORMSPREE_ENDPOINT} method="POST" class="space-y-8">
+  <section class="container-narrow corpo-pagina">
+    <form id="modulo" action={FORMSPREE_ENDPOINT} method="POST" class="space-y-8">
+
+      <!-- Modalità "prova voce": visibile solo arrivando dall'avviso (?audizione=1) -->
+      <div id="audizione-box" class="audizione-box" hidden>
+        <p class="audizione-titolo"><span class="segno-klein" aria-hidden="true"></span>{t('contatti.audizione.titolo')}</p>
+        <p class="text-ink-soft">{t('contatti.audizione.intro')}</p>
+      </div>
 
       <div class="grid md:grid-cols-2 gap-8">
         <label class="block">
           <span class="field-label">{t('contatti.form.nome')} *</span>
-          <input type="text" name="nome" required class="field-input" />
+          <input type="text" name="nome" autocomplete="name" enterkeyhint="next" required class="field-input" />
         </label>
-        <label class="block">
+        <label class="block solo-booking">
           <span class="field-label">{t('contatti.form.ruolo')}</span>
-          <input type="text" name="ruolo" class="field-input" />
+          <input type="text" name="ruolo" autocomplete="organization-title" enterkeyhint="next" class="field-input" />
         </label>
       </div>
 
-      <label class="block">
+      <label class="block solo-booking">
         <span class="field-label">{t('contatti.form.ente')}</span>
-        <input type="text" name="ente" class="field-input" />
+        <input type="text" name="ente" autocomplete="organization" enterkeyhint="next" class="field-input" />
+      </label>
+
+      <label class="block" id="campo-voce" hidden>
+        <span class="field-label">{t('contatti.audizione.voce')} *</span>
+        <select name="voce" class="field-input">
+          <option value="">{t('contatti.audizione.sceltaVoce')}</option>
+          {['soprano', 'mezzosoprano', 'contralto', 'controtenore', 'tenore', 'baritenore', 'baritono', 'bassobaritono', 'basso'].map((v) => (
+            <option value={v}>{t(`contatti.audizione.voci.${v}`)}</option>
+          ))}
+          <option value="non-so">{t('contatti.audizione.nonSo')}</option>
+        </select>
       </label>
 
       <label class="block">
         <span class="field-label">{t('contatti.form.tipo')} *</span>
-        <select name="tipo" required class="field-input">
+        <select name="tipo" id="campo-tipo" required class="field-input" data-audizione={t('contatti.audizione.tipo')}>
           <option value="liturgia">{t('contatti.form.tipoLiturgia')}</option>
           <option value="concerto">{t('contatti.form.tipoConcerto')}</option>
           <option value="festival">{t('contatti.form.tipoFestival')}</option>
@@ -45,7 +62,7 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
         </select>
       </label>
 
-      <div class="grid md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-8 solo-booking">
         <label class="block">
           <span class="field-label">{t('contatti.form.data')}</span>
           <input type="date" name="data" class="field-input" />
@@ -59,26 +76,66 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
       <div class="grid md:grid-cols-2 gap-8">
         <label class="block">
           <span class="field-label">{t('contatti.form.email')} *</span>
-          <input type="email" name="email" required class="field-input" />
+          <input type="email" name="email" autocomplete="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" required class="field-input" />
         </label>
         <label class="block">
           <span class="field-label">{t('contatti.form.telefono')}</span>
-          <input type="tel" name="telefono" class="field-input" />
+          <input type="tel" name="telefono" autocomplete="tel" enterkeyhint="next" class="field-input" />
         </label>
       </div>
 
       <label class="block">
         <span class="field-label">{t('contatti.form.note')}</span>
-        <textarea name="note" rows="5" class="field-input resize-none" style="border: 1px solid rgba(19,28,41,0.15); padding: 0.75rem;"></textarea>
+        <textarea name="note" id="campo-note" data-audizione={t('contatti.audizione.nota')} rows="5" class="field-input resize-none" style="border: 1px solid rgba(19,28,41,0.15); padding: 0.75rem;"></textarea>
       </label>
 
       <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
       <div class="pt-2">
-        <button type="submit" class="btn-primary">{t('contatti.form.invia')}</button>
+        <button type="submit" class="btn-primary w-full md:w-auto">{t('contatti.form.invia')}</button>
       </div>
 
     </form>
   </section>
+
+  <style>
+    .audizione-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      border: 1px solid theme('colors.ink.DEFAULT');
+      border-radius: 14px;
+    }
+    .audizione-box[hidden] { display: none; }
+    .audizione-titolo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: theme('fontFamily.serif');
+      font-size: var(--fs-title);
+      font-stretch: 90%;
+    }
+    form.modo-audizione .solo-booking { display: none; }
+  </style>
+
+  <script>
+    // Modalità "prova voce": SOLO arrivando dal bottone dell'avviso
+    // (?audizione=1). Negli altri casi il modulo resta quello normale.
+    if (new URLSearchParams(location.search).get('audizione') === '1') {
+      const form = document.getElementById('modulo') as HTMLFormElement;
+      const tipo = document.getElementById('campo-tipo') as HTMLSelectElement;
+      const voce = document.getElementById('campo-voce') as HTMLElement;
+      const note = document.getElementById('campo-note') as HTMLTextAreaElement;
+      form.classList.add('modo-audizione');
+      document.getElementById('audizione-box')!.hidden = false;
+      voce.hidden = false;
+      voce.querySelector('select')!.required = true;
+      const opt = new Option(tipo.dataset.audizione!, 'audizione', true, true);
+      tipo.prepend(opt);
+      tipo.value = 'audizione';
+      if (!note.value) note.value = note.dataset.audizione!;
+    }
+  </script>
 
 </Base>

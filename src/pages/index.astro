@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ConcertoCard from '../components/ConcertoCard.astro';
+import HomeFoto from '../components/HomeFoto.astro';
+import Anteprima from '../components/Anteprima.astro';
+import Globo from '../components/Globo.astro';
 import { getCollection } from 'astro:content';
 import { useTranslations, withBase } from '../i18n/utils';
 
@@ -16,79 +19,154 @@ const next = upcomingConcerts[0];
 ---
 
 <Base title="home">
+  <script is:inline>document.documentElement.classList.add('js-attivo');</script>
 
-  <!-- ═══ HERO ═══════════════════════════════════════════════ -->
-  <section class="relative min-h-[82svh] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
-      <div class="absolute top-[20%] inset-x-0 h-px" style="background: rgba(19,28,41,0.05)"></div>
-      <div class="absolute top-[80%] inset-x-0 h-px" style="background: rgba(19,28,41,0.05)"></div>
+  <!-- ═══ APERTURA: il nome, grande e fuori asse ═══════════════ -->
+  <section class="apertura pt-4 md:pt-6 flex flex-col" style="padding-inline: var(--gutter)">
+    <div class="label-caps">
+      <span>Vocal Ensemble · Milan</span>
     </div>
-
-    <div class="relative z-10 max-w-4xl mx-auto">
-      <p class="label-caps mb-8">Sacred Music · Vocal Ensemble</p>
-      <h1 class="text-display font-serif mb-6 leading-none tracking-tight text-ink">
-        {t('site.name')}
-      </h1>
-      <p class="max-w-md mx-auto text-lg text-ink-soft mb-10 leading-relaxed font-serif italic">
-        From Gregorian chant to the music of our time —<br class="hidden md:inline" />
-        a millennium of sacred tradition.
+    <!-- Due colonne su computer: a sinistra nome e azioni, a destra il globo -->
+    <div class="apertura-griglia md:mt-auto">
+    <div class="apertura-testo">
+    <h1 class="parola-marchio">{t('site.name')}</h1>
+    <div class="max-w-md ap-lede">
+      <p class="text-ink-muted">
+        From the Spanish Renaissance to the traditional songs of Ireland, Catalonia and Bohemia: five centuries of ensemble music, sacred and secular.
       </p>
-      <div class="flex flex-wrap gap-3 justify-center">
+      <div class="flex flex-wrap gap-3 ap-azioni">
         <a href={withBase('/contatti')} class="btn-primary">{t('home.ctaBooking')}</a>
         <a href={withBase('/concerti')} class="btn-ghost">{t('home.ctaConcerto')}</a>
       </div>
+      <!-- Anteprima d'ascolto: un tocco e si sente subito il coro -->
+      <div class="ap-ascolto">
+        <Anteprima lang="en" richiamo />
+      </div>
     </div>
+    </div>
+    </div>
+    <!-- Indizio discreto per scorrere: linea sottile con un punto che scende -->
+    <a href="#scopri" class="indizio-scroll" aria-label="Scroll to discover"><span aria-hidden="true"></span></a>
+  </section>
 
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
-      <div class="h-10 w-px" style="background: linear-gradient(to bottom, transparent, rgba(76,98,125,0.5))"></div>
+  <!-- ═══ FOTO ═══ -->
+  <!-- Foto a sinistra, citazione a destra (su telefono una sotto l'altra) -->
+  <section id="scopri" class="duo stacco-minore" style="--mob: 1">
+    <div class="collage duo-foto">
+    <HomeFoto nome="spartiti" prioritaria alt="Scores in the singers' hands during rehearsal" pos={[70, 20, 0]} posMobile={[82, 9, 0]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="chiesa" verticale alt="The church at night, facade lit above the steps" pos={[32, 4, -9]} posMobile={[50, 0, -10]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="palco" verticale alt="The empty stage before the concert" pos={[30, 68, -40]} posMobile={[38, 60, -42]} sizes="(min-width: 768px) 560px, 90vw" />
+    </div>
+    <blockquote class="statement duo-testo">
+      "We don't perform music of the past. We inhabit traditions that, for five centuries, have never stopped living."
+    </blockquote>
+  </section>
+
+  <!-- ═══ LA NOSTRA STORIA ═══════════════════════════════════ -->
+  <section class="riga-testo stacco-maggiore">
+    <p class="label-caps md:col-span-3">Our story</p>
+    <div class="md:col-span-5" style="max-width: 62ch">
+      <h2 style="margin-bottom: var(--space-4)">From the lecture hall to the nave</h2>
+      <div class="flex flex-col gap-4 text-ink-soft">
+        <p>
+          Ad Fontes began with Valentina Oriani's wish to bring an ensemble to life. She called on a few
+          musician friends and, within the Bocconi University community, sought out people from all over
+          the world who wanted to sing.
+        </p>
+        <p>
+          The result is a deeply intercultural choir: different voices, languages and stories that meet
+          every Sunday in the church of San Ferdinando, our home for now. What holds us together is the
+          wish to sing together, something close to a missionary impulse towards beauty.
+        </p>
+        <p>
+          The name says where we return to each time: <em class="latino">ad fontes</em>, to the sources — the villancicos
+          of Juan del Encina, Bach's chorales, and the lullabies and carols of Europe's folk traditions.
+        </p>
+      </div>
+    </div>
+    <!-- Da dove vengono le voci: il globo accanto alla storia -->
+    <div class="md:col-span-4 md:col-start-9 md:self-center globo-blocco">
+      <Globo testo="Voices from Ireland, the United States, Estonia, Turkey and Italy: different sensibilities and emotions that meet and find their centre in Milan." />
     </div>
   </section>
 
-  <!-- ═══ STATEMENT ══════════════════════════════════════════ -->
-  <section class="border-y py-12 md:py-14" style="border-color: rgba(19,28,41,0.08); background-color: #dde7f1;">
-    <div class="container-narrow text-center">
-      <blockquote class="statement">
-        "We do not perform early music.<br />
-        We inhabit a tradition that has never ceased to live."
-      </blockquote>
-    </div>
-  </section>
+  <!-- ═══ FOTO ═══ -->
 
-  <!-- ═══ NEXT CONCERT ═══════════════════════════════════════ -->
+  <!-- ═══ PROSSIMO CONCERTO ═════════════════════════════════════ -->
   {next && (
-    <section class="container-default pt-14 pb-12">
-      <p class="label-caps mb-8">{t('home.prossimoConcerto')}</p>
-      <ConcertoCard concerto={next} variant="compact" />
-      <div class="mt-8">
-        <a href={withBase('/concerti')} class="nav-link inline-flex items-center gap-2">
+    <section class="riga-testo stacco-minore">
+      <p class="label-caps md:col-span-3">{t('home.prossimoConcerto')}</p>
+      <div class="md:col-span-7">
+        <ConcertoCard concerto={next} variant="compact" />
+        <a href={withBase('/concerti')} class="nav-link tocco inline-flex items-center gap-2" style="margin-top: var(--space-5)">
           All concerts <span aria-hidden="true">→</span>
         </a>
       </div>
     </section>
   )}
 
-  <!-- ═══ LISTEN ═════════════════════════════════════════════ -->
-  <section class="py-14 border-t" style="border-color: rgba(19,28,41,0.08); background-color: #dde7f1;">
-    <div class="container-narrow">
-      <p class="label-caps text-center mb-4">{t('home.ascoltaci')}</p>
-      <h2 class="font-serif text-center mb-8">A taste of the repertoire</h2>
-      <div class="aspect-video flex items-center justify-center border" style="background: rgba(19,28,41,0.03); border-color: rgba(19,28,41,0.1);">
-        <span class="label-caps">Audio · video embed</span>
-      </div>
+
+  <!-- ═══ CHI SIAMO ═════════════════════════════════════════════ -->
+  <!-- Testo a sinistra, foto a destra (su telefono una sotto l'altra) -->
+  <section class="duo duo-inverso stacco-maggiore">
+    <div class="duo-testo">
+      <p class="label-caps" style="margin-bottom: var(--space-3)">The ensemble</p>
+      <h2 style="margin-bottom: var(--space-4)">About us</h2>
+      <p class="text-ink-soft max-w-xl" style="margin-bottom: var(--space-5)">
+        Singers united by a passion for singing together. Our repertoire spans centuries of tradition —
+        from the villancicos of the Spanish Renaissance to Bach, and on to Irish, Catalan and Czech traditional songs in twentieth-century arrangements.
+      </p>
+      <a href={withBase('/quartetto')} class="nav-link tocco inline-flex items-center gap-2">
+        Discover the ensemble <span aria-hidden="true">→</span>
+      </a>
+    </div>
+    <div class="collage duo-foto">
+    <HomeFoto nome="altare" verticale alt="The altar with its carved stone relief" pos={[34, 30, 0]} posMobile={[40, 30, 0]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="pianoforte" verticale alt="Hands on the keyboard under a reading lamp" pos={[24, 6, -24]} posMobile={[30, 4, -24]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="tastiera" alt="Rehearsing at the keyboard beside the organ" pos={[62, 38, -12]} posMobile={[66, 34, -16]} sizes="(min-width: 768px) 560px, 90vw" />
     </div>
   </section>
 
-  <!-- ═══ ABOUT TEASER ════════════════════════════════════════ -->
-  <section class="container-narrow py-16 text-center">
-    <p class="label-caps mb-4">The ensemble</p>
-    <h2 class="font-serif mb-5">About us</h2>
-    <p class="text-lg text-ink-soft leading-relaxed mb-8 font-serif">
-      Singers united by a passion for sacred music. Our repertoire spans centuries of tradition —
-      from the Renaissance polyphony of Palestrina and Victoria to the contemplative music of Ola Gjeilo.
-    </p>
-    <a href={withBase('/quartetto')} class="nav-link inline-flex items-center gap-2">
-      Discover the ensemble <span aria-hidden="true">→</span>
-    </a>
-  </section>
 
+  <script>
+    // Le foto entrano con una dissolvenza quando arrivano nello schermo. Senza
+    // JavaScript (o con "riduci movimento") restano semplicemente visibili:
+    // la classe js-attivo, che le nasconde, la mette lo script in cima alla pagina.
+    const foto = document.querySelectorAll('.foto-home');
+    // La dissolvenza si ripete ogni volta che una foto entra dal basso,
+    // scendendo. Se esce dal basso (si risale) si nasconde di nuovo, pronta
+    // per la prossima discesa; se entra dall'alto (si risale) resta ferma.
+    const osserva = new IntersectionObserver((voci) => {
+      voci.forEach((v) => {
+        const el = v.target;
+        const dalBasso = v.boundingClientRect.top > 0;
+        if (v.isIntersecting) {
+          el.classList.toggle('subito', !dalBasso);
+          el.classList.add('visibile');
+        } else if (dalBasso) {
+          el.classList.add('subito');
+          el.classList.remove('visibile');
+        }
+      });
+    }, { rootMargin: '0px' });
+    foto.forEach((f) => osserva.observe(f));
+
+    // L'indizio per scorrere svanisce appena si inizia a scendere.
+    const segnaScorso = () => document.documentElement.classList.toggle('scorso', scrollY > 40);
+    addEventListener('scroll', segnaScorso, { passive: true });
+    segnaScorso();
+
+    // Telefono: la sfumatura bianca sul primo collage si dissolve nei primi
+    // ~220 px di scorrimento (un solo aggiornamento per frame).
+    const sfuma = document.querySelector<HTMLElement>('.sfuma-iniziale');
+    if (sfuma) {
+      let attesa = false;
+      const aggiorna = () => {
+        attesa = false;
+        sfuma.style.setProperty('--sfuma', String(Math.max(0, 1 - window.scrollY / 220)));
+      };
+      addEventListener('scroll', () => { if (!attesa) { attesa = true; requestAnimationFrame(aggiorna); } }, { passive: true });
+      aggiorna();
+    }
+  </script>
 </Base>

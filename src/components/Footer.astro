@@ -7,39 +7,39 @@ const prefix = lang === 'en' ? '' : '/it';
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-ink/[0.07] bg-paper-warm mt-16">
-  <div class="container-default py-16 grid md:grid-cols-[1fr_auto_auto] gap-12 items-start">
+<footer class="border-t border-ink/10 bg-paper" style="margin-top: var(--space-9)">
+  <div class="grid grid-cols-2 md:grid-cols-[1fr_auto_auto] items-start" style="padding: var(--space-8) var(--gutter) var(--space-6); column-gap: clamp(2rem, -2rem + 10vw, 10rem); row-gap: var(--space-6)">
 
     <!-- Brand -->
-    <div>
-      <p class="font-serif text-[1.35rem] tracking-tight leading-none mb-4">
+    <div class="col-span-2 md:col-span-1">
+      <p class="fs-title font-medium tracking-tight !leading-none mb-4">
         {t('site.name')}
       </p>
-      <p class="text-sm text-ink-soft max-w-xs leading-relaxed">{t('site.tagline')}</p>
+      <p class="text-ink-soft max-w-xs">{t('site.tagline')}</p>
     </div>
 
     <!-- Esplora -->
-    <nav class="flex flex-col gap-2.5">
+    <nav class="flex flex-col">
       <p class="label-caps mb-2">{t('footer.esplora')}</p>
-      <a href={withBase(`${prefix}/quartetto`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.quartetto')}</a>
-      <a href={withBase(`${prefix}/repertorio`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.repertorio')}</a>
-      <a href={withBase(`${prefix}/concerti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.concerti')}</a>
-      <a href={withBase(`${prefix}/media`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.media')}</a>
+      <a href={withBase(`${prefix}/quartetto`)} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('nav.quartetto')}</a>
+      <a href={withBase(`${prefix}/repertorio`)} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('nav.repertorio')}</a>
+      <a href={withBase(`${prefix}/concerti`)} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('nav.concerti')}</a>
+      <a href={withBase(`${prefix}/media`)} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('nav.media')}</a>
     </nav>
 
     <!-- Contatti -->
-    <div class="flex flex-col gap-2.5">
+    <div class="flex flex-col">
       <p class="label-caps mb-2">{t('footer.contatti')}</p>
-      <a href={withBase(`${prefix}/contatti`)} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('home.ctaBooking')}</a>
-      <a href={withBase('/press-kit')} class="text-sm text-ink-soft hover:text-ink transition-colors">{t('nav.pressKit')}</a>
+      <a href={withBase(`${prefix}/contatti`)} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('home.ctaBooking')}</a>
+      <a href={withBase('/press-kit')} class="text-ink-soft hover:text-ink transition-colors inline-flex items-center min-h-[44px]">{t('nav.pressKit')}</a>
     </div>
 
   </div>
 
   <div class="border-t border-ink/[0.07]">
-    <div class="container-default py-5 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-ink-muted">
+    <div class="py-3 md:py-5 flex flex-col md:flex-row justify-between items-center gap-2 fs-label text-ink-muted" style="padding-inline: var(--gutter)">
       <span>{t('footer.copyright', { year })}</span>
-      <span class="font-serif italic text-ink-muted/60">{t('footer.motto')}</span>
+      <span class="text-ink-muted">{t('footer.motto')}</span>
     </div>
   </div>
 </footer>

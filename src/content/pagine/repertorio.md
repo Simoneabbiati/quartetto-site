@@ -11,7 +11,7 @@ Il cuore del nostro lavoro: mottetti, messe e *Magnificat* dei grandi maestri de
 
 ## Repertorio barocco e classico
 
-Brani sacri di Heinrich Schütz, Johann Sebastian Bach e dei loro contemporanei, eseguiti nella formazione a quattro voci.
+Brani sacri di Heinrich Schütz, Johann Sebastian Bach e dei loro contemporanei, eseguiti dall'ensemble.
 
 ## Sacro contemporaneo
 
@@ -21,4 +21,4 @@ Composizioni del Novecento e del nostro tempo: Arvo Pärt, James MacMillan, Eric
 
 I programmi possono essere costruiti su misura per liturgie, concerti e festival, in dialogo con i committenti per adattarsi al contesto e all'occasione.
 
-*Testo provvisorio: adattare al repertorio reale del quartetto.*
+*Testo provvisorio: adattare al repertorio reale dell'ensemble.*

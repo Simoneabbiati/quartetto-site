@@ -1,9 +1,10 @@
 {
   "site": {
     "name": "Ad Fontes",
-    "tagline": "Four voices for the sacred tradition"
+    "tagline": "A vocal ensemble in Milan"
   },
   "nav": {
+    "home": "Home",
     "quartetto": "The Ensemble",
     "repertorio": "Repertoire",
     "concerti": "Concerts",
@@ -53,6 +54,26 @@
       "telefono": "Phone",
       "note": "Notes",
       "invia": "Send request"
+    },
+    "audizione": {
+      "tipo": "Voice audition to join the ensemble",
+      "titolo": "Voice audition",
+      "intro": "We're delighted! Tell us your voice type and how to reach you, and we'll get in touch to arrange an audition, usually before or after the Sunday rehearsal at San Ferdinando.",
+      "voce": "Your voice type",
+      "sceltaVoce": "Choose…",
+      "nonSo": "Not sure yet",
+      "nota": "Hello! I'd like to take part in a voice audition to join the ensemble.",
+      "voci": {
+        "soprano": "Soprano",
+        "mezzosoprano": "Mezzo-soprano",
+        "contralto": "Alto",
+        "controtenore": "Countertenor",
+        "tenore": "Tenor",
+        "baritenore": "Baritenor",
+        "baritono": "Baritone",
+        "bassobaritono": "Bass-baritone",
+        "basso": "Bass"
+      }
     }
   },
   "footer": {
@@ -60,7 +81,7 @@
     "lingua": "Language",
     "esplora": "Explore",
     "contatti": "Contact",
-    "motto": "Four voices — a millennium of sacred tradition"
+    "motto": "Five centuries of ensemble singing"
   },
   "riservato": {
     "titolo": "Members area",
@@ -123,5 +144,11 @@
     "ascoltaParti": "Listen to the parts",
     "tutteLeVoci": "All voices",
     "apriPdf": "Open the PDF"
+  },
+  "avviso": {
+    "titolo": "We're looking for new voices, especially an alto!",
+    "testo": "We rehearse every Sunday at San Ferdinando, right next to Bocconi. Come and sing with us!",
+    "cta": "Get in touch",
+    "chiudi": "Close this notice"
   }
 }

@@ -23,12 +23,12 @@ const past = all
 <Base title="Concerts" description="Upcoming concerts and the archive of past events.">
 
   <!-- Page header -->
-  <section class="container-default pt-16 pb-12" style="border-bottom: 1px solid rgba(19,28,41,0.07)">
+  <section class="container-default testa-pagina">
     <p class="label-caps mb-5">{t('nav.concerti')}</p>
     <h1 class="font-serif">{t('concerti.prossimi')}</h1>
   </section>
 
-  <section class="container-default py-16">
+  <section class="container-default corpo-pagina">
     {upcoming.length === 0 ? (
       <p class="text-ink-muted italic py-8">{t('concerti.nessunConcerto')}</p>
     ) : (
@@ -39,9 +39,8 @@ const past = all
 
     {past.length > 0 && (
       <>
-        <div class="divider-ornament mt-28"><span class="font-serif">✦</span></div>
-        <p class="label-caps mb-5 mt-6">{t('concerti.archivio')}</p>
-        <h2 class="font-serif mb-14">{t('concerti.archivio')}</h2>
+        <div class="divider-ornament stacco-minore"><span class="font-serif">✦</span></div>
+        <h2 class="font-serif" style="margin: var(--space-4) 0 var(--space-6)">{t('concerti.archivio')}</h2>
         <div>
           {past.map((c) => <ConcertoCard concerto={c} variant="compact" />)}
         </div>

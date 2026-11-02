@@ -19,6 +19,9 @@ export default defineConfig({
     },
   },
 
+  // Niente barra degli strumenti di Astro nell'anteprima locale
+  devToolbar: { enabled: false },
+
   // Compressione HTML attiva di default in Astro 5
   integrations: [
     tailwind({

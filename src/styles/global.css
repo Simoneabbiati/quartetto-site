@@ -1,24 +1,68 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+/* Font: caricati con <link> in layouts/Base.astro (un @import qui verrebbe ignorato). */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  [hidden] { display: none !important; }
+
   :root {
-    --type-title: 1.2rem;  /* titoli di scheda e di riga */
-    --type-body: 0.95rem;  /* tutto il testo corrente, comprese le informazioni secondarie */
-    --type-label: 0.72rem; /* etichette maiuscolette di sezione */
+    /* Scala tipografica unica. I valori crescono con lo schermo (clamp):
+       passi stretti su telefono (~1.25), più ampi su computer (~1.5).
+       Corpo mai sotto 16px (sotto, iOS ingrandisce i campi dei moduli),
+       etichette mai sotto 13px. */
+    --fs-label: 0.8125rem;                                   /* 13px: etichette, lingua, copyright */
+    --fs-small: 0.875rem;                                    /* 14px: solo metadati (ora, ingresso) */
+    --fs-body:  clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);    /* 16 → 17px */
+    --fs-lede:  clamp(1.125rem, 1rem + 0.6vw, 1.3125rem);    /* 18 → 21px: paragrafo d'apertura */
+    --fs-title: clamp(1.25rem, 1.1rem + 0.62vw, 1.5rem);     /* 20 → 24px: titoli di scheda, brani */
+    --fs-h2:    clamp(1.625rem, 1.38rem + 1vw, 2.25rem);     /* 26 → 36px */
+    --fs-h1:    clamp(2rem, 1.44rem + 2.3vw, 3.5rem);        /* 32 → 56px */
+    --fs-ui:    0.9375rem;                                   /* 15px: menu e bottoni */
+
+    /* Scala di spaziature (base 8, fluida fra 390 e 1440 px). Dentro un gruppo
+       si usano i passi piccoli, fra le sezioni i grandi: lo stacco fra sezioni
+       è circa il doppio di quello interno, così si capisce cosa va insieme. */
+    --space-1: .25rem;                                    /* 4 */
+    --space-2: .5rem;                                     /* 8 */
+    --space-3: clamp(.75rem, .657rem + .381vw, 1rem);     /* 12→16 etichetta→titolo */
+    --space-4: clamp(1rem, .814rem + .762vw, 1.5rem);     /* 16→24 titolo→testo */
+    --space-5: clamp(1.5rem, 1.314rem + .762vw, 2rem);    /* 24→32 testo→azione */
+    --space-6: clamp(2rem, 1.629rem + 1.524vw, 3rem);     /* 32→48 fra gruppi */
+    --space-7: clamp(3rem, 2.443rem + 2.286vw, 4.5rem);   /* 48→72 foto↔testo impilati */
+    --space-8: clamp(4rem, 3.257rem + 3.048vw, 6rem);     /* 64→96 stacco minore */
+    --space-9: clamp(5rem, 3.143rem + 7.619vw, 10rem);    /* 80→160 stacco maggiore */
+    --gutter: var(--space-4);
+
+    /* Blu Klein (sRGB), più profondo sugli schermi P3 dove supportato. */
+    --klein: #002FA7;
+
+    /* nomi vecchi, usati dall'area riservata */
+    --type-title: var(--fs-title);
+    --type-body: var(--fs-body);
+    --type-label: var(--fs-label);
   }
 
   /* La misura del corpo testo si eredita da qui: così un elemento senza
      classi è già alla dimensione giusta, invece di ricadere sui 16px del
      browser e rompere la scala. (Su html resta 16px, per non alterare i rem.) */
   body {
-    font-size: var(--type-body);
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    -webkit-tap-highlight-color: transparent;
   }
 
+  /* Titoli bilanciati su più righe, paragrafi senza parole orfane. */
+  h1, h2, h3, .statement { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+
+  /* Ancore e salti di pagina non finiscono sotto l'header fisso. */
+  html { scroll-padding-top: 5rem; }
+
   html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     font-family: theme('fontFamily.sans');
     color: theme('colors.ink.DEFAULT');
     background-color: theme('colors.paper.DEFAULT');
@@ -29,35 +73,59 @@
 
   h1, h2, h3, h4 {
     font-family: theme('fontFamily.serif');
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-weight: 400;
+    letter-spacing: -0.02em;
     color: theme('colors.ink.DEFAULT');
   }
 
-  h1 { @apply text-4xl md:text-5xl lg:text-6xl leading-tight; }
-  h2 { @apply text-3xl md:text-4xl leading-tight; }
-  h3 { @apply text-2xl md:text-3xl; }
+  /* Titoli grandi leggermente stretti (asse wdth), il testo a larghezza piena. */
+  h1 { font-size: var(--fs-h1); line-height: 1.05; font-stretch: 88%; }
+  h2 { font-size: var(--fs-h2); line-height: 1.12; font-stretch: 90%; }
+  h3 { font-size: var(--fs-title); line-height: 1.25; }
 
-  p { @apply leading-relaxed; }
+
 
   a { @apply transition-colors duration-200; text-underline-offset: 3px; }
 
   ::selection {
-    background-color: theme('colors.accent.DEFAULT');
-    color: theme('colors.paper.DEFAULT');
+    background-color: var(--klein);
+    color: #ffffff;
+  }
+  @supports (color: color(display-p3 0 0 0)) {
+    :root { --klein: color(display-p3 0 0.17 0.68); }
   }
 }
 
 @layer components {
-  .container-narrow  { @apply mx-auto max-w-3xl px-6; }
-  .container-default { @apply mx-auto max-w-5xl px-6; }
+  .container-narrow  { @apply mx-auto max-w-3xl; padding-inline: var(--gutter); }
+  .container-default { @apply mx-auto max-w-5xl; padding-inline: var(--gutter); }
+
+  /* Stacchi fra le sezioni della homepage: due soli valori, rapporto 2:1. */
+  .stacco-maggiore { margin-top: var(--space-9); }
+  .stacco-minore { margin-top: var(--space-8); }
+  /* Pagine interne: intestazione e corpo con gli stessi passi della scala. */
+  .testa-pagina { padding-top: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid rgb(0 0 0 / 0.07); }
+  .corpo-pagina { padding-top: var(--space-7); padding-bottom: 0; }
+  .blocco-pagina { margin-bottom: var(--space-8); }
+  /* Su telefono il primo collage arriva subito sotto la prima schermata,
+     legato alla sua citazione (stacco ridotto fra foto e testo). */
+  @media (max-width: 767px) {
+    .duo[style*="--mob"] { margin-top: var(--space-6); gap: var(--space-5); }
+    .duo .statement { font-size: clamp(1.75rem, 7.5vw, 2rem); }
+    .duo .duo-foto { width: 100%; margin-inline: 0; }
+  }
+  /* Globo sotto la storia (telefono): vicino al suo testo, lontano dalla sezione dopo. */
+  .globo-blocco { margin-top: var(--space-6); }
+  @media (min-width: 768px) { .globo-blocco { margin-top: 0; } }
 
   /* ─── Buttons (shadcn-style: subtle lift, press feedback, focus ring) ─── */
   .btn-primary,
   .btn-ghost {
-    @apply relative inline-flex items-center justify-center px-7 py-3.5 font-medium tracking-widest uppercase text-xs;
-    font-family: theme('fontFamily.serif');
-    font-feature-settings: 'smcp' 1;
+    @apply relative inline-flex items-center justify-center px-5 py-2.5 font-normal;
+    min-height: 44px; /* bersaglio di tocco minimo */
+    font-family: theme('fontFamily.sans');
+    font-size: var(--fs-ui);
+    border-radius: 999px;
     transition: background-color 0.25s ease, color 0.25s ease,
                 transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
     will-change: transform;
@@ -68,9 +136,7 @@
     box-shadow: 0 1px 2px rgba(19, 28, 41, 0.12);
   }
   .btn-primary:hover {
-    @apply bg-accent;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(19, 28, 41, 0.18);
+    @apply bg-ink-muted;
   }
 
   .btn-ghost {
@@ -78,8 +144,6 @@
   }
   .btn-ghost:hover {
     @apply bg-ink text-paper;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(19, 28, 41, 0.15);
   }
 
   /* Press feedback + keyboard focus ring (shared) */
@@ -92,7 +156,7 @@
   .btn-ghost:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px theme('colors.paper.DEFAULT'),
-                0 0 0 4px theme('colors.accent.DEFAULT');
+                0 0 0 4px var(--klein);
   }
 
   /* ─── Scala tipografica ───────────────────────────────────
@@ -100,15 +164,29 @@
      colore e peso, non moltiplicando le dimensioni: dentro una sezione
      solo il titolo cambia grandezza, il resto è tutto `type-body`.
      Non usare text-xs / text-sm / text-lg nelle pagine: usare queste. */
-  .type-title {
+  .type-title, .fs-title {
     font-family: theme('fontFamily.serif');
-    font-size: var(--type-title);
-    line-height: 1.35;
+    font-size: var(--fs-title);
+    line-height: 1.25;
   }
 
-  .type-body {
-    font-size: var(--type-body);
+  .type-body, .fs-body {
+    font-size: var(--fs-body);
     line-height: 1.6;
+  }
+  .fs-lede  { font-size: var(--fs-lede);  line-height: 1.45; }
+  .fs-small { font-size: var(--fs-small); line-height: 1.45; }
+  .fs-label { font-size: var(--fs-label); line-height: 1.4; }
+
+  /* Misura di lettura: testo corrente entro ~65 caratteri per riga. */
+  .misura, .prose p, .container-narrow p { max-width: 65ch; }
+
+  /* Testi e titoli latini (ad fontes, Verbum caro…): l'unico graziato del sito. */
+  .latino {
+    font-family: theme('fontFamily.accento');
+    font-style: italic;
+    font-size: 1.08em;
+    letter-spacing: 0;
   }
 
   /* Bersaglio di tocco comodo per un link/sommario che è l'unico elemento
@@ -119,8 +197,8 @@
   .tocco {
     display: inline-flex;
     align-items: center;
-    padding-block: 0.55rem;
-    margin-block: -0.55rem;
+    padding-block: 0.625rem;
+    margin-block: -0.625rem;
   }
 
   /* Il titolo di un brano si presenta allo stesso modo ovunque compaia
@@ -132,8 +210,8 @@
     padding-block: 0.45rem;
     margin-block: -0.45rem;
     font-family: theme('fontFamily.serif');
-    font-size: var(--type-title);
-    line-height: 1.35;
+    font-size: var(--fs-title);
+    line-height: 1.25;
     color: theme('colors.ink.DEFAULT');
     transition: color 0.2s ease;
   }
@@ -145,11 +223,10 @@
   /* ─── Labels ──────────────────────────────────────────── */
   .label-caps {
     display: block;
-    font-family: theme('fontFamily.serif');
-    font-size: var(--type-label);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    font-feature-settings: 'smcp' 1, 'c2sc' 1;
+    font-family: theme('fontFamily.sans');
+    font-size: var(--fs-label);
+    line-height: 1.4;
+    letter-spacing: 0;
     color: theme('colors.ink.muted');
   }
 
@@ -168,19 +245,20 @@
 
   /* ─── Statement ───────────────────────────────────────── */
   .statement {
-    @apply font-serif italic text-2xl md:text-3xl text-ink-soft leading-relaxed text-center;
-    font-feature-settings: 'liga' 1, 'onum' 1;
+    @apply font-serif text-ink;
+    font-size: var(--fs-h2);
+    line-height: 1.12;
+    font-weight: 400;
+    font-stretch: 90%;
+    letter-spacing: -0.02em;
   }
 
   /* ─── Nav links (minimal animated underline) ──────────── */
   .nav-link {
     position: relative;
-    font-family: theme('fontFamily.serif');
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-feature-settings: 'smcp' 1;
-    @apply text-ink-soft transition-colors duration-200;
+    font-family: theme('fontFamily.sans');
+    font-size: var(--fs-ui);
+    @apply text-ink transition-colors duration-200;
   }
 
   .nav-link::after {
@@ -190,16 +268,27 @@
     bottom: -0.35em;
     height: 1px;
     width: 100%;
-    background-color: theme('colors.accent.DEFAULT');
+    background-color: currentColor;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .nav-link:hover { color: theme('colors.accent.DEFAULT'); }
-  .nav-link.active { color: theme('colors.accent.DEFAULT'); }
+  .nav-link:hover { color: theme('colors.ink.muted'); }
+  .nav-link.active { color: theme('colors.ink.DEFAULT'); }
   .nav-link:hover::after,
   .nav-link.active::after { transform: scaleX(1); }
+  /* la voce attiva è sottolineata in blu, il passaggio del mouse resta nero */
+  .nav-link.active::after { background-color: var(--klein); }
+
+  /* Segno del marchio: un piccolo monocromo blu accanto al nome. */
+  .segno-klein {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    background: var(--klein);
+    flex: none;
+  }
 
   /* ─── Mobile menu (hamburger → X + slide-down panel) ──── */
   .mobile-menu-btn {
@@ -256,31 +345,30 @@
                 opacity 0.25s ease, visibility 0.32s;
   }
   .mobile-menu.is-open {
-    max-height: 80vh;
+    max-height: calc(100dvh - 4.5rem);
+    overflow-y: auto;
     opacity: 1;
     visibility: visible;
   }
 
   .mobile-nav-link {
     font-family: theme('fontFamily.serif');
-    font-size: 0.95rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-feature-settings: 'smcp' 1;
+    font-size: var(--fs-h2);
+    font-weight: 400;
+    font-stretch: 90%;
+    letter-spacing: -0.02em;
     @apply block py-3.5 text-ink-soft transition-colors duration-200;
     border-bottom: 1px solid rgba(19, 28, 41, 0.06);
   }
   .mobile-nav-link:last-child { border-bottom: none; }
+  html.menu-aperto { overflow: hidden; }
   .mobile-nav-link:hover,
   .mobile-nav-link.active { color: theme('colors.accent.DEFAULT'); }
 
   /* ─── Form fields ─────────────────────────────────────── */
   .field-label {
-    font-family: theme('fontFamily.serif');
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-feature-settings: 'smcp' 1;
+    font-family: theme('fontFamily.sans');
+    font-size: var(--fs-label);
     @apply text-ink-soft;
   }
 
@@ -290,30 +378,280 @@
   }
 
   .field-input:focus { border-color: theme('colors.accent.DEFAULT'); }
+  .field-input { min-height: 48px; font-size: max(16px, var(--fs-body)); }
 
   /* ─── Prose ───────────────────────────────────────────── */
   .prose {
     --tw-prose-body: theme('colors.ink.soft');
     --tw-prose-headings: theme('colors.ink.DEFAULT');
     --tw-prose-links: theme('colors.accent.DEFAULT');
-    font-family: theme('fontFamily.serif');
-    font-size: 1.05rem;
-    line-height: 1.75;
+    font-family: theme('fontFamily.sans');
+    font-size: var(--fs-body);
+    line-height: 1.6;
   }
+  /* Spaziature del testo lungo (il plugin typography non è installato). */
+  .prose > * + * { margin-top: 1em; }
+  .prose > :is(h2, h3) { margin-top: 2em; }
+  .prose > :is(h2, h3) + * { margin-top: 0.6em; }
+  .prose h2 { font-size: var(--fs-title); line-height: 1.25; font-stretch: 100%; }
+}
+
+/* ─── Homepage editoriale ──────────────────────────────────
+   Il nome grande e fuori asse, foto sparse su una griglia con molto
+   bianco intorno, testi in righe a due colonne (etichetta | contenuto). */
+@layer components {
+  /* Apertura: su telefono è compatta (contenuto subito, la prima foto
+     compare già nella prima schermata); su computer è alta e ariosa. */
+  /* Computer: l'apertura è esattamente una schermata (meno l'header), con il
+     contenuto centrato in altezza: tutto visibile, ascolto compreso. */
+  @media (min-width: 768px) {
+    .apertura { min-height: calc(100svh - 4.5rem); padding-bottom: 2rem; }
+  }
+  /* Telefono: la prima schermata ha solo nome, frase, bottoni e ascolto,
+     centrati in altezza (come gli ensemble "tipografici": Graindelavoix,
+     Tallis Scholars, e i riferimenti 1000ml / wschupfer); le foto arrivano
+     scorrendo. */
+  @media (max-width: 767px) {
+    /* la prima schermata è tutta per nome e ascolto: le foto arrivano scorrendo */
+    .apertura { min-height: calc(100svh - 4.25rem); padding-bottom: var(--space-4); }
+    /* blocco nome→ascolto alzato: un terzo dello spazio libero sopra, due terzi
+       sotto (centro ottico più in alto del centro geometrico) */
+    /* etichetta in alto, blocco centrato, indizio per scorrere in fondo */
+    .apertura > .label-caps { flex: 1 1 0; min-height: var(--space-6); }
+    .apertura-griglia { margin-block: 0; }
+    .indizio-scroll { flex: 1 1 0; }
+    /* il blocco "abita" lo schermo: passi più ampi e frase più grande */
+    .ap-lede { margin-top: var(--space-5); }
+    .ap-lede p { font-size: var(--fs-lede); line-height: 1.5; }
+    .ap-azioni { margin-top: var(--space-6); }
+    .ap-ascolto { margin-top: var(--space-7); }
+  }
+
+  /* Passi dell'apertura su computer (su telefono più ampi, più sotto) */
+  .ap-lede { margin-top: var(--space-4); }
+  .ap-azioni { margin-top: var(--space-5); }
+  .ap-ascolto { margin-top: var(--space-6); }
+
+  /* Indizio per scorrere: una linea sottile verticale, un punto che la
+     percorre lentamente verso il basso. Sparisce appena si scorre. */
+  .indizio-scroll {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 3.5rem;
+    padding-bottom: var(--space-2);
+    transition: opacity 0.4s ease;
+  }
+  .indizio-scroll span {
+    position: relative;
+    display: block;
+    width: 1px;
+    height: 2.75rem;
+    background: rgb(0 0 0 / 0.18);
+    overflow: hidden;
+  }
+  .indizio-scroll span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -40%;
+    width: 1px;
+    height: 40%;
+    background: theme('colors.ink.DEFAULT');
+    animation: indizio-scende 2.4s cubic-bezier(0.65, 0, 0.35, 1) 1.2s infinite;
+  }
+  @keyframes indizio-scende {
+    0% { top: -40%; }
+    70%, 100% { top: 100%; }
+  }
+  html.scorso .indizio-scroll { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .indizio-scroll span::after { animation: none; top: 30%; }
+  }
+  @media (min-width: 768px) {
+    .apertura { position: relative; }
+    .indizio-scroll { position: absolute; left: 50%; bottom: var(--space-5); transform: translateX(-50%); min-height: 0; }
+  }
+
+  .parola-marchio {
+    font-family: theme('fontFamily.serif');
+    font-weight: 400;
+    /* su telefono il nome riempie quasi tutta la larghezza */
+    font-size: clamp(4.5rem, 24vw, 9rem);
+    line-height: 0.85;
+    font-stretch: 88%;
+    letter-spacing: -0.03em;
+    color: theme('colors.ink.DEFAULT');
+  }
+  @media (min-width: 768px) {
+    /* limitato anche dall'altezza: su schermi bassi non spinge giù il resto */
+    .parola-marchio { font-size: clamp(4.5rem, min(16vw, 30svh), 16rem); }
+  }
+
+  /* Apertura in due colonne su computer: nome e azioni a sinistra (rientrati),
+     globo a destra centrato in altezza. Su telefono una colonna, globo sotto. */
+  .apertura-griglia { display: flex; flex-direction: column; gap: var(--space-6); margin-bottom: var(--space-6); }
+  @media (min-width: 768px) {
+    .apertura-griglia {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: clamp(2rem, 5vw, 6rem);
+      margin-bottom: auto;
+      padding-left: calc((100% + 1.5rem) / 12);
+      padding-right: 0;
+    }
+  }
+
+  .pallino {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background-color: currentColor;
+  }
+
+  .griglia-foto {
+    @apply grid grid-cols-6 md:grid-cols-12 gap-x-4 md:gap-x-6 gap-y-6 md:gap-y-10 px-4 md:px-6 items-start;
+  }
+
+  .riga-testo {
+    @apply grid md:grid-cols-12;
+    column-gap: var(--gutter);
+    row-gap: var(--space-3);
+    padding-inline: var(--gutter);
+  }
+
+  /* Collage centrale: foto di misure diverse in una colonna, che a volte si
+     accavallano (margine verticale negativo). Le misure sono in % della
+     colonna, quindi le proporzioni restano uguali su ogni schermo. */
+  .collage {
+    @apply mx-auto;
+    padding-inline: var(--gutter);
+    max-width: 1120px;
+  }
+  .collage-foto {
+    position: relative;
+    width: var(--wm);
+    margin-left: var(--xm);
+    margin-top: var(--ym);
+  }
+  @media (min-width: 768px) {
+    .collage-foto {
+      width: var(--w);
+      margin-left: var(--x);
+      margin-top: var(--y);
+    }
+  }
+  .collage-foto:nth-child(2) { z-index: 2; }
+  .collage-foto:nth-child(3) { z-index: 3; }
+
+  /* Volume 1 — ombre: solo le foto in primo piano, verso il basso (luce
+     dall'alto); più in alto è la foto, più l'ombra è ampia e morbida. La foto
+     di base resta senza, è il "fondo". Spread negativo: niente alone ai lati. */
+  .collage-foto:nth-child(2) img {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 14px 30px -10px rgb(0 0 0 / 0.22);
+  }
+  .collage-foto:nth-child(3) img {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.06), 0 28px 50px -14px rgb(0 0 0 / 0.26);
+  }
+
+  /* Volume 2 — parallasse: scorrendo, le foto in primo piano si muovono un
+     po' più di quella di base. Solo CSS (scroll-driven animations), proprietà
+     `translate` per non toccare il `transform` della dissolvenza d'ingresso.
+     Spenta con "riduci movimento"; i browser senza supporto vedono il collage
+     fermo. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .collage-foto:nth-child(2) { --d: 5px; }
+      .collage-foto:nth-child(3) { --d: 10px; }
+      @media (min-width: 768px) {
+        .collage-foto:nth-child(2) { --d: 10px; }
+        .collage-foto:nth-child(3) { --d: 20px; }
+      }
+      .collage-foto:nth-child(n + 2) {
+        animation: deriva linear both;
+        animation-timeline: view();
+      }
+    }
+  }
+  @keyframes deriva {
+    from { translate: 0 var(--d); }
+    to { translate: 0 calc(var(--d) * -1); }
+  }
+
+  /* Coppia foto + testo: su telefono uno sotto l'altro, su computer affiancati
+     (collage a sinistra e testo a destra; .duo-inverso li scambia). */
+  .duo { display: flex; flex-direction: column; gap: var(--space-7); }
+  .duo .duo-testo { padding-inline: var(--gutter); }
+  @media (min-width: 768px) {
+    .duo {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 1.5rem;
+      align-items: center;
+      padding-inline: 1.5rem;
+      max-width: 1440px;
+      margin-inline: auto;
+    }
+    .duo .duo-foto { grid-column: 1 / span 7; padding-inline: 0; width: 100%; max-width: none; margin-inline: 0; }
+    .duo .duo-testo { grid-column: 9 / span 4; padding-inline: 0; }
+    .duo-inverso .duo-testo { grid-column: 2 / span 4; grid-row: 1; }
+    .duo-inverso .duo-foto { grid-column: 6 / span 7; grid-row: 1; }
+    /* etichette di sezione allineate a destra, vicino al loro contenuto */
+    .riga-testo > .label-caps { text-align: right; padding-right: var(--space-6); padding-top: .35rem; }
+  }
+
+  .foto-home img { background-color: theme('colors.paper.warm'); }
+
+  /* Telefono: al primo sguardo il primo collage sfuma verso il bianco (si
+     intravedono i bordi delle altre foto); scendendo la sfumatura scompare.
+     L'opacità segue lo scorrimento (--sfuma, impostata da index.astro). */
+  @media (max-width: 767px) {
+    .sfuma-iniziale { position: relative; }
+    .sfuma-iniziale::after {
+      content: '';
+      position: absolute;
+      inset: -1px 0 0;
+      z-index: 5;
+      pointer-events: none;
+      background: linear-gradient(to bottom,
+        rgb(255 255 255 / 0) 0%,
+        rgb(255 255 255 / 0.35) 30%,
+        rgb(255 255 255 / 0.85) 55%,
+        #ffffff 75%);
+      opacity: var(--sfuma, 1);
+    }
+  }
+
+  html.js-attivo .foto-home {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  html.js-attivo .foto-home.visibile {
+    opacity: 1;
+    transform: none;
+  }
+  html.js-attivo .foto-home.subito { transition: none; }
 }
 
 /* Rispetta le preferenze di riduzione del movimento */
 @media (prefers-reduced-motion: reduce) {
   .btn-primary,
-  .btn-ghost,
-  .nav-link::after {
+  .btn-ghost {
     transition: background-color 0.25s ease, color 0.25s ease;
     transform: none !important;
   }
+  /* La sottolineatura dei link resta nascosta finché non serve: qui si
+     toglie solo l'animazione, non la trasformazione che la nasconde. */
+  .nav-link::after { transition: none; }
   .btn-primary:hover,
   .btn-ghost:hover { transform: none !important; }
   .nav-link:hover::after,
   .nav-link.active::after { transform: scaleX(1) !important; }
+
+  html.js-attivo .foto-home { opacity: 1; transform: none; transition: none; }
 
   .mobile-menu,
   .hamburger,
