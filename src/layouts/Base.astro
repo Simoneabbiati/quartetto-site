@@ -51,8 +51,8 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={lang === 'it' ? 'Ad Fontes, ensemble vocale a Milano: un globo con le linee che collegano Milano a Irlanda, Stati Uniti, Estonia e Turchia' : 'Ad Fontes, vocal ensemble in Milan: a globe with lines linking Milan to Ireland, the United States, Estonia and Turkey'} />
-    <meta property="og:site_name" content="Ad Fontes" />
+    <meta property="og:image:alt" content={lang === 'it' ? 'Concordia Singers, ensemble vocale a Milano: un globo con le linee che collegano Milano a Irlanda, Stati Uniti, Estonia e Turchia' : 'Concordia Singers, vocal ensemble in Milan: a globe with lines linking Milan to Ireland, the United States, Estonia and Turkey'} />
+    <meta property="og:site_name" content="Concordia Singers" />
     <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
@@ -67,7 +67,7 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <!-- Instrument Sans (asse larghezza 75–100 e peso 400–600) + Instrument Serif per i testi latini -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..600;1,75..100,400..600&family=Instrument+Serif:ital@0;1&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..600;1,75..100,400..600&family=Instrument+Serif:ital@0;1&family=Italiana&display=swap" />
 
 
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />

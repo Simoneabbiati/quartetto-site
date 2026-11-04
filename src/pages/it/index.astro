@@ -23,13 +23,12 @@ const next = upcomingConcerts[0];
 
   <!-- ═══ APERTURA: il nome, grande e fuori asse ═══════════════ -->
   <section class="apertura pt-4 md:pt-6 flex flex-col" style="padding-inline: var(--gutter)">
-    <div class="label-caps">
-      <span>Ensemble Vocale · Milano</span>
-    </div>
+    <div class="label-caps" aria-hidden="true"></div>
     <!-- Due colonne su computer: a sinistra nome e azioni, a destra il globo -->
     <div class="apertura-griglia md:mt-auto">
     <div class="apertura-testo">
-    <h1 class="parola-marchio">{t('site.name')}</h1>
+    <h1 class="parola-marchio" aria-label="ConCordia Singers"><span>ConCordia</span> <span>Singers</span></h1>
+    <p class="ap-desc">vocal ensemble</p>
     <div class="max-w-md ap-lede">
       <p class="text-ink-muted">
         Dal Rinascimento spagnolo ai canti tradizionali d'Irlanda, Catalogna e Boemia: cinque secoli di musica d'insieme, sacra e profana.
@@ -69,7 +68,7 @@ const next = upcomingConcerts[0];
       <h2 style="margin-bottom: var(--space-4)">Dall'aula alla navata</h2>
       <div class="flex flex-col gap-4 text-ink-soft">
         <p>
-          Ad Fontes nasce dal desiderio di Valentina Oriani di dare vita a un ensemble. Ha chiamato
+          Concordia Singers nasce dal desiderio di Valentina Oriani di dare vita a un ensemble. Ha chiamato
           alcuni amici musicisti e, nella comunità dell'Università Bocconi, ha cercato persone arrivate
           da tutto il mondo con la voglia di cantare.
         </p>
@@ -79,8 +78,9 @@ const next = upcomingConcerts[0];
           voglia di cantare insieme, quasi uno slancio missionario verso la bellezza.
         </p>
         <p>
-          Il nome dice da dove ripartiamo ogni volta: <em class="latino">ad fontes</em>, alle fonti — i villancicos
-          di Juan del Encina, i corali di Bach, le ninne nanne e i canti natalizi della tradizione popolare europea.
+          Il nome dice cosa cerchiamo ogni volta: <em class="latino">concordia</em>, cuori che si accordano —
+          voci diverse che trovano un'unica armonia, dai villancicos di Juan del Encina ai corali di Bach,
+          fino alle ninne nanne e ai canti natalizi della tradizione popolare europea.
         </p>
       </div>
     </div>

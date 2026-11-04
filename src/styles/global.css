@@ -60,6 +60,9 @@
   /* Ancore e salti di pagina non finiscono sotto l'header fisso. */
   html { scroll-padding-top: 5rem; }
 
+  /* Niente scorrimento orizzontale: se un elemento sfora, su telefono Chrome
+     allargherebbe tutta la pagina (e il nome grande, in vw, verrebbe tagliato). */
+  html, body { overflow-x: clip; }
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -181,7 +184,7 @@
   /* Misura di lettura: testo corrente entro ~65 caratteri per riga. */
   .misura, .prose p, .container-narrow p { max-width: 65ch; }
 
-  /* Testi e titoli latini (ad fontes, Verbum caro…): l'unico graziato del sito. */
+  /* Testi e titoli latini (concordia, Verbum caro…): l'unico graziato del sito. */
   .latino {
     font-family: theme('fontFamily.accento');
     font-style: italic;
@@ -474,19 +477,30 @@
   }
 
   .parola-marchio {
-    font-family: theme('fontFamily.serif');
+    font-family: theme('fontFamily.marchio');
     font-weight: 400;
     /* su telefono il nome riempie quasi tutta la larghezza */
-    font-size: clamp(4.5rem, 24vw, 9rem);
-    line-height: 0.85;
-    font-stretch: 88%;
-    letter-spacing: -0.03em;
+    font-size: clamp(3.5rem, 18.5vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: 0.005em;
     color: theme('colors.ink.DEFAULT');
+    /* Italiana ha un solo peso, molto sottile: un contorno dello stesso colore
+       ispessisce il tratto quanto basta per leggerlo bene. */
+    -webkit-text-stroke: 0.014em currentColor;
+  }
+  /* "vocal ensemble" sotto il nome, piccolo e spaziato come nel logo */
+  .ap-desc {
+    margin: var(--space-4) 0 0 0.1em;
+    font-size: var(--fs-label);
+    letter-spacing: 0.34em;
+    color: theme('colors.ink.muted');
   }
   @media (min-width: 768px) {
     /* limitato anche dall'altezza: su schermi bassi non spinge giù il resto */
-    .parola-marchio { font-size: clamp(4.5rem, min(16vw, 30svh), 16rem); }
+    /* due righe ("Concordia" / "Singers"): limitato dall'altezza dello schermo */
+    .parola-marchio { font-size: clamp(4.5rem, min(13vw, 19svh), 13rem); }
   }
+  .parola-marchio span { display: block; }
 
   /* Apertura in due colonne su computer: nome e azioni a sinistra (rientrati),
      globo a destra centrato in altezza. Su telefono una colonna, globo sotto. */
@@ -499,8 +513,25 @@
       column-gap: clamp(2rem, 5vw, 6rem);
       margin-bottom: auto;
       padding-left: calc((100% + 1.5rem) / 12);
-      padding-right: 0;
+      padding-right: calc((100% + 1.5rem) / 12);
     }
+    /* Computer: il nome occupa tutta la larghezza; sotto, frase e bottoni a
+       sinistra e l'ascolto a destra (percorso a Z: logo → nome → azioni →
+       ascolto in basso a destra). Il peso si distribuisce su tutto lo schermo
+       invece di impilarsi in una colonna. */
+    .apertura-griglia { grid-template-columns: minmax(0, 1fr); }
+    .apertura-testo {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-items: end;
+    }
+    .apertura-testo > .parola-marchio,
+    .apertura-testo > .ap-desc { grid-column: 1 / -1; }
+    .apertura-testo > .ap-lede { display: contents; }
+    .apertura-testo > .ap-lede > p { grid-column: 1 / span 5; grid-row: 3; margin-top: var(--space-7); max-width: 34rem; }
+    .apertura-testo > .ap-lede > .ap-azioni { grid-column: 1 / span 6; grid-row: 4; }
+    .apertura-testo > .ap-lede > .ap-ascolto { grid-column: 8 / span 5; grid-row: 3 / span 2; align-self: end; justify-self: end; width: 100%; max-width: 26rem; margin-top: 0; }
   }
 
   .pallino {

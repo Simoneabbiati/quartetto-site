@@ -1,6 +1,6 @@
 {
   "site": {
-    "name": "Ad Fontes",
+    "name": "Concordia Singers",
     "tagline": "Ensemble vocale a Milano"
   },
   "nav": {
@@ -14,7 +14,7 @@
     "riservato": "Area riservata"
   },
   "home": {
-    "ctaBooking": "Scritturare Ad Fontes",
+    "ctaBooking": "Scritturare l'ensemble",
     "ctaConcerto": "Prossimi concerti",
     "prossimoConcerto": "Prossimo concerto",
     "ascoltaci": "Ascoltaci"
@@ -38,7 +38,7 @@
   },
   "contatti": {
     "titolo": "Contatti",
-    "intro": "Per scritturare Ad Fontes o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
+    "intro": "Per scritturare i Concordia Singers o ricevere informazioni, scrivici utilizzando il modulo qui sotto.",
     "form": {
       "nome": "Nome e cognome",
       "ruolo": "Ruolo",
@@ -77,7 +77,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Ad Fontes. Tutti i diritti riservati.",
+    "copyright": "© {year} Concordia Singers. Tutti i diritti riservati.",
     "lingua": "Lingua",
     "esplora": "Esplora",
     "contatti": "Contatti",

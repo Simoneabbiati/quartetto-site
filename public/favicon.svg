@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Ad Fontes">
-  <rect width="64" height="64" fill="#2f5a78"/>
-  <text x="32" y="43" text-anchor="middle"
-        font-family="EB Garamond, Georgia, serif" font-weight="600" font-size="28"
-        fill="#f6f4f1">AF</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="64" height="64" role="img" aria-label="ConCordia Singers">
+  <circle cx="40" cy="40" r="39" fill="#ffffff" stroke="#e2e2e2" stroke-width="1"/>
+  <g transform="translate(40 40) scale(0.72) translate(-40 -40)">
+    <path d="M44 12 A28 28 0 1 0 44 68" fill="none" stroke="#0b0b0c" stroke-width="8" stroke-linecap="round"/>
+    <path d="M36 22 A19 19 0 1 1 36 58" fill="none" stroke="#002FA7" stroke-width="8" stroke-linecap="round"/>
+  </g>
 </svg>

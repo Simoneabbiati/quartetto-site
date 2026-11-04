@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, useTranslations, withBase } from '../i18n/utils';
 import LangSwitcher from './LangSwitcher.astro';
+import Logo from './Logo.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -23,8 +24,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
 <header class="bg-paper/90 backdrop-blur-sm sticky top-0 z-50">
   <div class="px-4 md:px-6 flex items-center justify-between py-4">
 
-    <a href={withBase(prefix || '/')} class="fs-title font-medium tracking-tight !leading-none hover:text-ink-muted transition-colors duration-200 inline-flex items-center gap-2 py-3 -my-3">
-      <span class="segno-klein" aria-hidden="true"></span>{t('site.name')}
+    <a href={withBase(prefix || '/')} class="fs-title tracking-tight !leading-none hover:text-ink-muted transition-colors duration-200 inline-flex items-center gap-2 py-3 -my-3">
+      <Logo />
     </a>
 
     <nav class="hidden md:flex items-center gap-7">
@@ -40,7 +41,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
     </nav>
 
     <!-- Mobile controls -->
-    <div class="flex items-center gap-3 md:hidden">
+    <div class="flex items-center gap-1 md:hidden">
       <LangSwitcher />
       <button
         type="button"

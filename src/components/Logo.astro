@@ -1,0 +1,24 @@
+---
+// Logo ConCordia Singers (proposta 04): monogramma + nome, la seconda C
+// maiuscola per richiamare "cor" (cuore). `descrizione` aggiunge "vocal ensemble".
+import Monogramma from './Monogramma.astro';
+interface Props { descrizione?: boolean; misura?: string }
+const { descrizione = false, misura = '1.9em' } = Astro.props;
+---
+<span class="logo">
+  <Monogramma size={misura} />
+  <span class="logo-testo">
+    <span class="logo-nome">ConCordia Singers</span>
+    {descrizione && <span class="logo-desc">vocal ensemble</span>}
+  </span>
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 0.55em; }
+  .logo-testo { display: flex; flex-direction: column; }
+  .logo-nome { font-family: theme('fontFamily.marchio'); font-weight: 400; font-size: 1.12em; letter-spacing: 0.03em; line-height: 1; white-space: nowrap; -webkit-text-stroke: 0.02em currentColor; }
+  /* telefono: il nome un po' più piccolo, così resta spazio per lingua e menu */
+  @media (max-width: 767px) { .logo-nome { font-size: 0.92em; letter-spacing: 0.01em; } .logo { gap: 0.4em; } }
+  @media (max-width: 374px) { .logo-nome { font-size: 0.82em; } }
+  .logo-desc { font-size: 0.42em; letter-spacing: 0.3em; opacity: 0.7; margin-top: 0.55em; line-height: 1; }
+</style>

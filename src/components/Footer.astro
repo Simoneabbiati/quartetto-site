@@ -8,15 +8,9 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-ink/10 bg-paper" style="margin-top: var(--space-9)">
-  <div class="grid grid-cols-2 md:grid-cols-[1fr_auto_auto] items-start" style="padding: var(--space-8) var(--gutter) var(--space-6); column-gap: clamp(2rem, -2rem + 10vw, 10rem); row-gap: var(--space-6)">
-
-    <!-- Brand -->
-    <div class="col-span-2 md:col-span-1">
-      <p class="fs-title font-medium tracking-tight !leading-none mb-4">
-        {t('site.name')}
-      </p>
-      <p class="text-ink-soft max-w-xs">{t('site.tagline')}</p>
-    </div>
+  <!-- Come gli ensemble simili (Stile Antico, VOCES8, Tallis Scholars…): niente
+       logo in fondo, solo link utili e copyright. Il logo sta in alto. -->
+  <div class="flex flex-wrap items-start" style="padding: var(--space-7) var(--gutter) var(--space-6); column-gap: var(--space-9); row-gap: var(--space-6)">
 
     <!-- Esplora -->
     <nav class="flex flex-col">

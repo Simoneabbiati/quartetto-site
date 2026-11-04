@@ -12,6 +12,8 @@ export default {
         serif: ['"Instrument Sans"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
         sans: ['"Instrument Sans"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
         accento: ['"Instrument Serif"', 'Georgia', 'serif'],
+        // Solo per il nome ConCordia Singers (logo e nome grande in homepage)
+        marchio: ['"Italiana"', '"Didot"', '"Bodoni 72"', 'Georgia', 'serif'],
       },
       fontSize: {
         display: ['clamp(4rem, 12vw, 9rem)', { lineHeight: '0.95', letterSpacing: '-0.02em' }],

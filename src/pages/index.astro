@@ -23,13 +23,12 @@ const next = upcomingConcerts[0];
 
   <!-- ═══ APERTURA: il nome, grande e fuori asse ═══════════════ -->
   <section class="apertura pt-4 md:pt-6 flex flex-col" style="padding-inline: var(--gutter)">
-    <div class="label-caps">
-      <span>Vocal Ensemble · Milan</span>
-    </div>
+    <div class="label-caps" aria-hidden="true"></div>
     <!-- Due colonne su computer: a sinistra nome e azioni, a destra il globo -->
     <div class="apertura-griglia md:mt-auto">
     <div class="apertura-testo">
-    <h1 class="parola-marchio">{t('site.name')}</h1>
+    <h1 class="parola-marchio" aria-label="ConCordia Singers"><span>ConCordia</span> <span>Singers</span></h1>
+    <p class="ap-desc">vocal ensemble</p>
     <div class="max-w-md ap-lede">
       <p class="text-ink-muted">
         From the Spanish Renaissance to the traditional songs of Ireland, Catalonia and Bohemia: five centuries of ensemble music, sacred and secular.
@@ -69,7 +68,7 @@ const next = upcomingConcerts[0];
       <h2 style="margin-bottom: var(--space-4)">From the lecture hall to the nave</h2>
       <div class="flex flex-col gap-4 text-ink-soft">
         <p>
-          Ad Fontes began with Valentina Oriani's wish to bring an ensemble to life. She called on a few
+          Concordia Singers began with Valentina Oriani's wish to bring an ensemble to life. She called on a few
           musician friends and, within the Bocconi University community, sought out people from all over
           the world who wanted to sing.
         </p>
@@ -79,8 +78,9 @@ const next = upcomingConcerts[0];
           wish to sing together, something close to a missionary impulse towards beauty.
         </p>
         <p>
-          The name says where we return to each time: <em class="latino">ad fontes</em>, to the sources — the villancicos
-          of Juan del Encina, Bach's chorales, and the lullabies and carols of Europe's folk traditions.
+          The name says what we look for each time: <em class="latino">concordia</em>, hearts in accord —
+          different voices finding a single harmony, from the villancicos of Juan del Encina to Bach's chorales
+          and the lullabies and carols of Europe's folk traditions.
         </p>
       </div>
     </div>

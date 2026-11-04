@@ -1,7 +1,7 @@
 {
   "site": {
-    "name": "Ad Fontes",
-    "tagline": "A vocal ensemble in Milan"
+    "name": "Concordia Singers",
+    "tagline": "Vocal ensemble in Milan"
   },
   "nav": {
     "home": "Home",
@@ -14,7 +14,7 @@
     "riservato": "Members area"
   },
   "home": {
-    "ctaBooking": "Book Ad Fontes",
+    "ctaBooking": "Book the ensemble",
     "ctaConcerto": "Upcoming concerts",
     "prossimoConcerto": "Next concert",
     "ascoltaci": "Listen"
@@ -38,7 +38,7 @@
   },
   "contatti": {
     "titolo": "Contact",
-    "intro": "To book Ad Fontes or request further information, please use the form below.",
+    "intro": "To book Concordia Singers or request further information, please use the form below.",
     "form": {
       "nome": "Full name",
       "ruolo": "Role",
@@ -77,7 +77,7 @@
     }
   },
   "footer": {
-    "copyright": "© {year} Ad Fontes. All rights reserved.",
+    "copyright": "© {year} Concordia Singers. All rights reserved.",
     "lingua": "Language",
     "esplora": "Explore",
     "contatti": "Contact",
