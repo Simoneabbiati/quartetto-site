@@ -500,7 +500,9 @@
     /* due righe ("Concordia" / "Singers"): limitato dall'altezza dello schermo */
     .parola-marchio { font-size: clamp(4.5rem, min(13vw, 19svh), 13rem); }
   }
-  .parola-marchio span { display: block; }
+  .parola-marchio > span { display: block; }
+  /* la seconda C di ConCordia ("cor", il cuore) in blu Klein, ovunque compaia il nome */
+  .c-klein { color: var(--klein); }
 
   /* Apertura in due colonne su computer: nome e azioni a sinistra (rientrati),
      globo a destra centrato in altezza. Su telefono una colonna, globo sotto. */
