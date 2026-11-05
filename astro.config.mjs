@@ -7,8 +7,9 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  // Deploy su Cloudflare Pages: https://quartetto-site.pages.dev (dominio personalizzato da collegare in seguito)
-  site: 'https://quartetto-site.pages.dev',
+  // Indirizzo ufficiale (dominio su Aruba, DNS su Cloudflare). Il vecchio
+  // quartetto-site.pages.dev porta qui (vedi Base.astro).
+  site: 'https://concordiasingers.it',
 
   // Strategia bilingue: EN default su /, IT su /it/
   i18n: {

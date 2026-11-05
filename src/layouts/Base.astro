@@ -70,6 +70,14 @@ const defaultUrl = new URL(withBase('/'), Astro.site);
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..600;1,75..100,400..600&family=Instrument+Serif:ital@0;1&family=Italiana&display=swap" />
 
 
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <!-- Il vecchio indirizzo (e il www) portano all'indirizzo ufficiale, stessa pagina -->
+    <script is:inline>
+      if (location.hostname === 'quartetto-site.pages.dev' || location.hostname === 'www.concordiasingers.it') {
+        location.replace('https://concordiasingers.it' + location.pathname + location.search + location.hash);
+      }
+    </script>
+
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
   </head>
   <body class="min-h-screen flex flex-col bg-paper text-ink">
