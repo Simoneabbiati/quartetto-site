@@ -27,7 +27,7 @@ Tutto lo stile è in [BRAND.md](BRAND.md) (regole) e [brand.json](brand.json)
    con la sua didascalia, come su Instagram. Le immagini sono in
    `social/out/<id>.png`, le didascalie da incollare in `social/out/<id>.txt`.
 
-`ConCordia` si colora da solo (seconda C in blu), `\n` va a capo. Serve solo
+`ConCordia` si colora da solo (seconda C in bronzo), `\n` va a capo. Serve solo
 Google Chrome installato; nessun pacchetto da installare. `out/` non va su git.
 
 Per aggiungere foto nuove: mettile ottimizzate in `public/images/home/` come

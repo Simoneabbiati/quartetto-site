@@ -1,4 +1,4 @@
-# ConCordia Singers — linee guida del marchio
+# Concordia Singers — linee guida del marchio
 
 Regole per tutto ciò che pubblichiamo: post Instagram e Facebook, locandine,
 programmi di sala. Sono le stesse del sito (concordiasingers.it). Lo script
@@ -12,42 +12,44 @@ Milano. Il nome dice cosa cerchiamo: *concordia*, cuori che si accordano.
 
 ## Nome
 
-- Si scrive **ConCordia Singers**: la seconda C è maiuscola (da *cor, cordis*,
-  il cuore). Nel logo e nei titoli grandi è in **blu Klein**.
-- Nei testi correnti e nelle didascalie va bene anche "Concordia Singers".
-- Descrizione: **vocal ensemble** (in minuscolo, spaziato), mai "coro sacro"
-  o "quartetto": facciamo musica d'insieme, sacra e profana.
+- **Concordia Singers**. Nei titoli grandi la seconda C può essere in bronzo
+  ("ConCordia": da *cor, cordis*, il cuore). Nel logo il nome è in maiuscole
+  spaziate: **C O N C O R D I A**.
+- Descrizione: **vocal ensemble**. Mai "coro sacro" o "quartetto": facciamo
+  musica d'insieme, sacra e profana.
 
 ## Logo
 
-- **Monogramma**: due C, "con" e "cor", che si abbracciano. C esterna nera
-  (o bianca su fondo scuro), C interna blu Klein.
-- **Logo completo**: monogramma + "ConCordia Singers" in Italiana.
-- **Logo ridotto** (foto profilo, icone): solo il monogramma su cerchio bianco.
-- Spazio libero intorno al logo: almeno l'altezza della C esterna.
-- Non deformarlo, non cambiare i colori, non aggiungere ombre o contorni.
+- **Monogramma**: due C in Cormorant Garamond, una grande e una più piccola
+  rovesciata che si incastra fra le sue terminazioni ("con" e "cor").
+- **Logo completo**: monogramma + CONCORDIA (maiuscole spaziate) + "singers"
+  piccolo sotto.
+- **Colori del logo**: bronzo `#A8834F` su fondo chiaro, oro `#B8954E` su
+  fondo scuro `#1A1814`. Mai altri colori, ombre o contorni.
+- **Logo ridotto** (foto profilo, icona): solo il monogramma su avorio.
+- Spazio libero intorno al logo: almeno l'altezza della C piccola.
 
 ## Colori
 
 | Nome | Valore | Uso |
 |---|---|---|
-| Nero | `#0B0B0C` | testo, C esterna del monogramma |
-| Bianco | `#FFFFFF` | fondo principale |
-| Grigio | `#63656B` | testi secondari, didascalie |
-| Grigio chiaro | `#F2F2F0` | fondi alternativi, mai dietro testo lungo |
-| **Blu Klein** | `#002FA7` | **un solo dettaglio per immagine**: la C del cuore, il monogramma, un pallino |
+| Inchiostro | `#1A1814` | testi, fondi scuri |
+| Avorio | `#FBF9F5` | fondo principale |
+| Sabbia | `#F3EEE6` | fondi alternativi, riquadri |
+| Grigio caldo | `#6F665A` | testi secondari, didascalie |
+| **Bronzo** | `#A8834F` | logo e un solo dettaglio per immagine (pallino, C del nome) su fondo chiaro |
+| **Oro** | `#B8954E` | lo stesso, su fondo scuro |
 
-Il blu è raro di proposito: se in un'immagine c'è più di un elemento blu, è
-troppo. Mai sfumature, gradienti o blu chiari.
+Bronzo e oro sono rari di proposito: un dettaglio per immagine. Mai sfumature
+dorate, effetti metallici o lucidi.
 
 ## Caratteri
 
-- **Italiana** — solo per il nome e per i titoli molto grandi. Un solo peso,
-  sottile: si usa grande (almeno 64 px su un post), con un leggero contorno
-  dello stesso colore per dargli corpo.
-- **Instrument Sans** — tutto il resto: testi, date, didascalie. Pesi 400 e 500.
-  Per le etichette: minuscolo, spaziato (`vocal ensemble`).
-- **Instrument Serif corsivo** — solo per parole latine o titoli di brani
+- **Cormorant Garamond** — marchio, titoli, citazioni. Peso 400–500. Per il
+  logo in maiuscolo con spaziatura ampia (0.3em).
+- **Jost** — testi, date, didascalie, etichette. Pesi 400 e 500. Per le
+  etichette: maiuscolo piccolo e spaziato (`SINGERS · VOCAL ENSEMBLE`).
+- **Cormorant Garamond corsivo** — titoli di brani e parole latine
   (*Suantraí*, *Verbum caro factum est*).
 
 ## Fotografie
@@ -69,10 +71,10 @@ troppo. Mai sfumature, gradienti o blu chiari.
 ## Modelli di post (in `genera.mjs`)
 
 1. **foto** — una nostra foto a tutta pagina, logo piccolo e una riga di testo in basso.
-2. **citazione** — fondo bianco, una frase grande in Italiana, il monogramma in basso.
-3. **annuncio** — fondo bianco, titolo grande, 2–3 righe di dettagli (data,
-   luogo, cosa portare), pallino blu. Per concerti, prove aperte, ricerca voci.
-4. **ascolta** — fondo scuro, titolo del brano in corsivo, forma d'onda: per
+2. **citazione** — fondo avorio, una frase grande in Cormorant Garamond, il logo in basso.
+3. **annuncio** — fondo avorio, titolo grande, 2–3 righe di dettagli (data,
+   luogo, cosa portare), pallino bronzo. Per concerti, prove aperte, ricerca voci.
+4. **ascolta** — fondo inchiostro, titolo del brano in corsivo, forma d'onda in oro: per
    accompagnare un audio o un Reel.
 
 ## Tono di voce

@@ -20,26 +20,28 @@ const QUI = dirname(fileURLToPath(import.meta.url));
 const RADICE = resolve(QUI, '..');
 const OUT = join(QUI, 'out');
 const BRAND = JSON.parse(readFileSync(join(QUI, 'brand.json'), 'utf8'));
-const C = BRAND.colori;
+const C = BRAND.colori; // inchiostro, avorio, grigio, sabbia, bronzo, oro
 const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 // ── Pezzi grafici ──────────────────────────────────────────────────────────
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 // La seconda C di ConCordia in blu Klein, ovunque compaia il nome.
-const nome = (s) => esc(s).replace(/ConCordia/g, `Con<span class="k">C</span>ordia`);
+const nome = (s) => esc(s).replace(/Con[Cc]ordia/g, `Con<span class="k">C</span>ordia`);
 // *testo* → corsivo (titoli di brani, parole latine)
 const corsivo = (s) => nome(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
 const a_capo = (s) => corsivo(s).replace(/\n/g, '<br>');
 
-const monogramma = (px, esterna = C.nero) => `
-  <svg width="${px}" height="${px}" viewBox="0 0 80 80" aria-hidden="true">
-    <path d="M44 12 A28 28 0 1 0 44 68" fill="none" stroke="${esterna}" stroke-width="6.5" stroke-linecap="round"/>
-    <path d="M36 22 A19 19 0 1 1 36 58" fill="none" stroke="${C.klein}" stroke-width="6.5" stroke-linecap="round"/>
+const monogramma = (px, colore = C.bronzo) => `
+  <svg width="${px}" height="${px}" viewBox="20 20 165 165" aria-hidden="true">
+    <g font-family="${BRAND.font.marchio}" font-weight="500" fill="${colore}">
+      <text x="84" y="154" font-size="190" text-anchor="middle">C</text>
+      <text transform="translate(142 130) scale(-1 1)" font-size="104" text-anchor="middle">C</text>
+    </g>
   </svg>`;
 
 const logo = (scuro = false) => `
-  <div class="logo">${monogramma(64, scuro ? '#ffffff' : C.nero)}
-    <div><div class="logo-nome">${nome(BRAND.nome)}</div><div class="logo-desc">${BRAND.descrizione}</div></div>
+  <div class="logo">${monogramma(66, scuro ? C.oro : C.bronzo)}
+    <div><div class="logo-nome">Concordia</div><div class="logo-desc">singers · ${BRAND.descrizione}</div></div>
   </div>`;
 
 const foto = (n) => {
@@ -86,12 +88,12 @@ const MODELLI = {
 
   // Ascolta: fondo nero, brano in corsivo, forma d'onda.
   ascolta: (p) => `
-    <div class="pagina scura" style="background:${C.nero}">
+    <div class="pagina scura" style="background:${C.inchiostro}">
       <div class="alto chiara"><span class="pallino"></span>${esc(p.etichetta || 'Ascolta')}</div>
       <div class="centro">
         <div class="brano">${corsivo(p.titolo)}</div>
         ${p.testo ? `<div class="testo chiaro">${a_capo(p.testo)}</div>` : ''}
-        <div class="onda">${ONDA.map((h, i) => `<span style="height:${Math.round(h * 100)}%;${i < ONDA.length * 0.38 ? `background:${C.klein}` : ''}"></span>`).join('')}</div>
+        <div class="onda">${ONDA.map((h, i) => `<span style="height:${Math.round(h * 100)}%;${i < ONDA.length * 0.38 ? `background:${C.oro}` : ''}"></span>`).join('')}</div>
         <div class="play">▶︎ ${esc(p.durata || '0:28')}</div>
       </div>
       <div class="riga">${logo(true)}</div>
@@ -100,32 +102,33 @@ const MODELLI = {
 
 const CSS = (w, h) => `
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:${w}px;height:${h}px;overflow:hidden;background:#fff}
-  body{font-family:"${BRAND.font.testo}",sans-serif;color:${C.nero};-webkit-font-smoothing:antialiased}
-  .k{color:${C.klein};-webkit-text-stroke-color:${C.klein}}
+  html,body{width:${w}px;height:${h}px;overflow:hidden;background:${C.avorio}}
+  body{font-family:"${BRAND.font.testo}",sans-serif;color:${C.inchiostro};-webkit-font-smoothing:antialiased}
+  .k{color:${C.bronzo}}
   em{font-family:"${BRAND.font.corsivo}",serif;font-style:italic;letter-spacing:0}
   .pagina{position:relative;width:${w}px;height:${h}px;padding:88px 84px 80px;display:flex;flex-direction:column}
   .scura{color:#fff}
+  .scura .k{color:${C.oro}}
   .velo{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%)}
   .fondo{position:relative;margin-top:auto;display:flex;flex-direction:column;gap:28px}
   .alto{display:flex;align-items:center;gap:14px;font-size:26px;letter-spacing:.04em;color:${C.grigio}}
   .alto.chiara,.etichetta.chiara{color:rgba(255,255,255,.75)}
   .etichetta{font-size:26px;letter-spacing:.04em}
-  .pallino{width:14px;height:14px;border-radius:50%;background:${C.klein};display:inline-block}
+  .pallino{width:14px;height:14px;border-radius:50%;background:${C.bronzo};display:inline-block}
   .centro{margin:auto 0;display:flex;flex-direction:column;gap:40px}
   .riga{display:flex;align-items:flex-end;justify-content:space-between}
   .logo{display:flex;align-items:center;gap:18px}
-  .logo-nome{font-family:"${BRAND.font.marchio}",serif;font-size:40px;line-height:1;letter-spacing:.03em;-webkit-text-stroke:.8px currentColor}
-  .logo-desc{font-size:15px;letter-spacing:.32em;opacity:.65;margin-top:8px}
+  .logo-nome{font-family:"${BRAND.font.marchio}",serif;font-weight:500;font-size:36px;line-height:1;letter-spacing:.32em;text-transform:uppercase}
+  .logo-desc{font-size:14px;letter-spacing:.34em;text-transform:uppercase;opacity:.7;margin-top:10px}
   .sito{font-size:22px;color:${C.grigio};letter-spacing:.02em}
-  .titolo-foto{font-family:"${BRAND.font.marchio}",serif;font-size:76px;line-height:1.05;-webkit-text-stroke:1.4px currentColor;max-width:880px}
-  .citazione{font-family:"${BRAND.font.marchio}",serif;font-size:82px;line-height:1.08;-webkit-text-stroke:1.4px currentColor}
+  .titolo-foto{font-family:"${BRAND.font.marchio}",serif;font-size:76px;line-height:1.05;font-weight:400;max-width:880px}
+  .citazione{font-family:"${BRAND.font.marchio}",serif;font-size:82px;line-height:1.08;font-weight:400;}
   .firma{font-size:28px;color:${C.grigio}}
-  .titolo-grande{font-family:"${BRAND.font.marchio}",serif;font-size:104px;line-height:1;-webkit-text-stroke:1.8px currentColor}
-  .testo{font-size:34px;line-height:1.4;color:#3a3b3f;max-width:820px}
+  .titolo-grande{font-family:"${BRAND.font.marchio}",serif;font-size:104px;line-height:1;font-weight:400;}
+  .testo{font-size:34px;line-height:1.4;color:#3A352E;max-width:820px}
   .testo.chiaro{color:rgba(255,255,255,.78)}
-  .dettagli{display:flex;flex-direction:column;border-top:1px solid #e3e3e3}
-  .dettagli div{display:flex;gap:28px;padding:18px 0;border-bottom:1px solid #e3e3e3;font-size:30px}
+  .dettagli{display:flex;flex-direction:column;border-top:1px solid #E5DDD0}
+  .dettagli div{display:flex;gap:28px;padding:18px 0;border-bottom:1px solid #E5DDD0;font-size:30px}
   .dettagli dt{width:170px;color:${C.grigio};flex:none}
   .brano{font-family:"${BRAND.font.corsivo}",serif;font-style:italic;font-size:140px;line-height:1}
   .brano em{font-size:inherit}
@@ -215,13 +218,13 @@ writeFileSync(join(OUT, 'anteprima.html'), `<!doctype html><html lang="it"><head
   header{max-width:935px;margin:0 auto;padding:40px 16px 24px;display:flex;gap:28px;align-items:center;border-bottom:1px solid #dbdbdb}
   .avatar{width:120px;height:120px;border-radius:50%;background:#fff;border:1px solid #dbdbdb;display:grid;place-items:center;flex:none}
   .handle{font-size:20px;margin-bottom:8px} .bio{font-size:14px;line-height:1.5;color:#333}
-  .bio b{font-family:"Italiana",serif;font-size:20px;font-weight:400} .bio .k{color:${C.klein}}
+  .bio b{font-family:"Italiana",serif;font-size:20px;font-weight:400} .bio .k{color:${C.bronzo}}
   .griglia{max-width:935px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
   .griglia a{aspect-ratio:4/5;background:#eee center/cover;display:block}
   h2{max-width:935px;margin:48px auto 16px;padding:0 16px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#888}
   .post{max-width:470px;margin:0 auto 40px;background:#fff;border:1px solid #dbdbdb;border-radius:8px;overflow:hidden}
   .post-testa{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:14px;font-weight:600}
-  .post-testa .mini{width:32px;height:32px;border-radius:50%;border:1px solid #dbdbdb;display:grid;place-items:center;background:#fff}
+  .post-testa .mini{width:32px;height:32px;border-radius:50%;border:1px solid #dbdbdb;display:grid;place-items:center;background:${C.avorio}}
   .post img{width:100%;display:block}
   .azioni{padding:10px 14px 0;font-size:22px;letter-spacing:10px}
   .cap{padding:8px 14px 16px;font-size:14px;line-height:1.5;white-space:pre-wrap}

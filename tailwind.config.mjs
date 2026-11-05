@@ -3,46 +3,47 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
-      // Un'unica famiglia, Instrument Sans: larghezza ridotta per titoli e
-      // marchio, normale per il testo. La chiave `serif` resta per non toccare
-      // le decine di `font-serif` nelle pagine: indica il ruolo "titolo", non
-      // un carattere graziato. Instrument Serif (corsivo) solo per i testi
-      // latini, con la classe .latino.
+      // Identità "classica": Cormorant Garamond (graziato rinascimentale) per
+      // marchio e titoli, Jost (bastone geometrico) per testi e interfaccia.
+      // La chiave `serif` indica il ruolo "titolo". Corsivo Cormorant per i
+      // testi latini e i titoli dei brani (.latino).
       fontFamily: {
-        serif: ['"Instrument Sans"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        sans: ['"Instrument Sans"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        accento: ['"Instrument Serif"', 'Georgia', 'serif'],
-        // Solo per il nome ConCordia Singers (logo e nome grande in homepage)
-        marchio: ['"Italiana"', '"Didot"', '"Bodoni 72"', 'Georgia', 'serif'],
+        serif: ['"Cormorant Garamond"', '"Garamond"', 'Georgia', 'serif'],
+        sans: ['"Jost"', '"Futura"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        accento: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        marchio: ['"Cormorant Garamond"', '"Garamond"', 'Georgia', 'serif'],
       },
       fontSize: {
         display: ['clamp(4rem, 12vw, 9rem)', { lineHeight: '0.95', letterSpacing: '-0.02em' }],
       },
       colors: {
+        // Palette dal logo: inchiostro caldo quasi nero, carta avorio,
+        // bronzo (su chiaro) e oro (su scuro).
         ink: {
-          DEFAULT: '#000000',
-          soft:    '#1f1f1f',
-          muted:   '#616161',
+          DEFAULT: '#1A1814',
+          soft:    '#3A352E',
+          muted:   '#6F665A',
         },
         paper: {
-          DEFAULT: '#ffffff',
-          warm:    '#f5f5f5',
-          dark:    '#e6e6e6',
+          DEFAULT: '#FBF9F5',
+          warm:    '#F3EEE6',
+          dark:    '#E5DDD0',
         },
-        // Blu Klein: dettagli rari, una sola cosa blu per schermata
-        // (globo, forma d'onda mentre suona, segno del marchio, voce di menu
-        // attiva, selezione, contorno di focus). Mai su testi, foto, avviso.
-        klein: '#002FA7',
+        // `klein` è il nome storico del colore d'accento: ora è il bronzo del
+        // logo. Stesse regole di prima: dettagli rari, mai su testo lungo.
+        klein: '#A8834F',
+        bronzo: { DEFAULT: '#A8834F', scuro: '#8A6A3A' },
+        oro: '#B8954E',
         accent: {
-          DEFAULT: '#000000',
-          dark:    '#616161',
+          DEFAULT: '#1A1814',
+          dark:    '#6F665A',
         },
       },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '65ch',
-            color: '#1f1f1f',
+            color: '#3A352E',
           },
         },
       },

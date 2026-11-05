@@ -1,23 +1,37 @@
 {
-  "nome": "ConCordia Singers",
+  "nome": "Concordia Singers",
   "descrizione": "vocal ensemble",
   "sito": "concordiasingers.it",
   "colori": {
-    "nero": "#0B0B0C",
-    "bianco": "#FFFFFF",
-    "grigio": "#63656B",
-    "grigioChiaro": "#F2F2F0",
-    "klein": "#002FA7"
+    "inchiostro": "#1A1814",
+    "avorio": "#FBF9F5",
+    "grigio": "#6F665A",
+    "sabbia": "#F3EEE6",
+    "bronzo": "#A8834F",
+    "oro": "#B8954E",
+    "scuro": "#1A1814"
   },
   "font": {
-    "marchio": "Italiana",
-    "testo": "Instrument Sans",
-    "corsivo": "Instrument Serif",
-    "googleFonts": "https://fonts.googleapis.com/css2?family=Italiana&family=Instrument+Sans:wdth,wght@75..100,400..600&family=Instrument+Serif:ital@0;1&display=swap"
+    "marchio": "Cormorant Garamond",
+    "testo": "Jost",
+    "corsivo": "Cormorant Garamond",
+    "googleFonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500&display=swap"
   },
   "formati": {
-    "post": [1080, 1350],
-    "storia": [1080, 1920]
+    "post": [
+      1080,
+      1350
+    ],
+    "storia": [
+      1080,
+      1920
+    ]
   },
-  "hashtagBase": ["#ConCordiaSingers", "#vocalensemble", "#coro", "#Milano", "#Bocconi"]
+  "hashtagBase": [
+    "#ConCordiaSingers",
+    "#vocalensemble",
+    "#coro",
+    "#Milano",
+    "#Bocconi"
+  ]
 }

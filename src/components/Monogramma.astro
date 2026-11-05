@@ -1,11 +1,13 @@
 ---
-// Monogramma ConCordia: due C, "con" e "cor", aperte l'una verso l'altra fino a
-// formare un cerchio quasi chiuso (due voci che si accordano). La C esterna
-// prende il colore del testo, quella interna è blu Klein.
-interface Props { size?: string; classe?: string }
-const { size = '1.6em', classe = '' } = Astro.props;
+// Monogramma Concordia: due C in Cormorant Garamond, una grande e una più
+// piccola rovesciata che si incastra fra le sue terminazioni ("con" e "cor").
+// Colore: bronzo su fondo chiaro (default), oro su fondo scuro.
+interface Props { size?: string; colore?: string; classe?: string }
+const { size = '1.6em', colore = 'var(--bronzo)', classe = '' } = Astro.props;
 ---
-<svg class:list={['monogramma', classe]} viewBox="0 0 80 80" width={size} height={size} aria-hidden="true" focusable="false">
-  <path d="M44 12 A28 28 0 1 0 44 68" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" />
-  <path d="M36 22 A19 19 0 1 1 36 58" fill="none" stroke="var(--klein)" stroke-width="6.5" stroke-linecap="round" />
+<svg class:list={['monogramma', classe]} viewBox="20 20 165 165" width={size} height={size} aria-hidden="true" focusable="false">
+  <g font-family="'Cormorant Garamond', Garamond, Georgia, serif" font-weight="500" fill={colore}>
+    <text x="84" y="154" font-size="190" text-anchor="middle">C</text>
+    <text transform="translate(142 130) scale(-1 1)" font-size="104" text-anchor="middle">C</text>
+  </g>
 </svg>

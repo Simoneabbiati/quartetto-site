@@ -60,11 +60,11 @@ const { testo } = Astro.props;
   ];
 
   // Blu Klein: l'unico colore del sito, qui solo su archi e Milano.
-  const KLEIN = '#002FA7';
-  const kleinA = (a: number) => `rgba(0,47,167,${a})`;
+  const KLEIN = '#A8834F'; // bronzo del logo
+  const kleinA = (a: number) => `rgba(168,131,79,${a})`;
   const INK = KLEIN;
-  const TERRA = '#dcdcdc';
-  const GRIGLIA = 'rgba(0,0,0,0.06)';
+  const TERRA = '#E2DACD';
+  const GRIGLIA = 'rgba(26,24,20,0.07)';
 
   const canvas = document.querySelector<HTMLCanvasElement>('.globo-canvas');
   if (canvas) {
@@ -106,7 +106,7 @@ const { testo } = Astro.props;
       proj.rotate([lon, -30, 0]);
       ctx.clearRect(0, 0, size, size);
 
-      ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = '#ffffff'; ctx.fill();
+      ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = '#FBF9F5'; ctx.fill();
       ctx.beginPath(); path(graticule); ctx.strokeStyle = GRIGLIA; ctx.lineWidth = 0.6; ctx.stroke();
       ctx.beginPath(); path(land as any); ctx.fillStyle = TERRA; ctx.fill();
       ctx.beginPath(); path({ type: 'Sphere' }); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8; ctx.stroke();

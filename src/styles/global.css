@@ -36,7 +36,11 @@
     --gutter: var(--space-4);
 
     /* Blu Klein (sRGB), più profondo sugli schermi P3 dove supportato. */
-    --klein: #002FA7;
+    /* Accento: bronzo del logo (su fondo scuro si usa l'oro --oro) */
+    --klein: #A8834F;
+    --bronzo: #A8834F;
+    --bronzo-scuro: #8A6A3A;
+    --oro: #B8954E;
 
     /* nomi vecchi, usati dall'area riservata */
     --type-title: var(--fs-title);
@@ -76,14 +80,14 @@
 
   h1, h2, h3, h4 {
     font-family: theme('fontFamily.serif');
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    font-weight: 500;
+    letter-spacing: 0;
     color: theme('colors.ink.DEFAULT');
   }
 
   /* Titoli grandi leggermente stretti (asse wdth), il testo a larghezza piena. */
-  h1 { font-size: var(--fs-h1); line-height: 1.05; font-stretch: 88%; }
-  h2 { font-size: var(--fs-h2); line-height: 1.12; font-stretch: 90%; }
+  h1 { font-size: var(--fs-h1); line-height: 1.05; font-weight: 500; }
+  h2 { font-size: var(--fs-h2); line-height: 1.12; font-weight: 500; }
   h3 { font-size: var(--fs-title); line-height: 1.25; }
 
 
@@ -92,11 +96,9 @@
 
   ::selection {
     background-color: var(--klein);
-    color: #ffffff;
+    color: #FBF9F5;
   }
-  @supports (color: color(display-p3 0 0 0)) {
-    :root { --klein: color(display-p3 0 0.17 0.68); }
-  }
+
 }
 
 @layer components {
@@ -252,7 +254,7 @@
     font-size: var(--fs-h2);
     line-height: 1.12;
     font-weight: 400;
-    font-stretch: 90%;
+    font-weight: 500;
     letter-spacing: -0.02em;
   }
 
@@ -358,7 +360,7 @@
     font-family: theme('fontFamily.serif');
     font-size: var(--fs-h2);
     font-weight: 400;
-    font-stretch: 90%;
+    font-weight: 500;
     letter-spacing: -0.02em;
     @apply block py-3.5 text-ink-soft transition-colors duration-200;
     border-bottom: 1px solid rgba(19, 28, 41, 0.06);
@@ -396,7 +398,7 @@
   .prose > * + * { margin-top: 1em; }
   .prose > :is(h2, h3) { margin-top: 2em; }
   .prose > :is(h2, h3) + * { margin-top: 0.6em; }
-  .prose h2 { font-size: var(--fs-title); line-height: 1.25; font-stretch: 100%; }
+  .prose h2 { font-size: var(--fs-title); line-height: 1.25; }
 }
 
 /* ─── Homepage editoriale ──────────────────────────────────
@@ -482,11 +484,9 @@
     /* su telefono il nome riempie quasi tutta la larghezza */
     font-size: clamp(3.5rem, 18.5vw, 9rem);
     line-height: 0.95;
-    letter-spacing: 0.005em;
+    letter-spacing: 0;
+    font-weight: 400;
     color: theme('colors.ink.DEFAULT');
-    /* Italiana ha un solo peso, molto sottile: un contorno dello stesso colore
-       ispessisce il tratto quanto basta per leggerlo bene. */
-    -webkit-text-stroke: 0.014em currentColor;
   }
   /* "vocal ensemble" sotto il nome, piccolo e spaziato come nel logo */
   .ap-desc {
@@ -649,10 +649,10 @@
       z-index: 5;
       pointer-events: none;
       background: linear-gradient(to bottom,
-        rgb(255 255 255 / 0) 0%,
-        rgb(255 255 255 / 0.35) 30%,
-        rgb(255 255 255 / 0.85) 55%,
-        #ffffff 75%);
+        rgb(251 249 245 / 0) 0%,
+        rgb(251 249 245 / 0.35) 30%,
+        rgb(251 249 245 / 0.85) 55%,
+        #FBF9F5 75%);
       opacity: var(--sfuma, 1);
     }
   }
