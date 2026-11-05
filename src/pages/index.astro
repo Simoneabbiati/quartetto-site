@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import ConcertoCard from '../components/ConcertoCard.astro';
 import HomeFoto from '../components/HomeFoto.astro';
 import Anteprima from '../components/Anteprima.astro';
+import Divisore from '../components/Divisore.astro';
 import Globo from '../components/Globo.astro';
 import { getCollection } from 'astro:content';
 import { useTranslations, withBase } from '../i18n/utils';
@@ -37,7 +38,7 @@ const next = upcomingConcerts[0];
         <a href={withBase('/contatti')} class="btn-primary">{t('home.ctaBooking')}</a>
         <a href={withBase('/concerti')} class="btn-ghost">{t('home.ctaConcerto')}</a>
       </div>
-      <!-- Anteprima d'ascolto: un tocco e si sente subito il coro -->
+      <!-- Anteprima d'ascolto: un tocco e si sente subito l'ensemble -->
       <div class="ap-ascolto">
         <Anteprima lang="en" richiamo />
       </div>
@@ -61,6 +62,8 @@ const next = upcomingConcerts[0];
     </blockquote>
   </section>
 
+  <div class="stacco-maggiore"><Divisore /></div>
+
   <!-- ═══ LA NOSTRA STORIA ═══════════════════════════════════ -->
   <section class="riga-testo stacco-maggiore">
     <p class="label-caps md:col-span-3">Our story</p>
@@ -73,7 +76,7 @@ const next = upcomingConcerts[0];
           the world who wanted to sing.
         </p>
         <p>
-          The result is a deeply intercultural choir: different voices, languages and stories that meet
+          The result is a deeply intercultural ensemble: different voices, languages and stories that meet
           every Sunday in the church of San Ferdinando, our home for now. What holds us together is the
           wish to sing together, something close to a missionary impulse towards beauty.
         </p>
@@ -106,6 +109,8 @@ const next = upcomingConcerts[0];
   )}
 
 
+  <div class="stacco-maggiore"><Divisore /></div>
+
   <!-- ═══ CHI SIAMO ═════════════════════════════════════════════ -->
   <!-- Testo a sinistra, foto a destra (su telefono una sotto l'altra) -->
   <section class="duo duo-inverso stacco-maggiore">
@@ -121,9 +126,9 @@ const next = upcomingConcerts[0];
       </a>
     </div>
     <div class="collage duo-foto">
-    <HomeFoto nome="altare" verticale alt="The altar with its carved stone relief" pos={[34, 30, 0]} posMobile={[40, 30, 0]} sizes="(min-width: 768px) 560px, 90vw" />
-    <HomeFoto nome="pianoforte" verticale alt="Hands on the keyboard under a reading lamp" pos={[24, 6, -24]} posMobile={[30, 4, -24]} sizes="(min-width: 768px) 560px, 90vw" />
-    <HomeFoto nome="tastiera" alt="Rehearsing at the keyboard beside the organ" pos={[62, 38, -12]} posMobile={[66, 34, -16]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="bocconi" alt="Bocconi University: a corridor with an art installation, where many of our singers study" pos={[64, 30, 0]} posMobile={[86, 14, 0]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="pianoforte" verticale alt="Hands on the keyboard under a reading lamp" pos={[22, 4, -20]} posMobile={[34, 0, -16]} sizes="(min-width: 768px) 560px, 90vw" />
+    <HomeFoto nome="tastiera" alt="Rehearsing at the keyboard beside the organ" pos={[46, 50, -16]} posMobile={[62, 38, -14]} sizes="(min-width: 768px) 560px, 90vw" />
     </div>
   </section>
 

@@ -1,0 +1,20 @@
+{
+  "modello": "elenco",
+  "etichetta": "Chi siamo",
+  "titolo": "Cinque paesi,\nuna voce.",
+  "voci": [
+    "Irlanda",
+    "Stati Uniti",
+    "Estonia",
+    "Turchia",
+    "Italia"
+  ],
+  "didascalia": {
+    "it": "Veniamo da cinque paesi diversi e ci siamo trovati a Milano, attorno alla Bocconi, con la stessa voglia: cantare insieme.\nOgni voce porta la sua lingua e la sua storia. L’ensemble le mette in accordo.",
+    "en": "We come from five different countries and found each other in Milan, around Bocconi, with the same wish: to sing together.\nEvery voice brings its own language and story. The ensemble brings them into accord."
+  },
+  "hashtag": [
+    "#international",
+    "#vocalmusic"
+  ]
+}

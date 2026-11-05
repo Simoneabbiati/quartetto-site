@@ -1,0 +1,30 @@
+{
+  "modello": "annuncio",
+  "etichetta": "Cerchiamo voci",
+  "titolo": "Cerchiamo\nun contralto.",
+  "testo": "E altre voci con la voglia di cantare insieme. Serve amare la musica d’insieme.",
+  "dettagli": [
+    [
+      "Quando",
+      "ogni domenica"
+    ],
+    [
+      "Dove",
+      "San Ferdinando, accanto alla Bocconi"
+    ],
+    [
+      "Come",
+      "prova voce: scrivici dal sito"
+    ]
+  ],
+  "sito": true,
+  "didascalia": {
+    "it": "Cerchiamo nuove voci, in particolare un contralto.\nProviamo ogni domenica nella chiesa di San Ferdinando, proprio accanto alla Bocconi. Se ti piace cantare in un piccolo ensemble, scrivici per una prova voce: link in bio.",
+    "en": "We’re looking for new voices, especially an alto.\nWe rehearse every Sunday in the church of San Ferdinando, right next to Bocconi. If you love singing in a small ensemble, get in touch for an audition: link in bio."
+  },
+  "hashtag": [
+    "#cercasivoci",
+    "#contralto",
+    "#audizioni"
+  ]
+}

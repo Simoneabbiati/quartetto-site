@@ -1,0 +1,21 @@
+{
+  "modello": "elenco",
+  "etichetta": "Repertorio",
+  "titolo": "Cinque secoli\ndi musica.",
+  "voci": [
+    "*¿A quién debo yo llamar?* · Juan del Encina",
+    "*Verbum caro factum est* · anonimo",
+    "*O Jesulein süß* · J. S. Bach",
+    "*Suantraí* · tradizionale irlandese",
+    "*Sant Josep i la Mare de Déu* · tradizionale catalano"
+  ],
+  "didascalia": {
+    "it": "Il nostro repertorio attraversa cinque secoli: dai villancicos del Rinascimento spagnolo al corale di Bach, fino ai canti tradizionali d’Irlanda, Catalogna e Boemia e al Natale americano di Alfred Burt.",
+    "en": "Our repertoire spans five centuries: from Spanish Renaissance villancicos to a Bach chorale, to folk songs from Ireland, Catalonia and Bohemia and the American Christmas carols of Alfred Burt."
+  },
+  "hashtag": [
+    "#repertoire",
+    "#renaissance",
+    "#earlymusic"
+  ]
+}

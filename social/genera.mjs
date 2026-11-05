@@ -1,15 +1,17 @@
 #!/usr/bin/env node
-// Genera i post per Instagram/Facebook dai file in social/post/*.json, nello
-// stile del marchio (BRAND.md, brand.json). Per ogni post scrive in social/out/:
-//   <id>.png           immagine 1080×1350 (o 1080×1920 per le storie)
-//   <id>.txt           didascalia pronta da incollare (IT + EN + hashtag)
-// e una pagina di anteprima social/out/anteprima.html che mostra i post come
-// nel feed di Instagram.
+// Genera i post Instagram/Facebook da social/post/*.json seguendo la brand
+// guide (BRAND.md, brand.json). Per ogni post scrive in social/out/:
+//   <id>.png   immagine 1080×1350
+//   <id>.txt   didascalia pronta da incollare (IT + EN + hashtag)
+// e social/out/anteprima.html, con la griglia del profilo e i post uno per uno.
 //
 //   node social/genera.mjs            tutti i post
-//   node social/genera.mjs 02-voci    solo quello (o quelli) con questo id
+//   node social/genera.mjs 05         solo quelli il cui nome contiene "05"
 //
-// Usa Google Chrome già installato (headless), nessuna dipendenza.
+// Fondo: Cream o Walnut. Se il post non lo dice ("sfondo"), alterna a
+// scacchiera in base al numero del post (dispari Walnut, pari Cream): così la
+// griglia resta a scacchiera anche aggiungendo post nuovi.
+// Serve solo Google Chrome installato.
 
 import { spawn } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
@@ -20,133 +22,164 @@ const QUI = dirname(fileURLToPath(import.meta.url));
 const RADICE = resolve(QUI, '..');
 const OUT = join(QUI, 'out');
 const BRAND = JSON.parse(readFileSync(join(QUI, 'brand.json'), 'utf8'));
-const C = BRAND.colori; // inchiostro, avorio, grigio, sabbia, bronzo, oro
+const C = BRAND.colori;
+const M = BRAND.margini;
 const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-// ── Pezzi grafici ──────────────────────────────────────────────────────────
-const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-// La seconda C di ConCordia in blu Klein, ovunque compaia il nome.
-const nome = (s) => esc(s).replace(/Con[Cc]ordia/g, `Con<span class="k">C</span>ordia`);
-// *testo* → corsivo (titoli di brani, parole latine)
-const corsivo = (s) => nome(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
-const a_capo = (s) => corsivo(s).replace(/\n/g, '<br>');
+// Le due famiglie di colori della guida
+const TEMI = {
+  crema: { fondo: C.crema, titolo: C.inchiostro, testo: C.secondario, tenue: C.tenue, filo: C.filo, accento: C.bronzo, marchio: C.inchiostro, sbiadito: 'rgba(38,33,28,.18)' },
+  noce:  { fondo: C.noce, titolo: C.titoloSuNoce, testo: C.testoSuNoce, tenue: C.tenueSuNoce, filo: 'rgba(248,245,239,.18)', accento: C.oroChiaro, marchio: C.titoloSuNoce, sbiadito: 'rgba(248,245,239,.32)' },
+};
 
-const monogramma = (px, colore = C.bronzo) => `
+// ── Testo ──────────────────────────────────────────────────────────────────
+const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// "ConCordia" nei titoli: seconda C nel colore d'accento
+const nome = (s) => esc(s).replace(/Con[Cc]ordia/g, 'Con<span class="acc">C</span>ordia');
+// *testo* → corsivo (titoli di brani, parole latine)
+const ricco = (s) => nome(s).replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+
+// ── Elementi grafici ───────────────────────────────────────────────────────
+const monogramma = (px, colore) => `
   <svg width="${px}" height="${px}" viewBox="20 20 165 165" aria-hidden="true">
     <g font-family="${BRAND.font.marchio}" font-weight="500" fill="${colore}">
       <text x="84" y="154" font-size="190" text-anchor="middle">C</text>
-      <text transform="translate(142 130) scale(-1 1)" font-size="104" text-anchor="middle">C</text>
+      <text transform="translate(143 131) scale(-1 1)" font-size="114" text-anchor="middle">C</text>
     </g>
   </svg>`;
 
-const logo = (scuro = false) => `
-  <div class="logo">${monogramma(66, scuro ? C.oro : C.bronzo)}
-    <div><div class="logo-nome">Concordia</div><div class="logo-desc">singers · ${BRAND.descrizione}</div></div>
+const lockup = (T, sito) => `
+  <div class="piede">
+    <div class="lockup">${monogramma(58, T.accento)}
+      <div><div class="parola">Concordia</div><div class="sotto">Singers · Vocal ensemble</div></div>
+    </div>
+    ${sito ? `<div class="sito">${BRAND.sito}</div>` : ''}
   </div>`;
+
+const etichetta = (testo) => `<div class="etichetta"><span class="punto"></span>${esc(testo)}</div>`;
 
 const foto = (n) => {
   const p = join(RADICE, 'public/images/home', `${n}-1600.webp`);
-  if (!existsSync(p)) throw new Error(`Foto "${n}" non trovata in public/images/home (es. chiesa, spartiti, palco, altare, pianoforte, tastiera, spartiti-coro)`);
+  if (!existsSync(p)) throw new Error(`Foto "${n}" non trovata in public/images/home (es. chiesa, spartiti, spartiti-coro, palco, pianoforte, tastiera, bocconi)`);
   return pathToFileURL(p).href;
 };
 
 const ONDA = [0.2,0.22,0.62,0.96,0.96,0.85,0.86,0.81,0.64,0.64,0.74,0.84,0.94,0.62,0.58,0.42,0.3,0.44,0.66,0.65,0.72,0.61,0.75,0.63,0.74,0.93,0.92,0.63,0.43,0.46,0.47,0.35,0.58,0.69,0.74,0.81,0.86,0.68,0.72,0.73,0.96,1,0.88,0.48,0.44,0.31,0.39,0.6,0.69,0.78,0.65,0.62,0.67,0.85,0.57,0.66,0.6,0.59,0.44,0.37,0.27,0.21,0.13,0.12];
 
 // ── Modelli ────────────────────────────────────────────────────────────────
+// Ogni modello: etichetta in alto, contenuto centrato e allineato a sinistra,
+// lockup in basso a sinistra (sito opzionale a destra).
 const MODELLI = {
-  // Foto a tutta pagina, sfumata in basso, logo e una riga di testo.
-  foto: (p) => `
-    <div class="pagina scura" style="background:#000 url('${foto(p.foto)}') ${p.posizione || 'center'}/cover">
-      <div class="velo"></div>
-      <div class="fondo">
-        ${p.etichetta ? `<div class="etichetta chiara">${esc(p.etichetta)}</div>` : ''}
-        ${p.titolo ? `<div class="titolo-foto">${a_capo(p.titolo)}</div>` : ''}
-        <div class="riga">${logo(true)}</div>
-      </div>
-    </div>`,
+  // Titolo + testo (+ tabella a filo opzionale): annunci, prove, ricerca voci.
+  annuncio: (p, T) => `
+    ${etichetta(p.etichetta)}
+    <div class="centro">
+      ${p.sopratitolo ? `<div class="sopra">${esc(p.sopratitolo)}</div>` : ''}
+      <div class="titolo">${ricco(p.titolo)}</div>
+      ${p.testo ? `<div class="testo">${ricco(p.testo)}</div>` : ''}
+      ${p.dettagli?.length ? `<dl class="tabella">${p.dettagli.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${ricco(v)}</dd></div>`).join('')}</dl>` : ''}
+    </div>
+    ${lockup(T, p.sito)}`,
 
-  // Fondo bianco, una frase grande, monogramma in basso.
-  citazione: (p) => `
-    <div class="pagina">
-      <div class="alto"><span class="pallino"></span>${esc(p.etichetta || BRAND.descrizione)}</div>
-      <div class="centro"><div class="citazione">${a_capo(p.titolo)}</div>
-        ${p.firma ? `<div class="firma">${corsivo(p.firma)}</div>` : ''}</div>
-      <div class="riga">${logo()}</div>
-    </div>`,
+  // Una frase sola, grande.
+  citazione: (p, T) => `
+    ${etichetta(p.etichetta)}
+    <div class="centro">
+      <div class="titolo">${ricco(p.titolo)}</div>
+      ${p.firma ? `<div class="firma">${ricco(p.firma)}</div>` : ''}
+    </div>
+    ${lockup(T, p.sito)}`,
 
-  // Annuncio: titolo grande + dettagli (concerti, prove aperte, ricerca voci).
-  annuncio: (p) => `
-    <div class="pagina">
-      <div class="alto"><span class="pallino"></span>${esc(p.etichetta || 'Annuncio')}</div>
-      <div class="centro">
-        <div class="titolo-grande">${a_capo(p.titolo)}</div>
-        ${p.testo ? `<div class="testo">${a_capo(p.testo)}</div>` : ''}
-        ${(p.dettagli || []).length ? `<dl class="dettagli">${p.dettagli.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${corsivo(v)}</dd></div>`).join('')}</dl>` : ''}
-      </div>
-      <div class="riga">${logo()}<div class="sito">${BRAND.sito}</div></div>
-    </div>`,
+  // Dichiarazione su Walnut con la grande doppia C che esce dal bordo destro.
+  dichiarazione: (p, T) => `
+    <div class="cc-grande">${monogramma(980, T.accento)}</div>
+    ${etichetta(p.etichetta)}
+    <div class="centro"><div class="titolo">${ricco(p.titolo)}</div>
+      ${p.testo ? `<div class="testo">${ricco(p.testo)}</div>` : ''}</div>
+    ${lockup(T, p.sito)}`,
 
-  // Ascolta: fondo nero, brano in corsivo, forma d'onda.
-  ascolta: (p) => `
-    <div class="pagina scura" style="background:${C.inchiostro}">
-      <div class="alto chiara"><span class="pallino"></span>${esc(p.etichetta || 'Ascolta')}</div>
-      <div class="centro">
-        <div class="brano">${corsivo(p.titolo)}</div>
-        ${p.testo ? `<div class="testo chiaro">${a_capo(p.testo)}</div>` : ''}
-        <div class="onda">${ONDA.map((h, i) => `<span style="height:${Math.round(h * 100)}%;${i < ONDA.length * 0.38 ? `background:${C.oro}` : ''}"></span>`).join('')}</div>
-        <div class="play">▶︎ ${esc(p.durata || '0:28')}</div>
-      </div>
-      <div class="riga">${logo(true)}</div>
-    </div>`,
+  // Ascolto: titolo del brano in corsivo, forma d'onda (parte "suonata" in oro).
+  ascolta: (p, T) => `
+    ${etichetta(p.etichetta || 'Ascolta')}
+    <div class="centro">
+      <div class="brano">${ricco(`*${p.titolo.replace(/\*/g, '')}*`)}</div>
+      ${p.testo ? `<div class="testo">${ricco(p.testo)}</div>` : ''}
+      <div class="onda">${ONDA.map((h, i) => `<span style="height:${Math.round(h * 100)}%;background:${i < ONDA.length * 0.38 ? T.accento : T.sbiadito}"></span>`).join('')}</div>
+      <div class="durata"><span class="play"></span>${esc(p.durata || '0:28')}</div>
+    </div>
+    ${lockup(T, p.sito)}`,
+
+  // Foto dentro i margini, con titolo corsivo sotto.
+  foto: (p, T) => `
+    ${etichetta(p.etichetta)}
+    <div class="centro">
+      <div class="riquadro" style="background-image:url('${foto(p.foto)}');background-position:${p.posizione || 'center'}"></div>
+      ${p.titolo ? `<div class="didascalia-foto">${ricco(p.titolo)}</div>` : ''}
+    </div>
+    ${lockup(T, p.sito)}`,
+
+  // Elenco a fili (repertorio, paesi, programma).
+  elenco: (p, T) => `
+    ${etichetta(p.etichetta)}
+    <div class="centro">
+      <div class="titolo">${ricco(p.titolo)}</div>
+      <ul class="elenco">${(p.voci || []).map((v) => `<li>${ricco(v)}</li>`).join('')}</ul>
+    </div>
+    ${lockup(T, p.sito)}`,
 };
 
-const CSS = (w, h) => `
+const CSS = (T, w, h) => `
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:${w}px;height:${h}px;overflow:hidden;background:${C.avorio}}
-  body{font-family:"${BRAND.font.testo}",sans-serif;color:${C.inchiostro};-webkit-font-smoothing:antialiased}
-  .k{color:${C.bronzo}}
-  em{font-family:"${BRAND.font.corsivo}",serif;font-style:italic;letter-spacing:0}
-  .pagina{position:relative;width:${w}px;height:${h}px;padding:88px 84px 80px;display:flex;flex-direction:column}
-  .scura{color:#fff}
-  .scura .k{color:${C.oro}}
-  .velo{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%)}
-  .fondo{position:relative;margin-top:auto;display:flex;flex-direction:column;gap:28px}
-  .alto{display:flex;align-items:center;gap:14px;font-size:26px;letter-spacing:.04em;color:${C.grigio}}
-  .alto.chiara,.etichetta.chiara{color:rgba(255,255,255,.75)}
-  .etichetta{font-size:26px;letter-spacing:.04em}
-  .pallino{width:14px;height:14px;border-radius:50%;background:${C.bronzo};display:inline-block}
-  .centro{margin:auto 0;display:flex;flex-direction:column;gap:40px}
-  .riga{display:flex;align-items:flex-end;justify-content:space-between}
-  .logo{display:flex;align-items:center;gap:18px}
-  .logo-nome{font-family:"${BRAND.font.marchio}",serif;font-weight:500;font-size:36px;line-height:1;letter-spacing:.32em;text-transform:uppercase}
-  .logo-desc{font-size:14px;letter-spacing:.34em;text-transform:uppercase;opacity:.7;margin-top:10px}
-  .sito{font-size:22px;color:${C.grigio};letter-spacing:.02em}
-  .titolo-foto{font-family:"${BRAND.font.marchio}",serif;font-size:76px;line-height:1.05;font-weight:400;max-width:880px}
-  .citazione{font-family:"${BRAND.font.marchio}",serif;font-size:82px;line-height:1.08;font-weight:400;}
-  .firma{font-size:28px;color:${C.grigio}}
-  .titolo-grande{font-family:"${BRAND.font.marchio}",serif;font-size:104px;line-height:1;font-weight:400;}
-  .testo{font-size:34px;line-height:1.4;color:#3A352E;max-width:820px}
-  .testo.chiaro{color:rgba(255,255,255,.78)}
-  .dettagli{display:flex;flex-direction:column;border-top:1px solid #E5DDD0}
-  .dettagli div{display:flex;gap:28px;padding:18px 0;border-bottom:1px solid #E5DDD0;font-size:30px}
-  .dettagli dt{width:170px;color:${C.grigio};flex:none}
-  .brano{font-family:"${BRAND.font.corsivo}",serif;font-style:italic;font-size:140px;line-height:1}
+  html,body{width:${w}px;height:${h}px;overflow:hidden;background:${T.fondo}}
+  body{font-family:"${BRAND.font.testo}",sans-serif;font-weight:300;color:${T.testo};-webkit-font-smoothing:antialiased}
+  .post{position:relative;width:${w}px;height:${h}px;padding:${M.alto}px ${M.lati}px ${M.basso}px;display:flex;flex-direction:column;overflow:hidden}
+  .acc{color:${T.accento}}
+  em{font-family:"${BRAND.font.marchio}",serif;font-style:italic;font-weight:500}
+  .etichetta{position:relative;display:flex;align-items:center;gap:14px;font-size:26px;font-weight:400;color:${T.tenue}}
+  .punto{width:12px;height:12px;border-radius:50%;background:${T.accento}}
+  .centro{position:relative;margin:auto 0;display:flex;flex-direction:column;gap:36px}
+  .sopra{font-size:26px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:${T.accento};margin-bottom:-12px}
+  .titolo{font-family:"${BRAND.font.marchio}",serif;font-weight:500;font-size:116px;line-height:1.02;color:${T.titolo}}
+  .titolo em{font-size:inherit}
+  .testo{font-size:34px;line-height:1.45;max-width:820px}
+  .firma{font-size:30px;color:${T.tenue}}
+  .tabella{border-top:1px solid ${T.filo}}
+  .tabella div{display:flex;gap:32px;padding:20px 0;border-bottom:1px solid ${T.filo};font-size:30px}
+  .tabella dt{width:150px;flex:none;color:${T.tenue};font-weight:400}
+  .tabella dd{color:${T.titolo}}
+  .brano{font-size:168px;line-height:1;color:${T.titolo}}
   .brano em{font-size:inherit}
-  .onda{height:150px;display:flex;align-items:center;gap:5px}
-  .onda span{flex:1;min-height:6px;border-radius:3px;background:rgba(255,255,255,.28)}
-  .play{font-size:28px;letter-spacing:.04em;color:rgba(255,255,255,.7)}
+  .onda{height:120px;display:flex;align-items:center;gap:6px}
+  .onda span{flex:1;min-height:6px;border-radius:3px}
+  .durata{display:flex;align-items:center;gap:14px;font-size:26px;font-weight:400;color:${T.tenue}}
+  .play{width:0;height:0;border-left:16px solid ${T.accento};border-top:10px solid transparent;border-bottom:10px solid transparent}
+  .riquadro{width:100%;height:760px;background-size:cover}
+  .didascalia-foto{font-family:"${BRAND.font.marchio}",serif;font-style:italic;font-weight:500;font-size:64px;line-height:1.1;color:${T.titolo}}
+  .didascalia-foto em{font-size:inherit}
+  .elenco{list-style:none;border-top:1px solid ${T.filo}}
+  .elenco li{padding:20px 0;border-bottom:1px solid ${T.filo};font-size:32px;color:${T.titolo}}
+  .cc-grande{position:absolute;right:-150px;top:50%;transform:translateY(-52%);opacity:.2}
+  .piede{position:relative;display:flex;align-items:flex-end;justify-content:space-between}
+  .lockup{display:flex;align-items:center;gap:16px;color:${T.marchio}}
+  .parola{font-family:"${BRAND.font.marchio}",serif;font-weight:500;font-size:34px;letter-spacing:.32em;text-transform:uppercase;line-height:1}
+  .sotto{font-size:13px;font-weight:400;letter-spacing:.3em;text-transform:uppercase;color:${T.tenue};margin-top:10px}
+  .sito{font-size:22px;color:${T.tenue}}
 `;
+
+const temaDi = (post) => {
+  if (post.sfondo) return post.sfondo;
+  const n = parseInt(post.id, 10);
+  return Number.isNaN(n) || n % 2 === 1 ? 'noce' : 'crema';
+};
 
 const pagina = (post) => {
   const [w, h] = BRAND.formati[post.formato || 'post'];
   const modello = MODELLI[post.modello];
   if (!modello) throw new Error(`Modello "${post.modello}" sconosciuto: usa ${Object.keys(MODELLI).join(', ')}`);
+  const T = TEMI[temaDi(post)];
   return { w, h, html: `<!doctype html><html><head><meta charset="utf-8">
-    <link rel="stylesheet" href="${BRAND.font.googleFonts}"><style>${CSS(w, h)}</style></head>
-    <body>${modello(post)}<script>
-      Promise.all([document.fonts.ready, ...[...document.images].map(i => i.decode().catch(()=>{}))])
-        .then(() => document.body.dataset.pronto = '1');
-      // le immagini di sfondo CSS: precaricate a mano
+    <link rel="stylesheet" href="${BRAND.font.googleFonts}"><style>${CSS(T, w, h)}</style></head>
+    <body><div class="post">${modello(post, T)}</div><script>
       const bg = [...document.querySelectorAll('[style*="url("]')].map(e => getComputedStyle(e).backgroundImage.match(/url\\("?([^")]+)/)?.[1]).filter(Boolean);
       Promise.all(bg.map(u => new Promise(r => { const im = new Image(); im.onload = im.onerror = r; im.src = u; })))
         .then(() => document.fonts.ready).then(() => document.body.dataset.pronto = '1');
@@ -178,11 +211,11 @@ async function conChrome(fn) {
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
-const filtro = process.argv.slice(2);
 const cartella = join(QUI, 'post');
-const posts = readdirSync(cartella).filter((f) => f.endsWith('.json')).sort()
-  .map((f) => ({ id: f.replace(/\.json$/, ''), ...JSON.parse(readFileSync(join(cartella, f), 'utf8')) }))
-  .filter((p) => !filtro.length || filtro.some((x) => p.id.includes(x)));
+const leggi = () => readdirSync(cartella).filter((f) => f.endsWith('.json')).sort()
+  .map((f) => ({ id: f.replace(/\.json$/, ''), ...JSON.parse(readFileSync(join(cartella, f), 'utf8')) }));
+const filtro = process.argv.slice(2);
+const posts = leggi().filter((p) => !filtro.length || filtro.some((x) => p.id.includes(x)));
 mkdirSync(OUT, { recursive: true });
 
 await conChrome(async (send, attendi) => {
@@ -202,45 +235,41 @@ await conChrome(async (send, attendi) => {
     const s = await send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 0, width: w, height: h, scale: 1 } });
     writeFileSync(join(OUT, `${post.id}.png`), Buffer.from(s.data, 'base64'));
     writeFileSync(join(OUT, `${post.id}.txt`), didascalia(post) + '\n');
-    console.log(`✓ ${post.id}  (${post.modello}, ${w}×${h})`);
+    console.log(`✓ ${post.id}  (${post.modello}, ${temaDi(post)})`);
   }
 });
 
 // ── Anteprima in stile Instagram ───────────────────────────────────────────
-const tutti = readdirSync(cartella).filter((f) => f.endsWith('.json')).sort()
-  .map((f) => ({ id: f.replace(/\.json$/, ''), ...JSON.parse(readFileSync(join(cartella, f), 'utf8')) }))
-  .filter((p) => existsSync(join(OUT, `${p.id}.png`)));
+const tutti = leggi().filter((p) => existsSync(join(OUT, `${p.id}.png`)));
 writeFileSync(join(OUT, 'anteprima.html'), `<!doctype html><html lang="it"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Anteprima post · ${BRAND.nome}</title>
 <link rel="stylesheet" href="${BRAND.font.googleFonts}">
 <style>
   body{margin:0;background:#fafafa;font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;color:#111}
   header{max-width:935px;margin:0 auto;padding:40px 16px 24px;display:flex;gap:28px;align-items:center;border-bottom:1px solid #dbdbdb}
-  .avatar{width:120px;height:120px;border-radius:50%;background:#fff;border:1px solid #dbdbdb;display:grid;place-items:center;flex:none}
+  .avatar{width:120px;height:120px;border-radius:50%;background:${C.crema};border:1px solid #dbdbdb;display:grid;place-items:center;flex:none}
   .handle{font-size:20px;margin-bottom:8px} .bio{font-size:14px;line-height:1.5;color:#333}
-  .bio b{font-family:"Italiana",serif;font-size:20px;font-weight:400} .bio .k{color:${C.bronzo}}
+  .bio b{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:500} .bio .acc{color:${C.bronzo}}
   .griglia{max-width:935px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
   .griglia a{aspect-ratio:4/5;background:#eee center/cover;display:block}
   h2{max-width:935px;margin:48px auto 16px;padding:0 16px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#888}
   .post{max-width:470px;margin:0 auto 40px;background:#fff;border:1px solid #dbdbdb;border-radius:8px;overflow:hidden}
   .post-testa{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:14px;font-weight:600}
-  .post-testa .mini{width:32px;height:32px;border-radius:50%;border:1px solid #dbdbdb;display:grid;place-items:center;background:${C.avorio}}
+  .post-testa .mini{width:32px;height:32px;border-radius:50%;border:1px solid #dbdbdb;display:grid;place-items:center;background:${C.crema}}
   .post img{width:100%;display:block}
-  .azioni{padding:10px 14px 0;font-size:22px;letter-spacing:10px}
-  .cap{padding:8px 14px 16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+  .cap{padding:12px 14px 16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
   .cap b{font-weight:600}
   .file{padding:0 14px 14px;font-size:12px;color:#888}
 </style></head><body>
-<header><div class="avatar">${monogramma(78)}</div>
+<header><div class="avatar">${monogramma(80, C.bronzo)}</div>
   <div><div class="handle">concordiasingers</div>
-  <div class="bio"><b>${nome(BRAND.nome)}</b><br>Vocal ensemble · Milano 🇮🇪🇺🇸🇪🇪🇹🇷🇮🇹<br>Ogni domenica a San Ferdinando, accanto alla Bocconi<br><span style="color:#00376b">${BRAND.sito}</span></div></div></header>
+  <div class="bio"><b>${nome('ConCordia Singers')}</b><br>Vocal ensemble · Milano<br>Ogni domenica a San Ferdinando, accanto alla Bocconi<br><span style="color:#00376b">${BRAND.sito}</span></div></div></header>
 <h2>Griglia del profilo (il più recente in alto a sinistra)</h2>
 <div class="griglia">${[...tutti].reverse().map((p) => `<a href="#${p.id}" style="background-image:url('${p.id}.png')"></a>`).join('')}</div>
-<h2>Post uno per uno</h2>
+<h2>Post uno per uno (in ordine di pubblicazione)</h2>
 ${tutti.map((p) => `<article class="post" id="${p.id}">
-  <div class="post-testa"><span class="mini">${monogramma(22)}</span>concordiasingers</div>
+  <div class="post-testa"><span class="mini">${monogramma(24, C.bronzo)}</span>concordiasingers</div>
   <img src="${p.id}.png" alt="">
-  <div class="azioni">♡ ◯ ➤</div>
   <div class="cap"><b>concordiasingers</b> ${esc(didascalia(p))}</div>
   <div class="file">${p.id}.png · didascalia in ${p.id}.txt</div>
 </article>`).join('')}

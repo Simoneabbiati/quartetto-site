@@ -63,7 +63,7 @@ const { testo } = Astro.props;
   const KLEIN = '#A8834F'; // bronzo del logo
   const kleinA = (a: number) => `rgba(168,131,79,${a})`;
   const INK = KLEIN;
-  const TERRA = '#E2DACD';
+  const TERRA = '#E2D9CA';
   const GRIGLIA = 'rgba(26,24,20,0.07)';
 
   const canvas = document.querySelector<HTMLCanvasElement>('.globo-canvas');
@@ -106,7 +106,7 @@ const { testo } = Astro.props;
       proj.rotate([lon, -30, 0]);
       ctx.clearRect(0, 0, size, size);
 
-      ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = '#FBF9F5'; ctx.fill();
+      ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = '#F8F5EF'; ctx.fill();
       ctx.beginPath(); path(graticule); ctx.strokeStyle = GRIGLIA; ctx.lineWidth = 0.6; ctx.stroke();
       ctx.beginPath(); path(land as any); ctx.fillStyle = TERRA; ctx.fill();
       ctx.beginPath(); path({ type: 'Sphere' }); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 0.8; ctx.stroke();

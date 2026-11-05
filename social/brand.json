@@ -3,19 +3,22 @@
   "descrizione": "vocal ensemble",
   "sito": "concordiasingers.it",
   "colori": {
-    "inchiostro": "#1A1814",
-    "avorio": "#FBF9F5",
-    "grigio": "#6F665A",
-    "sabbia": "#F3EEE6",
+    "crema": "#F8F5EF",
+    "inchiostro": "#26211C",
+    "secondario": "#4A433B",
+    "tenue": "#6B6258",
+    "filo": "#E2D9CA",
     "bronzo": "#A8834F",
-    "oro": "#B8954E",
-    "scuro": "#1A1814"
+    "noce": "#3E2C20",
+    "titoloSuNoce": "#F7F1E6",
+    "testoSuNoce": "#EDE4D4",
+    "tenueSuNoce": "#CFC3AE",
+    "oroChiaro": "#C9A66B"
   },
   "font": {
     "marchio": "Cormorant Garamond",
-    "testo": "Jost",
-    "corsivo": "Cormorant Garamond",
-    "googleFonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500&display=swap"
+    "testo": "Figtree",
+    "googleFonts": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Figtree:wght@300;400;500&display=swap"
   },
   "formati": {
     "post": [
@@ -30,8 +33,13 @@
   "hashtagBase": [
     "#ConCordiaSingers",
     "#vocalensemble",
-    "#coro",
+    "#ensemblevocale",
     "#Milano",
     "#Bocconi"
-  ]
+  ],
+  "margini": {
+    "lati": 96,
+    "alto": 96,
+    "basso": 88
+  }
 }

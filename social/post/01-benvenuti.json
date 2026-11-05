@@ -1,0 +1,14 @@
+{
+  "modello": "dichiarazione",
+  "etichetta": "Benvenuti",
+  "titolo": "Benvenuti\nin ConCordia.",
+  "testo": "Un ensemble vocale nato in Bocconi,\na Milano.",
+  "didascalia": {
+    "it": "Benvenuti! Siamo i ConCordia Singers, un ensemble vocale nato nella comunità dell’Università Bocconi.\nCantiamo musica d’insieme, sacra e profana, dal Rinascimento ai canti tradizionali. Qui racconteremo le prove, i brani e le persone dietro le voci.",
+    "en": "Welcome! We’re ConCordia Singers, a vocal ensemble born in the Bocconi University community.\nWe sing ensemble music, sacred and secular, from the Renaissance to folk songs. Here we’ll share our rehearsals, our pieces and the people behind the voices."
+  },
+  "hashtag": [
+    "#vocalmusic",
+    "#ensemble"
+  ]
+}

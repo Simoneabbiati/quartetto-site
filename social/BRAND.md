@@ -1,91 +1,89 @@
 # Concordia Singers — linee guida del marchio
 
-Regole per tutto ciò che pubblichiamo: post Instagram e Facebook, locandine,
-programmi di sala. Sono le stesse del sito (concordiasingers.it). Lo script
-`genera.mjs` le applica da solo: i valori numerici sono in `brand.json`.
+Riassunto della brand guide preparata per l'ensemble (Instagram e Facebook).
+Lo script `genera.mjs` applica queste regole da solo; i valori sono in
+`brand.json`. Il sito (concordiasingers.it) usa gli stessi colori e caratteri.
 
 ## Chi siamo, in una frase
 
 Un ensemble vocale nato in Bocconi, con voci da Irlanda, Stati Uniti, Estonia,
 Turchia e Italia, che prova ogni domenica nella chiesa di San Ferdinando a
-Milano. Il nome dice cosa cerchiamo: *concordia*, cuori che si accordano.
+Milano. *Concordia*: da *cum* + *cor, cordis*, cuori che si accordano.
 
-## Nome
+## Nome e logo
 
-- **Concordia Singers**. Nei titoli grandi la seconda C può essere in bronzo
-  ("ConCordia": da *cor, cordis*, il cuore). Nel logo il nome è in maiuscole
-  spaziate: **C O N C O R D I A**.
-- Descrizione: **vocal ensemble**. Mai "coro sacro" o "quartetto": facciamo
-  musica d'insieme, sacra e profana.
-
-## Logo
-
-- **Monogramma**: due C in Cormorant Garamond, una grande e una più piccola
-  rovesciata che si incastra fra le sue terminazioni ("con" e "cor").
-- **Logo completo**: monogramma + CONCORDIA (maiuscole spaziate) + "singers"
-  piccolo sotto.
-- **Colori del logo**: bronzo `#A8834F` su fondo chiaro, oro `#B8954E` su
-  fondo scuro `#1A1814`. Mai altri colori, ombre o contorni.
-- **Logo ridotto** (foto profilo, icona): solo il monogramma su avorio.
-- Spazio libero intorno al logo: almeno l'altezza della C piccola.
+- **Concordia Singers**, descrizione **vocal ensemble**. Siamo un
+  **ensemble**: mai "coro" o "choir", né nei post né sul sito (vale anche
+  per gli hashtag). Nei titoli
+  "ConCordia" con la seconda C in bronzo (su crema) o oro chiaro (su noce).
+- **Logo**: una C grande e una C più piccola (circa 60%) specchiata, annidata
+  a destra. Lockup: logo + CONCORDIA (Cormorant maiuscolo, spaziatura 0.32em)
+  + "SINGERS · VOCAL ENSEMBLE" piccolo in Figtree.
+- Logo bronzo su crema, oro chiaro su noce. Parola del marchio in inchiostro
+  su crema, in crema su noce. Mai ombre, contorni o sfumature.
 
 ## Colori
 
 | Nome | Valore | Uso |
 |---|---|---|
-| Inchiostro | `#1A1814` | testi, fondi scuri |
-| Avorio | `#FBF9F5` | fondo principale |
-| Sabbia | `#F3EEE6` | fondi alternativi, riquadri |
-| Grigio caldo | `#6F665A` | testi secondari, didascalie |
-| **Bronzo** | `#A8834F` | logo e un solo dettaglio per immagine (pallino, C del nome) su fondo chiaro |
-| **Oro** | `#B8954E` | lo stesso, su fondo scuro |
+| Crema | `#F8F5EF` | fondo chiaro |
+| Inchiostro | `#26211C` | titoli su crema |
+| Secondario | `#4A433B` | testo su crema |
+| Tenue | `#6B6258` | etichette, didascalie su crema |
+| Filo | `#E2D9CA` | linee sottili su crema |
+| **Bronzo** | `#A8834F` | accento su crema |
+| Noce | `#3E2C20` | unico fondo scuro |
+| Titolo su noce | `#F7F1E6` | |
+| Testo su noce | `#EDE4D4` | |
+| Tenue su noce | `#CFC3AE` | |
+| **Oro chiaro** | `#C9A66B` | accento su noce |
 
-Bronzo e oro sono rari di proposito: un dettaglio per immagine. Mai sfumature
-dorate, effetti metallici o lucidi.
+L'accento è raro: pallino dell'etichetta, C del nome, parte "suonata" della
+forma d'onda. Niente sfumature, effetti metallici, ombre, emoji o icone stock.
 
 ## Caratteri
 
-- **Cormorant Garamond** — marchio, titoli, citazioni. Peso 400–500. Per il
-  logo in maiuscolo con spaziatura ampia (0.3em).
-- **Jost** — testi, date, didascalie, etichette. Pesi 400 e 500. Per le
-  etichette: maiuscolo piccolo e spaziato (`SINGERS · VOCAL ENSEMBLE`).
-- **Cormorant Garamond corsivo** — titoli di brani e parole latine
-  (*Suantraí*, *Verbum caro factum est*).
+- **Cormorant Garamond 500** — titoli, in minuscolo normale (mai tutto
+  maiuscolo), 110–120 px nel post. Corsivo per titoli di brani e parole
+  latine, fino a 168 px.
+- **Figtree 300** — testi (30–36 px). **Figtree 400** — etichette (26 px,
+  con pallino d'accento).
 
-## Fotografie
+## Struttura di un post (1080 × 1350)
 
-- Le nostre, vere: prove, chiesa, spartiti, mani. Niente foto stock.
-- Luce calda e scura degli interni, ripulite dal rumore (vedi
-  `Downloads/…/ottimizzate/_script-ottimizzazione.py`). Niente filtri colorati.
-- Ritaglio verticale 4:5 per il feed. Le persone non vanno tagliate a metà viso.
-- Sulla foto al massimo il logo piccolo e una riga di testo, in basso.
+- Margini: 96 px ai lati e in alto, 88 px in basso.
+- In alto a sinistra l'**etichetta**: pallino + categoria (Benvenuti, Chi
+  siamo, Il nostro nome, Le prove, Dietro le quinte, Repertorio, Ascolta,
+  Cerchiamo voci, In concerto).
+- Contenuto allineato a sinistra, centrato in verticale.
+- In basso a sinistra il **lockup**; il sito in basso a destra è opzionale.
+- Le foto stanno dentro i margini, non a tutta pagina.
+- **Griglia**: crema e noce alternati a scacchiera. Lo script lo fa da solo
+  (post dispari noce, pari crema); `"sfondo": "crema" | "noce"` lo forza.
 
-## Formati
+## Firme visive (modelli)
 
-| Dove | Formato | Pixel |
-|---|---|---|
-| Instagram e Facebook, feed | 4:5 verticale | 1080 × 1350 |
-| Storie e Reel | 9:16 | 1080 × 1920 |
-| Copertina Facebook | — | 1640 × 624 (zona sicura centrale) |
-
-## Modelli di post (in `genera.mjs`)
-
-1. **foto** — una nostra foto a tutta pagina, logo piccolo e una riga di testo in basso.
-2. **citazione** — fondo avorio, una frase grande in Cormorant Garamond, il logo in basso.
-3. **annuncio** — fondo avorio, titolo grande, 2–3 righe di dettagli (data,
-   luogo, cosa portare), pallino bronzo. Per concerti, prove aperte, ricerca voci.
-4. **ascolta** — fondo inchiostro, titolo del brano in corsivo, forma d'onda in oro: per
-   accompagnare un audio o un Reel.
+| Modello | Cosa |
+|---|---|
+| `dichiarazione` | frase breve su noce, grande doppia C che esce dal bordo destro |
+| `annuncio` | titolo, testo, tabella a fili (Quando / Dove / Come) |
+| `citazione` | una frase grande, firma piccola |
+| `ascolta` | titolo del brano in corsivo, forma d'onda oro + sbiadita, ▶ durata |
+| `foto` | una nostra foto dentro i margini, titolo corsivo sotto |
+| `elenco` | titolo + elenco a fili (paesi, repertorio, programma) |
 
 ## Tono di voce
 
-- Caldo, diretto, entusiasta senza esagerare. Diamo del tu.
-- Sempre in **italiano e inglese**: prima l'italiano, poi una riga vuota,
-  poi l'inglese.
-- Frasi brevi. Al massimo un'emoji per post, e solo se aggiunge qualcosa (♪, 🎶).
-- Raccontiamo persone e musica, non noi stessi: "la prova di domenica",
-  "la voce di Aisling", "un canto irlandese".
-- Chiusura con un invito chiaro quando serve: "Scrivici", "Ascolta", "Vieni".
-- Hashtag in fondo, 5–8, sempre gli stessi di base: `#ConCordiaSingers
-  #vocalensemble #coro #Milano #Bocconi` + 2–3 sul contenuto.
-- Link nel post: su Instagram non è cliccabile, si scrive "link in bio".
+- Caldo, diretto, frasi brevi. Sempre **italiano e inglese** (prima IT).
+- Nessuna emoji.
+- Hashtag in fondo: quelli di base (`brand.json`) + 2–3 sul contenuto.
+- Su Instagram il link non è cliccabile: "link in bio".
+
+## Per Claude (o chi scrive i post)
+
+- **Mai inventare fatti**: date, orari, luoghi, prezzi, nomi, repertorio.
+  Se manca un dato, usa un segnaposto tra parentesi quadre: `[data]`,
+  `[orario]`, `[luogo]`, e segnalalo.
+- Usa solo foto vere dell'ensemble (`public/images/home/`).
+- Rispetta palette, caratteri, margini ed etichette qui sopra; non aggiungere
+  elementi decorativi.

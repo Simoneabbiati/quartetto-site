@@ -40,7 +40,8 @@
     --klein: #A8834F;
     --bronzo: #A8834F;
     --bronzo-scuro: #8A6A3A;
-    --oro: #B8954E;
+    --oro: #C9A66B;
+    --noce: #3E2C20;
 
     /* nomi vecchi, usati dall'area riservata */
     --type-title: var(--fs-title);
@@ -96,7 +97,7 @@
 
   ::selection {
     background-color: var(--klein);
-    color: #FBF9F5;
+    color: #F8F5EF;
   }
 
 }
@@ -649,10 +650,10 @@
       z-index: 5;
       pointer-events: none;
       background: linear-gradient(to bottom,
-        rgb(251 249 245 / 0) 0%,
-        rgb(251 249 245 / 0.35) 30%,
-        rgb(251 249 245 / 0.85) 55%,
-        #FBF9F5 75%);
+        rgb(248 245 239 / 0) 0%,
+        rgb(248 245 239 / 0.35) 30%,
+        rgb(248 245 239 / 0.85) 55%,
+        #F8F5EF 75%);
       opacity: var(--sfuma, 1);
     }
   }

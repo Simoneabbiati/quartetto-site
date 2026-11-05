@@ -10,7 +10,7 @@ const { descrizione = false, misura = '2.1em' } = Astro.props;
   <Monogramma size={misura} />
   <span class="logo-testo" aria-hidden="true">
     <span class="logo-nome">Concordia</span>
-    <span class="logo-sotto">singers{descrizione && ' · vocal ensemble'}</span>
+    <span class="logo-sotto">singers · vocal ensemble</span>
   </span>
 </span>
 
@@ -29,10 +29,10 @@ const { descrizione = false, misura = '2.1em' } = Astro.props;
   }
   .logo-sotto {
     font-family: theme('fontFamily.sans');
-    font-size: 0.42em;
-    letter-spacing: 0.36em;
+    font-size: 0.36em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: theme('colors.bronzo.scuro');
+    color: theme('colors.ink.muted');
     margin-top: 0.55em;
     line-height: 1;
   }

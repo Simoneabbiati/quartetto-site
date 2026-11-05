@@ -1,7 +1,7 @@
 ---
 // Avviso "cerchiamo voci": una scheda che entra dal basso poco dopo l'apertura
 // della pagina (in basso a destra su computer, a tutta larghezza su telefono).
-// Ricompare a ogni pagina e a ogni visita (scelta del coro: deve farsi vedere);
+// Ricompare a ogni pagina e a ogni visita (scelta dell'ensemble: deve farsi vedere);
 // la ✕ la chiude solo per la pagina corrente. Il bottone apre il modulo
 // contatti in modalità "prova voce" (?audizione=1), già compilato.
 import { getLangFromUrl, useTranslations, withBase, stripBase } from '../i18n/utils';
@@ -9,7 +9,7 @@ import { getLangFromUrl, useTranslations, withBase, stripBase } from '../i18n/ut
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const contatti = withBase(lang === 'it' ? '/it/contatti' : '/contatti') + '?audizione=1#modulo';
-// Non nell'area riservata (chi ci entra fa già parte del coro) né sulla pagina
+// Non nell'area riservata (chi ci entra fa già parte dell'ensemble) né sulla pagina
 // contatti, dove l'invito sarebbe ridondante.
 const percorso = stripBase(Astro.url.pathname).replace(/^\/it/, '');
 const visibile = !percorso.startsWith('/riservato') && !percorso.startsWith('/contatti');
@@ -36,8 +36,8 @@ const visibile = !percorso.startsWith('/riservato') && !percorso.startsWith('/co
     right: 0.75rem;
     bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
     padding: 1.1rem 1.25rem 1.25rem;
-    background: theme('colors.ink.DEFAULT');
-    color: theme('colors.paper.DEFAULT');
+    background: theme('colors.noce');
+    color: #F7F1E6;
     border-radius: 14px;
     box-shadow: 0 18px 40px rgb(0 0 0 / 0.22);
     /* entra dal basso dopo un attimo, per non coprire subito il nome */
@@ -69,8 +69,8 @@ const visibile = !percorso.startsWith('/riservato') && !percorso.startsWith('/co
     align-items: flex-start;
     gap: 0.55rem;
   }
-  .avviso-titolo .pallino { flex: none; margin-top: 0.5em; }
-  .avviso-testo { margin: 0 0 1rem; color: rgb(255 255 255 / 0.72); line-height: 1.45; }
+  .avviso-titolo .pallino { flex: none; margin-top: 0.5em; background: var(--oro); }
+  .avviso-testo { margin: 0 0 1rem; color: #CFC3AE; line-height: 1.45; }
   .avviso-cta {
     display: inline-flex;
     align-items: center;
@@ -79,7 +79,7 @@ const visibile = !percorso.startsWith('/riservato') && !percorso.startsWith('/co
     padding: 0 1.1rem;
     border-radius: 999px;
     background: theme('colors.paper.DEFAULT');
-    color: theme('colors.ink.DEFAULT');
+    color: theme('colors.noce');
     font-size: var(--fs-ui);
     text-decoration: none;
     transition: background-color 0.2s ease;

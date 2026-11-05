@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="64" height="64" role="img" aria-label="Concordia Singers">
-  <rect width="200" height="200" rx="40" fill="#FBF9F5"/>
+  <rect width="200" height="200" rx="40" fill="#F8F5EF"/>
   <g transform="translate(100 100) scale(.82) translate(-102 -102)" font-family="Cormorant Garamond, Garamond, Georgia, 'Times New Roman', serif" font-weight="500" fill="#A8834F">
     <text x="84" y="154" font-size="190" text-anchor="middle">C</text>
-    <text transform="translate(142 130) scale(-1 1)" font-size="104" text-anchor="middle">C</text>
+    <text transform="translate(143 131) scale(-1 1)" font-size="114" text-anchor="middle">C</text>
   </g>
 </svg>

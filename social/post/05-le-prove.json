@@ -1,0 +1,15 @@
+{
+  "modello": "annuncio",
+  "etichetta": "Le prove",
+  "sopratitolo": "Domenica",
+  "titolo": "Ogni settimana,\nla stessa chiesa.",
+  "testo": "Ci ritroviamo a provare nella chiesa di San Ferdinando, accanto alla Bocconi.",
+  "didascalia": {
+    "it": "Ogni domenica ci ritroviamo nella chiesa di San Ferdinando, proprio accanto alla Bocconi. È lì che i brani prendono forma, una prova alla volta.",
+    "en": "Every Sunday we meet in the church of San Ferdinando, right next to Bocconi. That’s where the pieces take shape, one rehearsal at a time."
+  },
+  "hashtag": [
+    "#rehearsal",
+    "#SanFerdinando"
+  ]
+}
