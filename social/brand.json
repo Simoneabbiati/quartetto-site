@@ -1,0 +1,23 @@
+{
+  "nome": "ConCordia Singers",
+  "descrizione": "vocal ensemble",
+  "sito": "concordiasingers.it",
+  "colori": {
+    "nero": "#0B0B0C",
+    "bianco": "#FFFFFF",
+    "grigio": "#63656B",
+    "grigioChiaro": "#F2F2F0",
+    "klein": "#002FA7"
+  },
+  "font": {
+    "marchio": "Italiana",
+    "testo": "Instrument Sans",
+    "corsivo": "Instrument Serif",
+    "googleFonts": "https://fonts.googleapis.com/css2?family=Italiana&family=Instrument+Sans:wdth,wght@75..100,400..600&family=Instrument+Serif:ital@0;1&display=swap"
+  },
+  "formati": {
+    "post": [1080, 1350],
+    "storia": [1080, 1920]
+  },
+  "hashtagBase": ["#ConCordiaSingers", "#vocalensemble", "#coro", "#Milano", "#Bocconi"]
+}
