@@ -43,42 +43,30 @@ const Content = chiSiamo ? (await chiSiamo.render()).Content : null;
     <p class="label-caps mb-5 text-center">I cantanti</p>
     <h2 class="font-serif text-center" style="margin-bottom: var(--space-7)">Le voci</h2>
 
-    <div class="grid md:grid-cols-2 gap-16">
-      {cantanti.length > 0 ? (
-        cantanti.map(async (cantante) => {
-          const { Content: BioContent } = await cantante.render();
-          const voceLabel = t(`cantanti.${cantante.data.voce}`);
-          return (
-            <article>
-              <div class="flex items-center gap-4 mb-3">
-                {cantante.data.foto && (
-                  <img
-                    src={cantante.data.foto}
-                    alt={cantante.data.nome}
-                    class="w-14 h-14 rounded-full object-cover flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-700"
-                  />
-                )}
-                <div>
-                  <p class="label-caps mb-1">{voceLabel}</p>
-                  <h3>{cantante.data.nome}</h3>
-                </div>
-              </div>
-              <p class="text-ink-soft mb-5 leading-relaxed">{cantante.data.bioBreve}</p>
-              <details>
-                <summary class="nav-link cursor-pointer">Biografia completa</summary>
-                <div class="prose mt-5">
-                  <BioContent />
-                </div>
-              </details>
-            </article>
-          );
-        })
-      ) : (
-        <p class="col-span-2 text-center text-ink-muted italic">
-          Schede dei cantanti da creare in src/content/cantanti/
-        </p>
-      )}
+    <!-- Per ora solo nome e voce: le biografie (src/content/cantanti) si
+         mostreranno quando saranno scritte. -->
+    <ul class="voci-elenco">
+      {cantanti.map((cantante) => (
+        <li>
+          <p class="label-caps">{t(`cantanti.${cantante.data.voce}`)}</p>
+          <h3>{cantante.data.nome}</h3>
+        </li>
+      ))}
+    </ul>
     </div>
   </section>
 
 </Base>
+
+<style>
+  .voci-elenco {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 52rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: var(--space-6) var(--space-5);
+  }
+  .voci-elenco li { display: flex; flex-direction: column; gap: var(--space-2); }
+</style>
