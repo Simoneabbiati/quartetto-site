@@ -44,8 +44,8 @@ const formattedDate = dateFormatter.format(data.data);
             <ul class="mt-3 space-y-1 text-ink-soft misura">
               {data.programma.map((brano) => (
                 <li>
-                  <span class="font-medium">{brano.compositore}</span>
-                  <span class="text-ink-muted"> — {brano.opera}</span>
+                  <span class="font-medium">{brano.opera}</span>
+                  {brano.compositore && <span class="text-ink-muted"> — {brano.compositore}</span>}
                 </li>
               ))}
             </ul>

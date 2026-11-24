@@ -18,7 +18,7 @@ const concerti = defineCollection({
     programma: z
       .array(
         z.object({
-          compositore: z.string(),
+          compositore: z.string().optional(),
           opera: z.string(),
         })
       )

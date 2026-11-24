@@ -182,6 +182,7 @@ const calendario = prova
         <!-- Pezzi da preparare -->
         <div>
           <p class="label-caps mb-3">{t('riservato.pezziDaPreparare')}</p>
+          {prova.note && <p class="text-ink-soft type-body mb-4" style="white-space: pre-line">{prova.note}</p>}
           {pezzi.length === 0 && <p class="text-ink-soft type-body">{t('riservato.nessunPezzo')}</p>}
           <div class="flex flex-col gap-4">
             {pezzi.map((pezzo) => (

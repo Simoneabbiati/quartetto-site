@@ -32,6 +32,7 @@ interface Prova {
   ora_fine: string | null;
   luogo: string | null;
   indirizzo: string | null;
+  note: string | null;
   mioStato: string | null;
 }
 
@@ -62,7 +63,7 @@ if (db) {
     const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes, tracceRes] = await db.batch([
       db.prepare('SELECT id, titolo, compositore, organico, concerto_id FROM spartiti ORDER BY compositore, titolo'),
       db.prepare(
-        `SELECT p.id, p.data, p.ora, p.ora_fine, p.luogo, p.indirizzo, pr.stato as mioStato
+        `SELECT p.id, p.data, p.ora, p.ora_fine, p.luogo, p.indirizzo, p.note, pr.stato as mioStato
          FROM prove p LEFT JOIN presenze pr ON pr.prova_id = p.id AND pr.utente_email = ?
          ORDER BY p.data, p.ora`
       ).bind(userEmail ?? ''),
@@ -249,6 +250,7 @@ function presenzePerProva(provaId: number) {
 
             <div>
               <p class="type-body text-ink-muted uppercase tracking-wide mb-1.5">{t('riservato.pezziDaPreparare')}</p>
+              {prossima.note && <p class="type-body text-ink-soft mb-2" style="white-space: pre-line">{prossima.note}</p>}
               {pezzi.length === 0 && <p class="type-body text-ink-muted">{t('riservato.nessunPezzoAssegnato')}</p>}
               {pezzi.map((pezzo) => (
                 <p>
