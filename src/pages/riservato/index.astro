@@ -23,6 +23,7 @@ interface Spartito {
   compositore: string;
   organico: string | null;
   concerto_id: string | null;
+  indicazioni: string | null;
 }
 
 interface Prova {
@@ -61,7 +62,7 @@ if (db) {
     // Le tabelle sono piccole (pochi coristi, poche prove): le leggiamo intere
     // e incrociamo i dati qui, invece di fare una query per ogni riga mostrata.
     const [spartitiRes, proveRes, coristiRes, presenzeRes, pezziRes, tracceRes] = await db.batch([
-      db.prepare('SELECT id, titolo, compositore, organico, concerto_id FROM spartiti ORDER BY compositore, titolo'),
+      db.prepare('SELECT id, titolo, compositore, organico, concerto_id, indicazioni FROM spartiti ORDER BY compositore, titolo'),
       db.prepare(
         `SELECT p.id, p.data, p.ora, p.ora_fine, p.luogo, p.indirizzo, p.note, pr.stato as mioStato
          FROM prove p LEFT JOIN presenze pr ON pr.prova_id = p.id AND pr.utente_email = ?
@@ -387,7 +388,7 @@ function presenzePerProva(provaId: number) {
                        Mobile: link che apre il visualizzatore nativo del telefono —
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
-                  <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 }]}>
+                  <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 || s.indicazioni }]}>
                     <!-- navpanes=0 / pagemode=none: il visualizzatore del browser apre il
                          PDF senza la colonna delle miniature (riapribile dal suo menu ☰),
                          che non si può restringere da qui e ruberebbe spazio allo spartito. -->
@@ -400,7 +401,9 @@ function presenzePerProva(provaId: number) {
                     ></iframe>
                     <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
 
-                    {tracce.length > 0 && (
+                    {(tracce.length > 0 || s.indicazioni) && (
+                      <div class="flex flex-col gap-6">
+                      {tracce.length > 0 && (
                       <div>
                         <p class="label-caps mb-2">{t('riservato.ascoltaParti')}</p>
                         <div class="flex flex-col gap-2">
@@ -415,6 +418,18 @@ function presenzePerProva(provaId: number) {
                             </div>
                           ))}
                         </div>
+                      </div>
+                      )}
+                      <!-- Indicazioni di esecuzione (una per riga), sotto l'audio:
+                           si leggono mentre si ascolta, accanto allo spartito. -->
+                      {s.indicazioni && (
+                        <div>
+                          <p class="label-caps mb-2">{t('riservato.indicazioni')}</p>
+                          <ul class="flex flex-col gap-1.5 type-body text-ink-soft">
+                            {s.indicazioni.split('\n').filter((r) => r.trim()).map((r) => <li>{r}</li>)}
+                          </ul>
+                        </div>
+                      )}
                       </div>
                     )}
                   </div>
