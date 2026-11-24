@@ -389,11 +389,12 @@ function presenzePerProva(provaId: number) {
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
                   <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 || s.indicazioni || corista?.admin }]}>
-                    <!-- navpanes=0 / pagemode=none: il visualizzatore del browser apre il
+                    <!-- view=Fit (Chrome/Safari) e zoom=page-fit (Firefox): la pagina intera nel riquadro.
+                         navpanes=0 / pagemode=none: il visualizzatore del browser apre il
                          PDF senza la colonna delle miniature (riapribile dal suo menu ☰),
                          che non si può restringere da qui e ruberebbe spazio allo spartito. -->
                     <iframe
-                      src={`${pdfUrl}#navpanes=0&pagemode=none`}
+                      src={`${pdfUrl}#navpanes=0&pagemode=none&view=Fit&zoom=page-fit`}
                       title={s.titolo}
                       class="hidden md:block spartito-pdf-iframe"
                       style="width:100%; border:1px solid rgba(26,37,53,0.15);"
