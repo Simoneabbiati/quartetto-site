@@ -425,7 +425,7 @@ function presenzePerProva(provaId: number) {
                       {s.indicazioni && (
                         <div>
                           <p class="label-caps mb-2">{t('riservato.indicazioni')}</p>
-                          <ul class="flex flex-col gap-1.5 type-body text-ink-soft">
+                          <ul class="flex flex-col gap-1.5 type-body text-ink-soft list-disc pl-5">
                             {s.indicazioni.split('\n').filter((r) => r.trim()).map((r) => <li>{r}</li>)}
                           </ul>
                         </div>
