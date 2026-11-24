@@ -9,6 +9,7 @@ const t = useTranslations('it');
 Astro.response.headers.set('Cache-Control', 'no-store');
 
 interface Spartito {
+  id: number;
   titolo: string;
   compositore: string;
   organico: string | null;
@@ -20,7 +21,7 @@ let spartiti: Spartito[] = [];
 if (db) {
   try {
     const { results } = await db
-      .prepare('SELECT titolo, compositore, organico FROM spartiti ORDER BY compositore, titolo')
+      .prepare('SELECT id, titolo, compositore, organico FROM spartiti ORDER BY compositore, titolo')
       .all();
     spartiti = results as Spartito[];
   } catch {
@@ -50,7 +51,7 @@ if (db) {
     <div class="space-y-0">
       {spartiti.map((brano, i) => (
         <div
-          class="grid grid-cols-[1fr_auto] gap-4 py-3.5 items-baseline"
+          class="grid grid-cols-[1fr_auto_auto] gap-4 py-3.5 items-baseline"
           style={`border-bottom: 1px solid rgba(26,37,53,${i === spartiti.length - 1 ? '0' : '0.06'})`}
         >
           <p class="fs-title min-w-0">
@@ -61,6 +62,8 @@ if (db) {
           {brano.organico && (
             <span class="label-caps justify-self-end">{brano.organico}</span>
           )}
+          {!brano.organico && <span></span>}
+          <a href={`/riservato/?apri=${brano.id}&lang=it`} class="apri-spartito label-caps text-accent hover:underline justify-self-end" style="display:none">Apri lo spartito ↗</a>
         </div>
       ))}
     </div>
@@ -75,5 +78,15 @@ if (db) {
       </p>
     </div>
   </section>
+
+  <script>
+    // Ai coristi loggati (Cloudflare Access) mostra il link per aprire ogni
+    // spartito nell'area riservata; per gli altri l'elenco resta com'è.
+    fetch('/riservato/api/io', { credentials: 'same-origin', redirect: 'manual' })
+      .then((r) => {
+        if (r.ok) document.querySelectorAll<HTMLElement>('.apri-spartito').forEach((a) => (a.style.display = ""));
+      })
+      .catch(() => {});
+  </script>
 
 </Base>
