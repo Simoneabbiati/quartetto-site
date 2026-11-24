@@ -143,6 +143,10 @@
     "titoloEvento": "Prova",
     "ascoltaParti": "Ascolta le parti",
     "indicazioni": "Indicazioni",
+    "modifica": "Modifica",
+    "salva": "Salva",
+    "annulla": "Annulla",
+    "indicazioniAiuto": "Una indicazione per riga, es. «1ª strofa: tutti insieme»",
     "tutteLeVoci": "Tutte le voci",
     "apriPdf": "Apri il PDF"
   },

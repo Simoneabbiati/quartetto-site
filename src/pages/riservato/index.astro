@@ -388,7 +388,7 @@ function presenzePerProva(provaId: number) {
                        Mobile: link che apre il visualizzatore nativo del telefono —
                        incorporarlo anche lì farebbe tornare il problema di Safari
                        che mostra solo la prima pagina di un PDF multi-pagina. -->
-                  <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 || s.indicazioni }]}>
+                  <div class:list={['flex flex-col gap-4 spartito-corpo', { 'con-tracce': tracce.length > 0 || s.indicazioni || corista?.admin }]}>
                     <!-- navpanes=0 / pagemode=none: il visualizzatore del browser apre il
                          PDF senza la colonna delle miniature (riapribile dal suo menu ☰),
                          che non si può restringere da qui e ruberebbe spazio allo spartito. -->
@@ -401,7 +401,7 @@ function presenzePerProva(provaId: number) {
                     ></iframe>
                     <a href={pdfUrl} class="btn-ghost md:hidden self-start">{t('riservato.apriPdf')}</a>
 
-                    {(tracce.length > 0 || s.indicazioni) && (
+                    {(tracce.length > 0 || s.indicazioni || corista?.admin) && (
                       <div class="flex flex-col gap-6">
                       {tracce.length > 0 && (
                       <div>
@@ -422,12 +422,30 @@ function presenzePerProva(provaId: number) {
                       )}
                       <!-- Indicazioni di esecuzione (una per riga), sotto l'audio:
                            si leggono mentre si ascolta, accanto allo spartito. -->
-                      {s.indicazioni && (
-                        <div>
-                          <p class="label-caps mb-2">{t('riservato.indicazioni')}</p>
-                          <ul class="flex flex-col gap-1.5 type-body text-ink-soft list-disc pl-5">
-                            {s.indicazioni.split('\n').filter((r) => r.trim()).map((r) => <li>{r}</li>)}
+                      {(s.indicazioni || corista?.admin) && (
+                        <div class="indicazioni" data-spartito-id={s.id} data-testo={s.indicazioni ?? ''}
+                             data-msg-saving={t('riservato.salvataggio')} data-msg-error={t('riservato.erroreSalvataggio')}>
+                          <div class="flex items-baseline justify-between gap-3 mb-2">
+                            <p class="label-caps">{t('riservato.indicazioni')}</p>
+                            {/* Solo gli admin modificano: sono istruzioni per tutto l'ensemble. */}
+                            {corista?.admin && (
+                              <button type="button" class="indicazioni-modifica type-body text-ink-muted hover:text-ink underline">{t('riservato.modifica')}</button>
+                            )}
+                          </div>
+                          <ul class="indicazioni-elenco flex flex-col gap-1.5 type-body text-ink-soft list-disc pl-5">
+                            {(s.indicazioni ?? '').split('\n').filter((r) => r.trim()).map((r) => <li>{r}</li>)}
                           </ul>
+                          {corista?.admin && (
+                            <form class="indicazioni-form flex flex-col gap-2" hidden>
+                              <textarea rows="5" class="type-body w-full p-2" style="border:1px solid rgba(26,37,53,0.25); border-radius:2px;"
+                                        placeholder={t('riservato.indicazioniAiuto')}></textarea>
+                              <div class="flex items-center gap-3">
+                                <button type="submit" class="btn-ghost">{t('riservato.salva')}</button>
+                                <button type="button" class="indicazioni-annulla type-body text-ink-muted hover:text-ink">{t('riservato.annulla')}</button>
+                                <span class="indicazioni-feedback type-body text-ink-muted" aria-live="polite"></span>
+                              </div>
+                            </form>
+                          )}
                         </div>
                       )}
                       </div>
@@ -693,6 +711,52 @@ function presenzePerProva(provaId: number) {
 
       dettagli.querySelector('.chiudi-spartito')?.addEventListener('click', () => {
         dettagli.open = false;
+      });
+    });
+
+    // Indicazioni di esecuzione: gli admin le modificano qui (una per riga).
+    document.querySelectorAll<HTMLElement>('.indicazioni').forEach((box) => {
+      const form = box.querySelector<HTMLFormElement>('.indicazioni-form');
+      const tasto = box.querySelector<HTMLButtonElement>('.indicazioni-modifica');
+      if (!form || !tasto) return;
+      const elenco = box.querySelector<HTMLUListElement>('.indicazioni-elenco')!;
+      const area = form.querySelector('textarea')!;
+      const feedback = form.querySelector<HTMLElement>('.indicazioni-feedback')!;
+
+      const mostraForm = (si: boolean) => {
+        form.hidden = !si;
+        elenco.hidden = si;
+        tasto.hidden = si;
+        if (si) { area.value = box.dataset.testo ?? ''; feedback.textContent = ''; area.focus(); }
+      };
+      tasto.addEventListener('click', () => mostraForm(true));
+      form.querySelector('.indicazioni-annulla')!.addEventListener('click', () => mostraForm(false));
+      // Escape nel campo annulla la modifica senza chiudere il popup.
+      area.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { e.stopPropagation(); mostraForm(false); }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        feedback.textContent = box.dataset.msgSaving!;
+        try {
+          const res = await fetch('/riservato/api/indicazioni', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ spartito_id: Number(box.dataset.spartitoId), indicazioni: area.value }),
+          });
+          if (!res.ok) throw new Error();
+          const { indicazioni } = await res.json();
+          box.dataset.testo = indicazioni;
+          elenco.replaceChildren(...indicazioni.split('\n').filter(Boolean).map((r: string) => {
+            const li = document.createElement('li');
+            li.textContent = r;
+            return li;
+          }));
+          mostraForm(false);
+        } catch {
+          feedback.textContent = box.dataset.msgError!;
+        }
       });
     });
 

@@ -143,6 +143,10 @@
     "titoloEvento": "Rehearsal",
     "ascoltaParti": "Listen to the parts",
     "indicazioni": "Performance notes",
+    "modifica": "Edit",
+    "salva": "Save",
+    "annulla": "Cancel",
+    "indicazioniAiuto": "One note per line, e.g. “1st verse: all together”",
     "tutteLeVoci": "All voices",
     "apriPdf": "Open the PDF"
   },
