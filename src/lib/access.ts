@@ -5,8 +5,17 @@ export const TEAM_DOMAIN = 'https://jolly-meadow-0b7f.cloudflareaccess.com';
  * l'header è impostato da Access solo dopo un login riuscito, quindi è
  * la fonte affidabile per identificare chi sta facendo la richiesta.
  */
+// Email presa dal token di Access *verificato* dal middleware (src/middleware.ts),
+// legata alla richiesta. Non si legge più l'header in chiaro: Access non lo
+// manda sempre, e senza Access davanti chiunque potrebbe inventarlo.
+const emailVerificate = new WeakMap<Request, string>();
+
+export function impostaEmailVerificata(request: Request, email: string) {
+  emailVerificate.set(request, email.toLowerCase());
+}
+
 export function getAccessEmail(request: Request): string | null {
-  return request.headers.get('cf-access-authenticated-user-email');
+  return emailVerificate.get(request) ?? null;
 }
 
 export interface Corista {
@@ -18,5 +27,5 @@ export interface Corista {
 
 export async function getCorista(db: any, email: string): Promise<Corista | null> {
   if (!db || !email) return null;
-  return db.prepare('SELECT email, nome, voce, admin FROM coristi WHERE email = ?').bind(email).first();
+  return db.prepare('SELECT email, nome, voce, admin FROM coristi WHERE lower(email) = ?').bind(email.toLowerCase()).first();
 }

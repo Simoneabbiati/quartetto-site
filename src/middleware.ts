@@ -1,5 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
-import { TEAM_DOMAIN } from './lib/access';
+import { TEAM_DOMAIN, impostaEmailVerificata } from './lib/access';
 
 // L'area riservata si apre solo con un login di Cloudflare Access *verificato*:
 // controlliamo la firma del token (Cf-Access-Jwt-Assertion) con le chiavi
@@ -68,6 +68,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Valido solo se c'è un token firmato e l'email dell'header è la stessa.
   if (email && (!dichiarata || dichiarata.toLowerCase() === email.toLowerCase())) {
+    impostaEmailVerificata(context.request, email);
     return next();
   }
 
